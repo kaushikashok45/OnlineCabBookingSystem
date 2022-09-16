@@ -14,14 +14,21 @@ public class StartTrip extends HttpServlet{
     public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
     	HttpSession sessionsa = request.getSession(false);
     	BigDecimal fare=(BigDecimal) sessionsa.getAttribute("fare");
-    	int id=SQLQueries.getLastTripId();
-    	Trip t=SQLQueries.getTrip(id);
+    	int id=0;
+    	Trip t=null;
+    	try {
+    	id=SQLQueries.getLastTripId();
+    	t=SQLQueries.getTrip(id);
     	SQLQueries.changeTripStatus(id,"Completed");
     	SQLQueries.changeCabStatus(t.getCabId(),"Available");
     	BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(fare);
     	SQLQueries.changeCabWallet(t.getCabId(),newWallet);
     	SQLQueries.changeCabLoc(t.getCabId(),SQLQueries.getLocId((String)sessionsa.getAttribute("dest")));
     	sessionsa.setAttribute("trip", t);
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     	request.getRequestDispatcher("TripCompleted.jsp").forward(request, response);
     }
 }

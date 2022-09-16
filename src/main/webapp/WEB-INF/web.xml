@@ -121,4 +121,28 @@
      <servlet-name>CancelTrip</servlet-name>  
      <url-pattern>/CancelTrip/*</url-pattern>  
     </servlet-mapping> 
+    <error-page>
+     <error-code>404</error-code>
+     <location>/Error404.jsp</location>
+    </error-page>
+     <error-page>
+     <error-code>500</error-code>
+     <location>/Error500.jsp</location>
+    </error-page>
+     <error-page>
+     <error-code>301</error-code>
+     <location>/Error301.jsp</location>
+    </error-page>
+     <error-page> 
+        <exception-type>java.sql.SQLException</exception-type> 
+        <location>/Error1.jsp</location> 
+    </error-page>
+      <error-page> 
+        <exception-type>java.lang.NullPointerException</exception-type> 
+        <location>/Error2.jsp</location> 
+    </error-page>
+    <error-page> 
+        <exception-type>java.lang.ClassNotFoundException</exception-type> 
+        <location>/Error1.jsp</location> 
+    </error-page>
 </web-app>

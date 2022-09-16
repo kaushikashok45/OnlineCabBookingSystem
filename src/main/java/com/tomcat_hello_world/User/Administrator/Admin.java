@@ -1,6 +1,7 @@
 package com.tomcat_hello_world.User.Administrator;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,7 @@ public class Admin extends HttpServlet{
 	      request.getRequestDispatcher("Admin.jsp").forward(request, response);
 	}
 	
-	public Admin addAdmin(String name,String email,String password) {
+	public Admin addAdmin(String name,String email,String password) throws SQLException,ClassNotFoundException,NullPointerException{
 		Admin a=new Admin();
 		a.setEmail(email);
 		a.setName(name);
@@ -28,7 +29,7 @@ public class Admin extends HttpServlet{
 	
 	
 	
-	public void addLocation(String loc) {
+	public void addLocation(String loc) throws SQLException,ClassNotFoundException,NullPointerException{
 		if(!(SQLQueries.checkLocExist(loc))) {
 			SQLQueries.addLoc(loc);
 		}

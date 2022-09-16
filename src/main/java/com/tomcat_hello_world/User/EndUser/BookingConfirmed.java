@@ -27,7 +27,13 @@ public class BookingConfirmed extends HttpServlet{
 		     double speed=(double) sessionsa.getAttribute("speed");
 		     int time=(dist.divide(new BigDecimal(speed),2, RoundingMode.HALF_UP)).intValue();
 		     String email=(String) sessionsa.getAttribute("email");
-		     String uid=SQLQueries.getUserId(email);
+		     String uid=null;
+		     try {
+		     uid=SQLQueries.getUserId(email);
+		     }
+		     catch(Exception e) {
+		    	 e.printStackTrace();
+		     }
 		     String src=(String) sessionsa.getAttribute("src");
 		     String dest=(String) sessionsa.getAttribute("dest");
 		     Random rnd = new Random();
@@ -45,8 +51,13 @@ public class BookingConfirmed extends HttpServlet{
 		     sessionsa.setAttribute("email",email);
 		     boolean insertedTrip=false;
 		     if(email!=null) {
+		    	 try {
 		    	  insertedTrip=SQLQueries.insertTrip(Integer.parseInt(uid),c.getId(),SQLQueries.getPointsId(src, dest),numbers,"Underway",time);
 		    	  SQLQueries.changeCabStatus(c.getId(),"Booked");
+		    	 }
+		    	 catch(Exception e) {
+		    		 e.printStackTrace();
+		    	 }
 		     }
 		     if(insertedTrip) {
 		    	 request.getRequestDispatcher("BookingConfirm.jsp").forward(request, response);

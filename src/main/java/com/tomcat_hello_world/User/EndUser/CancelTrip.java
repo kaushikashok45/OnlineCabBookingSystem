@@ -19,8 +19,11 @@ public class CancelTrip extends HttpServlet{
 public void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
 	HttpSession sessionsa = request.getSession(false);
 	BigDecimal fare=new BigDecimal("100");
-	int id=SQLQueries.getLastTripId();
-	Trip t=SQLQueries.getTrip(id);
+	int id=0;
+	Trip t=null;
+	try {
+	id=SQLQueries.getLastTripId();
+	t=SQLQueries.getTrip(id);
 	SQLQueries.changeTripStatus(id,"Cancelled");
 	SQLQueries.changeCabStatus(t.getCabId(),"Available");
 	SQLQueries.changeTripTimeEnded(id);
@@ -30,5 +33,9 @@ public void doGet(HttpServletRequest request,HttpServletResponse response) throw
 	sessionsa.setAttribute("trip", t);
 	sessionsa.setAttribute("fare", fare);
 	request.getRequestDispatcher("TripCancelled.jsp").forward(request, response);
+	}
+	catch(Exception e) {
+		e.printStackTrace();
+	}
 }
 }

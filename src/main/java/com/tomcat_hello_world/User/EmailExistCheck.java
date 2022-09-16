@@ -14,7 +14,14 @@ public class EmailExistCheck extends HttpServlet{
 public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
         String email=request.getParameter("email").trim();
         response.setContentType("text/plain");
-        if((SQLQueries.checkEmailExists(email))){
+        boolean doesEmailExist=false;
+        try {
+        	doesEmailExist=(SQLQueries.checkEmailExists(email));
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
+        }
+        if(doesEmailExist){
             response.getWriter().write("Email already registered!");
         }
     }

@@ -10,6 +10,7 @@ import com.tomcat_hello_world.User.Driver.*;
 import java.util.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 
 public class BookCab extends HttpServlet{
 	
@@ -43,7 +44,7 @@ public class BookCab extends HttpServlet{
 	}
 
 	
-	public static Cab assignCab(String src,String dest,String carType) {
+	public static Cab assignCab(String src,String dest,String carType) throws SQLException,ClassNotFoundException,NullPointerException{
 		ArrayList<Cab> cars=new ArrayList<Cab>();
 		ArrayList<Cab> assignedCabs=new ArrayList<Cab>();
 		cars=SQLQueries.getFreeCabs(src,carType);
@@ -75,16 +76,23 @@ public class BookCab extends HttpServlet{
         String dest=request.getParameter("dest");
         String src=request.getParameter("src");
         String carType=request.getParameter("carType");
-        Cab c=assignCab(src,dest,carType);
+        Cab c=null;
+        try {
+        c=assignCab(src,dest,carType);
+        }
+        catch(Exception  e) {
+        	e.printStackTrace();
+        }
         HttpSession session=request.getSession(true);
         response.setContentType("text/html");
         PrintWriter out=response.getWriter();
         
         request.setAttribute("cab",c);
         session.setAttribute("cab", c);
-        BigDecimal fare=null;
+        BigDecimal fare=null,dist=null;
         int eta=0;
-        BigDecimal dist=SQLQueries.getDistance(src,dest);
+        try {
+        dist=SQLQueries.getDistance(src,dest);
         if(c!=null) {
    	       if(("hatchback").equals(c.getType())){
    		     fare=dist.multiply(new BigDecimal(20));
@@ -113,6 +121,10 @@ public class BookCab extends HttpServlet{
  		    	eta=10+((SQLQueries.getDistance(src,c.getLoc())).divide(new BigDecimal(Double.toString(0.4)))).intValue();
  		       }
    	       }
+        }
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
         }
        
         session.setAttribute("dist",dist);

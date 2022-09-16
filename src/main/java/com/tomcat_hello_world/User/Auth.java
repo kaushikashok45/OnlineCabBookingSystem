@@ -13,6 +13,7 @@ public class Auth extends HttpServlet{
 	public void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
           String userEmail=request.getParameter("email");
           String userPassword=request.getParameter("pass");
+          try {
           if((SQLQueries.checkEmailExists(userEmail))){
             if(SQLQueries.checkPassword(userEmail, userPassword)){
 
@@ -45,6 +46,10 @@ public class Auth extends HttpServlet{
           }
           else{
             response.sendRedirect("/com.tomcat_hello_world/?error=1");
+          }
+          }
+          catch(Exception e) {
+        	  e.printStackTrace();
           }
     }
 }

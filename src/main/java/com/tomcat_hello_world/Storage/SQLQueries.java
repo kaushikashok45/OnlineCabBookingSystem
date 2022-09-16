@@ -13,36 +13,26 @@ import java.util.Date;
 
 public class SQLQueries extends Encryptor{
 
-    public static boolean checkEmailExists(String email){
+    public static boolean checkEmailExists(String email) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean emailExists=false;
-        try{
-           
-            Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select Count(*) from Users  where Email=?");
-            ps.setString(1,email);
-            ResultSet rs=ps.executeQuery();
-            int count=0;
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-            if(count>0){
-                emailExists=true;
-            }
-            con.close();
+        Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement("Select Count(*) from Users  where Email=?");
+        ps.setString(1,email);
+        ResultSet rs=ps.executeQuery();
+        int count=0;
+        if(rs.next()){
+              count=rs.getInt(1);
         }
-        catch(SQLException e){
-            e.printStackTrace();
+        if(count>0){
+           emailExists=true;
         }
-        catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }
+        con.close();
+       
         return emailExists;
     } 
     
-    public static boolean checkLocExist(String loc){
+    public static boolean checkLocExist(String loc) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean locExists=false;
-        try{
-           
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select Count(*) from Location where Point=?");
             ps.setString(1,loc);
@@ -55,20 +45,13 @@ public class SQLQueries extends Encryptor{
                 locExists=true;
             }
             con.close();
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-        catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }
+  
         return locExists;
     } 
 
-    public static boolean checkPassword(String email,String password){
+    public static boolean checkPassword(String email,String password) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean isEqual=false;
-        try{
-           
+        
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
             ps.setString(1,email);
@@ -80,20 +63,13 @@ public class SQLQueries extends Encryptor{
             if(pwd.equals(Encryptor.encrypt(password))){
                 isEqual=true;
             }
-            con.close();
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-        catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }
+      
         return isEqual;
     }
 
-    public static boolean insertUser(String name,String email,String pwd,String role){
+    public static boolean insertUser(String name,String email,String pwd,String role) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean userInserted=false;
-        try{
+        
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("insert into Users(Name,Email,Password,Role) VALUES(?,?,?,?)");
             String password=Encryptor.encrypt(pwd);
@@ -106,16 +82,13 @@ public class SQLQueries extends Encryptor{
             con.close();
             userInserted=true;
             
-         }
-         catch(Exception e){
-             e.printStackTrace();
-         }
+       
         return userInserted;
     }
     
-    public static boolean addLoc(String point){
+    public static boolean addLoc(String point) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean locInserted=false;
-        try{
+     
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("insert into Location(Point) VALUES(?)");
             ps.setString(1,point);
@@ -124,18 +97,14 @@ public class SQLQueries extends Encryptor{
             con.close();
             locInserted=true;
             
-         }
-         catch(Exception e){
-             e.printStackTrace();
-         }
+        
         return locInserted;
     }
 
     
-    public static boolean insertDistance(int src,int dest,float distance){
+    public static boolean insertDistance(int src,int dest,float distance) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean distanceInserted=false;
-        try{
-            Connection con=DatabaseConnection.initializeDatabase();
+                   Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("insert into Distance(src,dest,distance) VALUES(?,?,?)");
             BigDecimal d = new BigDecimal(distance);
             ps.setInt(1, src);
@@ -145,17 +114,13 @@ public class SQLQueries extends Encryptor{
             ps.close();
             con.close();
             distanceInserted=true;
-            
-         }
-         catch(Exception e){
-             e.printStackTrace();
-         }
+        
         return distanceInserted;
     }
 
-    public static String getUserName(String email){
+    public static String getUserName(String email) throws SQLException,ClassNotFoundException,NullPointerException{
         String name=null;
-        try{    
+         
           Connection con=DatabaseConnection.initializeDatabase();
           PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
           ps.setString(1,email);
@@ -164,19 +129,13 @@ public class SQLQueries extends Encryptor{
             name=rs.getString("Name");
           }
           con.close();
-       }
-       catch(SQLException e){
-         e.printStackTrace();
-       }
-       catch(ClassNotFoundException e){
-         e.printStackTrace();
-       }
+     
        return name;
     }
 
-    public static String getUserId(String email){
+    public static String getUserId(String email) throws SQLException,ClassNotFoundException,NullPointerException {
         String id=null;
-        try{    
+        
           Connection con=DatabaseConnection.initializeDatabase();
           PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
           ps.setString(1,email);
@@ -185,19 +144,13 @@ public class SQLQueries extends Encryptor{
             id=Integer.toString(rs.getInt("id"));
           }
           con.close();
-       }
-       catch(SQLException e){
-         e.printStackTrace();
-       }
-       catch(ClassNotFoundException e){
-         e.printStackTrace();
-       }
+       
        return id;
     } 
     
-    public static String getUserType(String email) {
+    public static String getUserType(String email) throws SQLException,ClassNotFoundException,NullPointerException{
     	String userType=null;
-    	try{    
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
             ps.setString(1,email);
@@ -206,18 +159,12 @@ public class SQLQueries extends Encryptor{
               userType=rs.getString("Role");
             }
             con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+         
     	return userType;
     }
     
-    public static void changeName(String name,String email) {
-    	try{    
+    public static void changeName(String name,String email) throws SQLException,ClassNotFoundException,NullPointerException {
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Users set Name=? where Email=?");
             ps.setString(1,name);
@@ -225,17 +172,11 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     }
     
-    public static void changeEmail(String email,String oldEmail) {
-    	try{    
+    public static void changeEmail(String email,String oldEmail) throws SQLException,ClassNotFoundException,NullPointerException{
+    	 
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Users set Email=? where Email=?");
             ps.setString(1,email);
@@ -243,17 +184,11 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+         
     }
     
-    public static void changePassword(String pwd,String email) {
-    	try{    
+    public static void changePassword(String pwd,String email) throws SQLException,ClassNotFoundException,NullPointerException{
+    	
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Users set Password=? where Email=?");
             ps.setString(1,pwd);
@@ -261,17 +196,11 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+       
     }
     
-    public static void changeCabStatus(int cabid,String status) {
-    	try{    
+    public static void changeCabStatus(int cabid,String status) throws SQLException,ClassNotFoundException,NullPointerException {
+    	
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Cabs set Status=? where id=?");
             ps.setString(1,status);
@@ -279,17 +208,11 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+       
     }
     
-    public static void changeCabType(String cabid,String type) {
-    	try{    
+    public static void changeCabType(String cabid,String type) throws SQLException,ClassNotFoundException,NullPointerException{
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Cabs set Type=? where id=?");
             ps.setString(1,type);
@@ -297,36 +220,23 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             
             con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+       
     }
     
-    public static void changeCabLoc(int cabid,int locid) {
-    	try{    
+    public static void changeCabLoc(int cabid,int locid) throws SQLException,ClassNotFoundException,NullPointerException{
+      
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Cabs set locid=? where id=?");
             ps.setInt(1,locid);
             ps.setInt(2,cabid);
             ps.executeUpdate();
             
-            con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     }
     
-    public static void changeCabWallet(int cabid,BigDecimal newWallet) {
+    public static void changeCabWallet(int cabid,BigDecimal newWallet) throws SQLException,ClassNotFoundException,NullPointerException{
     	
-    	try{    
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Cabs set wallet=? where id=?");
             ps.setBigDecimal(1,newWallet);
@@ -334,18 +244,12 @@ public class SQLQueries extends Encryptor{
             ps.executeUpdate();
             
             con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     }
     
-public static void changeTripTimeEnded(int cabid) {
+public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFoundException,NullPointerException{
     	Timestamp ts=new Timestamp(System.currentTimeMillis());
-    	try{    
+    	   
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Trips set time_ended=? where id=?");
             ps.setTimestamp(1,ts);
@@ -353,18 +257,12 @@ public static void changeTripTimeEnded(int cabid) {
             ps.executeUpdate();
             
             con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     }
     
-    public static int getLocId(String loc){
+    public static int getLocId(String loc) throws SQLException,ClassNotFoundException,NullPointerException{
     	int locid=0;
-    	try{    
+    	
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Location where Point=?;");
             ps.setString(1,loc);
@@ -374,19 +272,13 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+      
     	return locid;
     }
     
-    public static BigDecimal getCabWallet(int cabid){
+    public static BigDecimal getCabWallet(int cabid) throws SQLException,ClassNotFoundException,NullPointerException{
     	BigDecimal wallet=new BigDecimal("1000");
-    	try{    
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select wallet from Cabs where id=?;");
             ps.setInt(1,cabid);
@@ -396,19 +288,13 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+       
     	return wallet;
     }
     	
-    	public static String getLocName(int id){
+    	public static String getLocName(int id) throws SQLException,ClassNotFoundException,NullPointerException{
         	String loc=null;
-        	try{    
+        	   
                 Connection con=DatabaseConnection.initializeDatabase();
                 PreparedStatement ps=con.prepareStatement("Select * from Location where id=?;");
                 ps.setInt(1,id);
@@ -418,19 +304,13 @@ public static void changeTripTimeEnded(int cabid) {
                 }
                 
                 con.close();
-             }
-             catch(SQLException e){
-               e.printStackTrace();
-             }
-             catch(ClassNotFoundException e){
-               e.printStackTrace();
-             }
+           
         	return loc;
         } 	
     
-    public static ArrayList<Cab> getCabs(){
+    public static ArrayList<Cab> getCabs() throws SQLException,ClassNotFoundException,NullPointerException{
     	ArrayList<Cab> cabs=new ArrayList<Cab>();
-    	try{    
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Cabs;");
             ResultSet rs=ps.executeQuery();
@@ -446,20 +326,14 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     	return cabs;
     }
     
-    public static ArrayList<Cab> getFreeCabs(String cloc,String carType){
+    public static ArrayList<Cab> getFreeCabs(String cloc,String carType) throws SQLException,ClassNotFoundException,NullPointerException{
     	ArrayList<Cab> cabs=new ArrayList<Cab>();
     	int locid=getLocId(cloc);
-    	try{    
+    	   
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Cabs WHERE locid=? AND Type=? AND Status=?;");
             ps.setInt(1,locid);
@@ -478,19 +352,12 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
     	return cabs;
     }
     
-    public static ArrayList<Integer> getNearByLocs(int locid,int range){
+    public static ArrayList<Integer> getNearByLocs(int locid,int range) throws SQLException,ClassNotFoundException,NullPointerException{
     	ArrayList<Integer> locs=new ArrayList<Integer>();
-    	try{    
+    	 
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Distance WHERE (src=?  OR dest=?) AND Distance=?;");
             BigDecimal dist=new BigDecimal(range);
@@ -510,17 +377,11 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+       
     	return locs;
     }
     
-    public static ArrayList<Cab> getFreeCabs(String cloc,String carType,int range){
+    public static ArrayList<Cab> getFreeCabs(String cloc,String carType,int range) throws SQLException,ClassNotFoundException,NullPointerException{
     	ArrayList<Cab> cabs=new ArrayList<Cab>();
     	int locid=getLocId(cloc);
     	ArrayList<Integer> locs=getNearByLocs(locid,range);
@@ -531,9 +392,9 @@ public static void changeTripTimeEnded(int cabid) {
     	return cabs;
     }
     
-    public static ArrayList<String> getLocations(){
+    public static ArrayList<String> getLocations() throws SQLException,ClassNotFoundException,NullPointerException{
     	ArrayList<String> locs=new ArrayList<String>();
-    	try{    
+    	
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select * from Location;");
             ResultSet rs=ps.executeQuery();
@@ -543,19 +404,14 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+         
+        
     	return locs;
     }
     
-    public static BigDecimal getDistance(String src,String dest) {
+    public static BigDecimal getDistance(String src,String dest) throws SQLException,ClassNotFoundException,NullPointerException{
     	BigDecimal dist=null;
-    	try{    
+    	  
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select Distance from Distance where (src=? AND dest=?) OR (src=? AND dest=?);");
             ps.setInt(1,getLocId(src));
@@ -569,19 +425,13 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+      
     	return dist;
     }
     
-    public static boolean insertTrip(int uid,int cabid,int pointsid,String otp,String status,int time) {
+    public static boolean insertTrip(int uid,int cabid,int pointsid,String otp,String status,int time) throws SQLException,ClassNotFoundException,NullPointerException{
     	boolean insertedTrip=false;
-    	try{    
+    	
     		int OTP=Integer.parseInt(otp);
     		Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("insert into Trips(uid,cabid,pointsid,otp,Status,time_ended) VALUES(?,?,?,?,?,?)");
@@ -596,19 +446,13 @@ public static void changeTripTimeEnded(int cabid) {
             ps.executeUpdate();
             con.close();
             insertedTrip=true;
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     	return insertedTrip;
     } 
     
-    public static int getPointsId(String src,String dest) {
+    public static int getPointsId(String src,String dest) throws SQLException,ClassNotFoundException,NullPointerException{
     	int pid=0;
-    	try{    
+    	
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Select id from Distance where (src=? AND dest=?) OR (src=? AND dest=?);");
             ps.setInt(1,getLocId(src));
@@ -622,38 +466,26 @@ public static void changeTripTimeEnded(int cabid) {
             }
             con.close();
    
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+      
     	return pid;
     }
     
-    public static int getLastTripId() {
+    public static int getLastTripId() throws SQLException,ClassNotFoundException,NullPointerException{
     	int id=0;
-        try{    
+       
           Connection con=DatabaseConnection.initializeDatabase();
           PreparedStatement ps=con.prepareStatement("Select MAX(id)  FROM Trips;");
           ResultSet rs=ps.executeQuery();
           if(rs.next()){
             id=rs.getInt(1);
           }
-       }
-       catch(SQLException e){
-         e.printStackTrace();
-       }
-       catch(ClassNotFoundException e){
-         e.printStackTrace();
-       }
+      
        return id;
     }
     
-    public static Trip getTrip(int id) {
+    public static Trip getTrip(int id) throws SQLException,ClassNotFoundException,NullPointerException{
     	Trip trip=null;
-        try{    
+       
           Connection con=DatabaseConnection.initializeDatabase();
           PreparedStatement ps=con.prepareStatement("Select * from Trips where id=?");
           ps.setInt(1, id);
@@ -669,18 +501,12 @@ public static void changeTripTimeEnded(int cabid) {
             Timestamp timeEnded=rs.getTimestamp("time_ended"); 
             trip=new Trip(id,uid,cabid,pointsid,otp,status,timeCreated,timeEnded);
           }
-       }
-       catch(SQLException e){
-         e.printStackTrace();
-       }
-       catch(ClassNotFoundException e){
-         e.printStackTrace();
-       }
+      
        return trip;
     }
     
-    public static void changeTripStatus(int tid,String status) {
-    	try{    
+    public static void changeTripStatus(int tid,String status) throws SQLException,ClassNotFoundException,NullPointerException{
+    	    
             Connection con=DatabaseConnection.initializeDatabase();
             PreparedStatement ps=con.prepareStatement("Update Trips set Status=? where id=?");
             ps.setString(1,status);
@@ -688,13 +514,7 @@ public static void changeTripTimeEnded(int cabid) {
             ps.executeUpdate();
             
             con.close();
-         }
-         catch(SQLException e){
-           e.printStackTrace();
-         }
-         catch(ClassNotFoundException e){
-           e.printStackTrace();
-         }
+        
     }
 }
 

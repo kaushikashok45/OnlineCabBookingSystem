@@ -12,7 +12,13 @@ public class FetchLocations extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-       ArrayList<String> locations=SQLQueries.getLocations();
+       ArrayList<String> locations=new ArrayList<String>();
+       try {
+    	   locations=SQLQueries.getLocations();
+       }
+       catch(Exception e){
+    	   e.printStackTrace();
+       }
        String locationsString="";
        for(String loc:locations) {
     	   locationsString=locationsString+loc+",";

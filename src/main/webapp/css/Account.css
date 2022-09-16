@@ -406,6 +406,10 @@
   .cancellation{
      text-align:center;
    }
+   
+   #subs{
+     text-align:center;
+   }
 
 
 @media only screen and (max-width: 900px) {

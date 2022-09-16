@@ -26,8 +26,22 @@ public class Process extends HttpServlet{
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(pwd);
         boolean pwdmatch=m.matches();
-        if((!(SQLQueries.checkEmailExists(email)))&&(pwdmatch)&&(isPasswordValid)&&(name!=null)&&(!(name.equals("")))&&(!name.equals(" "))){
-          if(SQLQueries.insertUser(name,email,pwd,"Customer")){
+        boolean doesEmailExist=false;
+        try {
+        	doesEmailExist=(SQLQueries.checkEmailExists(email));
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
+        }
+        if((!doesEmailExist)&&(pwdmatch)&&(isPasswordValid)&&(name!=null)&&(!(name.equals("")))&&(!name.equals(" "))){
+          boolean insertedUser=false;
+          try {
+        	  insertedUser=SQLQueries.insertUser(name,email,pwd,"Customer");
+          }
+          catch(Exception e) {
+        	  e.printStackTrace();
+          }
+          if(insertedUser){
             response.sendRedirect("/com.tomcat_hello_world/?success=1");
           }
           else{
