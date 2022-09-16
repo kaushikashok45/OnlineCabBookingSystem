@@ -1,0 +1,155 @@
+body{
+    margin-top:22%
+   }
+
+h1{
+     text-align:center;
+     color:green;
+     font-family:sans-serif;
+}
+   
+#link{
+      font-family:sans-serif;
+      
+      font-size:20px;
+      display:flex;
+      flex-direction:row;
+	  align-items: center;
+	  justify-content: center;
+	  flex-wrap:wrap;
+}
+
+#user{
+	list-style:none;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap:wrap;
+	flex-direction:row;
+}
+
+@media only screen and (max-width: 800px) {
+
+	   #link{
+	      flex-direction:column-reverse;
+	   }
+	   #user{
+	     flex-direction:column;
+	     margin:0 auto;
+	   }
+	   body{
+	     margin-top:50%;
+	   }
+	} 
+  
+#success{
+     color: green;
+     font-family: sans-serif;
+     text-align: center;
+}
+   
+#error{
+     color: red;
+     font-family: sans-serif;
+     text-align: center;
+} 
+
+.flex-item{
+    text-align: center;
+    cursor:pointer;
+}
+
+#accounts li{
+    display: inline-flex;
+   position: relative;
+   display:table;
+   margin:0 auto;
+   border:1px solid black;
+   border-radius: 10px;
+   box-sizing: border-box;
+   width: fit-content;
+   min-width:80%;
+   padding: 15px;
+   margin-bottom:8px;
+   opacity: 0.8;
+   margin-left:1em;
+   margin-right: 1em;
+}
+
+#accounts li:hover{
+    background-color: aliceblue;
+    transform:scale(1.03);
+    transition-duration: 900ms;
+    
+}
+
+.remove{
+    border-color: #0f0700;
+}
+
+#accounts li:hover #arrow{
+    margin-left: 2px;
+}
+
+#accounts a{
+    font-family: sans-serif;
+    text-decoration: none;
+    color: green;
+    padding-top: 5px;
+}
+
+
+
+#accounts button{
+    background-color: aliceblue;
+    border-color: white;
+    color:#0f0700;
+    border-radius: 5px;
+    cursor:pointer;
+    border-radius: 50%;
+}
+
+#accounts button:hover{
+   background-color: #E31837;
+   transition-duration: 900ms;
+   color: white;
+   opacity: 0.9;
+}
+
+#signup{
+    background-color: white;
+    color:black;
+    cursor:pointer;
+    padding: 15px;
+    font-size: 0.6em;
+    font-weight: bold;
+    border-radius: 15%;
+    border-color: black;
+}
+
+#signup:hover{
+    background-color: aliceblue;
+    opacity: 0.9;
+    transition-delay: 200ms;
+}
+
+#login{
+    background-color: green;
+    color:white;
+    cursor:pointer;
+    padding: 15px;
+    font-size: 0.6em;
+    font-weight: bold;
+    border-radius: 7px;
+    border-color: white;
+    border-color: #0f0700;
+}
+
+#login:hover{
+    background-color: #018749;
+    opacity: 0.9;
+    transition-delay: 200ms;
+}
+
+
+
