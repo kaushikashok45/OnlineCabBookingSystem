@@ -25,12 +25,8 @@ public void doGet(HttpServletRequest request,HttpServletResponse response) throw
 	try {
 	id=SQLQueries.getLastTripId();
 	t=SQLQueries.getTrip(id);
-	SQLQueries.changeTripStatus(id,Constants.tripStatus3);
-	SQLQueries.changeCabStatus(t.getCabId(),Constants.cabStatus1);
-	SQLQueries.changeTripTimeEnded(id);
 	BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(fare);
-	SQLQueries.changeCabWallet(t.getCabId(),newWallet);
-	SQLQueries.changeCabLoc(t.getCabId(),SQLQueries.getLocId((String)sessionsa.getAttribute(Constants.src)));
+	SQLQueries.cancelTrip(newWallet,SQLQueries.getLocId((String)sessionsa.getAttribute(Constants.src)),id);
 	sessionsa.setAttribute(Constants.trip, t);
 	sessionsa.setAttribute(Constants.fare, fare);
 	request.getRequestDispatcher(Constants.tripCancelled).forward(request, response);

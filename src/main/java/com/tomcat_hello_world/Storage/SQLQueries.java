@@ -516,5 +516,33 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             con.close();
         
     }
+    
+    public static void startTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
+   	 Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement(Constants.updateTripStart); 
+        ps.setString(1,Constants.cabStatus1);
+        ps.setBigDecimal(2,fare);
+        ps.setInt(3, locid);
+        ps.setString(4, Constants.tripStatus2);
+        ps.setInt(5,id);
+        ps.executeUpdate();
+        con.close();
+    
+   }
+    
+    public static void cancelTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
+    	 Timestamp ts=new Timestamp(System.currentTimeMillis());
+    	 Connection con=DatabaseConnection.initializeDatabase();
+         PreparedStatement ps=con.prepareStatement(Constants.updateTrip); 
+         ps.setString(1,Constants.cabStatus1);
+         ps.setBigDecimal(2,fare);
+         ps.setInt(3, locid);
+         ps.setString(4, Constants.tripStatus3);
+         ps.setTimestamp(5, ts);
+         ps.setInt(6,id);
+         ps.executeUpdate();
+         con.close();
+     
+    }
 }
 

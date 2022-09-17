@@ -97,6 +97,8 @@ public class Constants {
     public static final String updateCabsWallet="Update Cabs set wallet=? where id=?";
     public static final String updateTripsTimeEnded="Update Trips set time_ended=? where id=?";
     public static final String updateTripsStatus="Update Trips set Status=? where id=?";
+    public static final String updateTrip="UPDATE Cabs,Trips set Cabs.Status=?,Cabs.wallet=?,Cabs.locid=?,Trips.Status=?,Trips.time_ended=? WHERE Cabs.id=Trips.cabid AND Trips.id=?;";
+    public static final String updateTripStart="UPDATE Cabs,Trips set Cabs.Status=?,Cabs.wallet=?,Cabs.locid=?,Trips.Status=? WHERE Cabs.id=Trips.cabid AND Trips.id=?;";
     public static final String tripCompleted="TripCompleted.jsp";
     public static final String reqConfirm="ReqConfirm.jsp";
     public static final String bookingConfirm="BookingConfirm.jsp";

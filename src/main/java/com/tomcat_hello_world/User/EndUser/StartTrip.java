@@ -21,11 +21,8 @@ public class StartTrip extends HttpServlet{
     	try {
     	id=SQLQueries.getLastTripId();
     	t=SQLQueries.getTrip(id);
-    	SQLQueries.changeTripStatus(id,Constants.tripStatus2);
-    	SQLQueries.changeCabStatus(t.getCabId(),Constants.cabStatus1);
     	BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(fare);
-    	SQLQueries.changeCabWallet(t.getCabId(),newWallet);
-    	SQLQueries.changeCabLoc(t.getCabId(),SQLQueries.getLocId((String)sessionsa.getAttribute(Constants.dest)));
+    	SQLQueries.startTrip(newWallet, SQLQueries.getLocId((String)sessionsa.getAttribute(Constants.dest)), id);
     	sessionsa.setAttribute(Constants.trip, t);
     	}
     	catch(Exception e) {
