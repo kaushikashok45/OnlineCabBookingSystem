@@ -6,6 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.tomcat_hello_world.Security.Constants;
+
 import java.math.BigDecimal;
 
 
@@ -18,7 +21,7 @@ public class Cab extends HttpServlet{
 	public Cab() {}
 	
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-	      request.getRequestDispatcher("Cab.jsp").forward(request, response);
+	      request.getRequestDispatcher(Constants.cabJSP).forward(request, response);
 	}
 	
 	public Cab(int id,int uid,String type,String loc,BigDecimal wallet,String status) {

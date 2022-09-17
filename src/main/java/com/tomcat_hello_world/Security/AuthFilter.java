@@ -12,15 +12,15 @@ public class AuthFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession(false);
-        String loginURI = request.getContextPath() + "/auth";
+        String loginURI = request.getContextPath() + Constants.authURL;
 
-        boolean loggedIn = session != null && session.getAttribute("name") != null;
+        boolean loggedIn = session != null && session.getAttribute(Constants.smallName) != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);
 
         if (loggedIn || loginRequest) {
             chain.doFilter(request, response);
         } else {
-            response.sendRedirect("/com.tomcat_hello_world/");
+            response.sendRedirect(Constants.indexURL);
         }
     }
     public void destroy(){}

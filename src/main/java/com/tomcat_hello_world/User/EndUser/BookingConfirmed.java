@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.User.Driver.Cab;
 
@@ -20,13 +21,13 @@ public class BookingConfirmed extends HttpServlet{
 
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
 		      HttpSession sessionsa = request.getSession(true);
-		     Cab c=(Cab) sessionsa.getAttribute("cab"); 
-		     BigDecimal fare=(BigDecimal) sessionsa.getAttribute("fare");
-		     int eta=(int) sessionsa.getAttribute("eta");
-		     BigDecimal dist=(BigDecimal) sessionsa.getAttribute("dist");
-		     double speed=(double) sessionsa.getAttribute("speed");
+		     Cab c=(Cab) sessionsa.getAttribute(Constants.cab); 
+		     BigDecimal fare=(BigDecimal) sessionsa.getAttribute(Constants.fare);
+		     int eta=(int) sessionsa.getAttribute(Constants.eta);
+		     BigDecimal dist=(BigDecimal) sessionsa.getAttribute(Constants.dist);
+		     double speed=(double) sessionsa.getAttribute(Constants.speed);
 		     int time=(dist.divide(new BigDecimal(speed),2, RoundingMode.HALF_UP)).intValue();
-		     String email=(String) sessionsa.getAttribute("email");
+		     String email=(String) sessionsa.getAttribute(Constants.email);
 		     String uid=null;
 		     try {
 		     uid=SQLQueries.getUserId(email);
@@ -34,36 +35,36 @@ public class BookingConfirmed extends HttpServlet{
 		     catch(Exception e) {
 		    	 e.printStackTrace();
 		     }
-		     String src=(String) sessionsa.getAttribute("src");
-		     String dest=(String) sessionsa.getAttribute("dest");
+		     String src=(String) sessionsa.getAttribute(Constants.src);
+		     String dest=(String) sessionsa.getAttribute(Constants.dest);
 		     Random rnd = new Random();
 		     int number = rnd.nextInt(999999);
-		     String numbers=String.format("%06d", number);
-		     sessionsa.setAttribute("cab",c);
-		     sessionsa.setAttribute("src",src);
-		     sessionsa.setAttribute("dest",dest);
-		     sessionsa.setAttribute("fare",fare);
-		     sessionsa.setAttribute("eta",eta);
-		     sessionsa.setAttribute("dist",dist);
-		     sessionsa.setAttribute("speed",speed);
-		     sessionsa.setAttribute("time",uid);
-		     sessionsa.setAttribute("otp",numbers);
-		     sessionsa.setAttribute("email",email);
+		     String numbers=String.format(Constants.otpFormat, number);
+		     sessionsa.setAttribute(Constants.cab,c);
+		     sessionsa.setAttribute(Constants.src,src);
+		     sessionsa.setAttribute(Constants.dest,dest);
+		     sessionsa.setAttribute(Constants.fare,fare);
+		     sessionsa.setAttribute(Constants.eta,eta);
+		     sessionsa.setAttribute(Constants.dist,dist);
+		     sessionsa.setAttribute(Constants.speed,speed);
+		     sessionsa.setAttribute(Constants.uid,uid);
+		     sessionsa.setAttribute(Constants.otp,numbers);
+		     sessionsa.setAttribute(Constants.email,email);
 		     boolean insertedTrip=false;
 		     if(email!=null) {
 		    	 try {
-		    	  insertedTrip=SQLQueries.insertTrip(Integer.parseInt(uid),c.getId(),SQLQueries.getPointsId(src, dest),numbers,"Underway",time);
-		    	  SQLQueries.changeCabStatus(c.getId(),"Booked");
+		    	  insertedTrip=SQLQueries.insertTrip(Integer.parseInt(uid),c.getId(),SQLQueries.getPointsId(src, dest),numbers,Constants.tripStatus1,time);
+		    	  SQLQueries.changeCabStatus(c.getId(),Constants.cabStatus2);
 		    	 }
 		    	 catch(Exception e) {
 		    		 e.printStackTrace();
 		    	 }
 		     }
 		     if(insertedTrip) {
-		    	 request.getRequestDispatcher("BookingConfirm.jsp").forward(request, response);
+		    	 request.getRequestDispatcher(Constants.bookingConfirm).forward(request, response);
 		     }
 		     else {
-		    	 request.getRequestDispatcher("/account").forward(request, response);
+		    	 request.getRequestDispatcher(Constants.account).forward(request, response);
 		     }
 	}
 }

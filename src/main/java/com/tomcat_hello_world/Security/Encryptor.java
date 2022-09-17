@@ -7,7 +7,7 @@ public class Encryptor {
     protected static String encrypt(String pwd){
         String encryptedPwd=null;
         try{
-            MessageDigest m=MessageDigest.getInstance("MD5");
+            MessageDigest m=MessageDigest.getInstance(Constants.md5);
             m.update(pwd.getBytes());
             byte[] bytes=m.digest();
             StringBuilder s = new StringBuilder();  

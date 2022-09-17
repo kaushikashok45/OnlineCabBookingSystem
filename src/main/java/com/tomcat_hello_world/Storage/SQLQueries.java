@@ -16,7 +16,7 @@ public class SQLQueries extends Encryptor{
     public static boolean checkEmailExists(String email) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean emailExists=false;
         Connection con=DatabaseConnection.initializeDatabase();
-        PreparedStatement ps=con.prepareStatement("Select Count(*) from Users  where Email=?");
+        PreparedStatement ps=con.prepareStatement(Constants.getUserCountByEmail);
         ps.setString(1,email);
         ResultSet rs=ps.executeQuery();
         int count=0;
@@ -34,7 +34,7 @@ public class SQLQueries extends Encryptor{
     public static boolean checkLocExist(String loc) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean locExists=false;
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select Count(*) from Location where Point=?");
+            PreparedStatement ps=con.prepareStatement(Constants.getLocFromPoint);
             ps.setString(1,loc);
             ResultSet rs=ps.executeQuery();
             int count=0;
@@ -53,12 +53,12 @@ public class SQLQueries extends Encryptor{
         boolean isEqual=false;
         
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+            PreparedStatement ps=con.prepareStatement(Constants.getPwdFromUserEmail);
             ps.setString(1,email);
             ResultSet rs=ps.executeQuery();
             String pwd=null;
             if(rs.next()){
-                pwd=rs.getString("Password");
+                pwd=rs.getString(Constants.password);
             }
             if(pwd.equals(Encryptor.encrypt(password))){
                 isEqual=true;
@@ -71,7 +71,7 @@ public class SQLQueries extends Encryptor{
         boolean userInserted=false;
         
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("insert into Users(Name,Email,Password,Role) VALUES(?,?,?,?)");
+            PreparedStatement ps=con.prepareStatement(Constants.insertUser);
             String password=Encryptor.encrypt(pwd);
             ps.setString(1, name);
             ps.setString(2, email);
@@ -90,7 +90,7 @@ public class SQLQueries extends Encryptor{
         boolean locInserted=false;
      
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("insert into Location(Point) VALUES(?)");
+            PreparedStatement ps=con.prepareStatement(Constants.insertLoc);
             ps.setString(1,point);
             ps.executeUpdate();
             ps.close();
@@ -105,7 +105,7 @@ public class SQLQueries extends Encryptor{
     public static boolean insertDistance(int src,int dest,float distance) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean distanceInserted=false;
                    Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("insert into Distance(src,dest,distance) VALUES(?,?,?)");
+            PreparedStatement ps=con.prepareStatement(Constants.insertDistance);
             BigDecimal d = new BigDecimal(distance);
             ps.setInt(1, src);
             ps.setInt(2, dest);
@@ -122,11 +122,11 @@ public class SQLQueries extends Encryptor{
         String name=null;
          
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+          PreparedStatement ps=con.prepareStatement(Constants.getUserByEmail);
           ps.setString(1,email);
           ResultSet rs=ps.executeQuery();
           if(rs.next()){
-            name=rs.getString("Name");
+            name=rs.getString(Constants.name);
           }
           con.close();
      
@@ -137,11 +137,11 @@ public class SQLQueries extends Encryptor{
         String id=null;
         
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+          PreparedStatement ps=con.prepareStatement(Constants.getUserByEmail);
           ps.setString(1,email);
           ResultSet rs=ps.executeQuery();
           if(rs.next()){
-            id=Integer.toString(rs.getInt("id"));
+            id=Integer.toString(rs.getInt(Constants.id));
           }
           con.close();
        
@@ -152,11 +152,11 @@ public class SQLQueries extends Encryptor{
     	String userType=null;
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+            PreparedStatement ps=con.prepareStatement(Constants.getUserByEmail);
             ps.setString(1,email);
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
-              userType=rs.getString("Role");
+              userType=rs.getString(Constants.role);
             }
             con.close();
          
@@ -166,7 +166,7 @@ public class SQLQueries extends Encryptor{
     public static void changeName(String name,String email) throws SQLException,ClassNotFoundException,NullPointerException {
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Users set Name=? where Email=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateUsersName);
             ps.setString(1,name);
             ps.setString(2,email);
             ps.executeUpdate();
@@ -178,7 +178,7 @@ public class SQLQueries extends Encryptor{
     public static void changeEmail(String email,String oldEmail) throws SQLException,ClassNotFoundException,NullPointerException{
     	 
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Users set Email=? where Email=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateUsersEmail);
             ps.setString(1,email);
             ps.setString(2,oldEmail);
             ps.executeUpdate();
@@ -190,7 +190,7 @@ public class SQLQueries extends Encryptor{
     public static void changePassword(String pwd,String email) throws SQLException,ClassNotFoundException,NullPointerException{
     	
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Users set Password=? where Email=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateUsersPassword);
             ps.setString(1,pwd);
             ps.setString(2,email);
             ps.executeUpdate();
@@ -202,7 +202,7 @@ public class SQLQueries extends Encryptor{
     public static void changeCabStatus(int cabid,String status) throws SQLException,ClassNotFoundException,NullPointerException {
     	
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Cabs set Status=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateCabsStatus);
             ps.setString(1,status);
             ps.setInt(2,cabid);
             ps.executeUpdate();
@@ -214,7 +214,7 @@ public class SQLQueries extends Encryptor{
     public static void changeCabType(String cabid,String type) throws SQLException,ClassNotFoundException,NullPointerException{
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Cabs set Type=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateCabsType);
             ps.setString(1,type);
             ps.setString(2,cabid);
             ps.executeUpdate();
@@ -226,7 +226,7 @@ public class SQLQueries extends Encryptor{
     public static void changeCabLoc(int cabid,int locid) throws SQLException,ClassNotFoundException,NullPointerException{
       
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Cabs set locid=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateCabsLoc);
             ps.setInt(1,locid);
             ps.setInt(2,cabid);
             ps.executeUpdate();
@@ -238,7 +238,7 @@ public class SQLQueries extends Encryptor{
     	
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Cabs set wallet=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateCabsWallet);
             ps.setBigDecimal(1,newWallet);
             ps.setInt(2,cabid);
             ps.executeUpdate();
@@ -251,7 +251,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	Timestamp ts=new Timestamp(System.currentTimeMillis());
     	   
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Trips set time_ended=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateTripsTimeEnded);
             ps.setTimestamp(1,ts);
             ps.setInt(2,cabid);
             ps.executeUpdate();
@@ -264,7 +264,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	int locid=0;
     	
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Location where Point=?;");
+            PreparedStatement ps=con.prepareStatement(Constants.getLocIdByPoint);
             ps.setString(1,loc);
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
@@ -280,11 +280,11 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	BigDecimal wallet=new BigDecimal("1000");
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select wallet from Cabs where id=?;");
+            PreparedStatement ps=con.prepareStatement(Constants.getCabWallet);
             ps.setInt(1,cabid);
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
-            	  	wallet=rs.getBigDecimal("wallet");
+            	  	wallet=rs.getBigDecimal(Constants.wallet);
             }
             con.close();
    
@@ -296,11 +296,11 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
         	String loc=null;
         	   
                 Connection con=DatabaseConnection.initializeDatabase();
-                PreparedStatement ps=con.prepareStatement("Select * from Location where id=?;");
+                PreparedStatement ps=con.prepareStatement(Constants.getLocId);
                 ps.setInt(1,id);
                 ResultSet rs=ps.executeQuery();
                 if(rs.next()){
-                	loc=rs.getString("Point");  	
+                	loc=rs.getString(Constants.Point);  	
                 }
                 
                 con.close();
@@ -312,15 +312,15 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	ArrayList<Cab> cabs=new ArrayList<Cab>();
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Cabs;");
+            PreparedStatement ps=con.prepareStatement(Constants.getAllCabs);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-            	int id=rs.getInt("id");
-            	int uid=rs.getInt("uid");
-            	String type=rs.getString("Type");
-            	String loc= getLocName(rs.getInt("Location"));
-            	BigDecimal wallet=rs.getBigDecimal("Wallet");
-            	String status=rs.getString("Status");
+            	int id=rs.getInt(Constants.id);
+            	int uid=rs.getInt(Constants.uid);
+            	String type=rs.getString(Constants.type);
+            	String loc= getLocName(rs.getInt(Constants.location));
+            	BigDecimal wallet=rs.getBigDecimal(Constants.wallet);
+            	String status=rs.getString(Constants.status);
             	Cab c=new Cab(id,uid,type,loc,wallet,status);
             	cabs.add(c);
             }
@@ -335,18 +335,18 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	int locid=getLocId(cloc);
     	   
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Cabs WHERE locid=? AND Type=? AND Status=?;");
+            PreparedStatement ps=con.prepareStatement(Constants.getCabByLocTypeStatus);
             ps.setInt(1,locid);
             ps.setString(2,carType);
             ps.setString(3,"Available");
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-            	int id=rs.getInt("id");
-            	int uid=rs.getInt("uid");
-            	String type=rs.getString("Type");
-            	String loc= getLocName(rs.getInt("locid"));
-            	BigDecimal wallet=rs.getBigDecimal("wallet");
-            	String status=rs.getString("Status");
+            	int id=rs.getInt(Constants.id);
+            	int uid=rs.getInt(Constants.uid);
+            	String type=rs.getString(Constants.type);
+            	String loc= getLocName(rs.getInt(Constants.locid));
+            	BigDecimal wallet=rs.getBigDecimal(Constants.wallet);
+            	String status=rs.getString(Constants.status);
             	Cab c=new Cab(id,uid,type,loc,wallet,status);
             	cabs.add(c);
             }
@@ -359,15 +359,15 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	ArrayList<Integer> locs=new ArrayList<Integer>();
     	 
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Distance WHERE (src=?  OR dest=?) AND Distance=?;");
+            PreparedStatement ps=con.prepareStatement(Constants.getNearbyLocs);
             BigDecimal dist=new BigDecimal(range);
             ps.setInt(1,locid);
             ps.setInt(2,locid);
             ps.setBigDecimal(3,dist);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-            	int src=rs.getInt("src");
-            	int dest=rs.getInt("dest");
+            	int src=rs.getInt(Constants.src);
+            	int dest=rs.getInt(Constants.dest);
             	if(src!=locid) {
             		locs.add(src);
             	}
@@ -396,10 +396,10 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	ArrayList<String> locs=new ArrayList<String>();
     	
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select * from Location;");
+            PreparedStatement ps=con.prepareStatement(Constants.getAllLocs);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-            	String loc=rs.getString("Point");
+            	String loc=rs.getString(Constants.Point);
             	locs.add(loc);
             }
             con.close();
@@ -413,14 +413,14 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	BigDecimal dist=null;
     	  
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select Distance from Distance where (src=? AND dest=?) OR (src=? AND dest=?);");
+            PreparedStatement ps=con.prepareStatement(Constants.getDistance);
             ps.setInt(1,getLocId(src));
             ps.setInt(2,getLocId(dest));
             ps.setInt(3,getLocId(dest));
             ps.setInt(4,getLocId(src));
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
-            	dist=rs.getBigDecimal("Distance");
+            	dist=rs.getBigDecimal(Constants.distance);
             	
             }
             con.close();
@@ -434,7 +434,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	
     		int OTP=Integer.parseInt(otp);
     		Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("insert into Trips(uid,cabid,pointsid,otp,Status,time_ended) VALUES(?,?,?,?,?,?)");
+            PreparedStatement ps=con.prepareStatement(Constants.insertTrip);
             ps.setInt(1,uid);
             ps.setInt(2, cabid);
             ps.setInt(3, pointsid);
@@ -454,7 +454,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	int pid=0;
     	
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Select id from Distance where (src=? AND dest=?) OR (src=? AND dest=?);");
+            PreparedStatement ps=con.prepareStatement(Constants.getDistanceId);
             ps.setInt(1,getLocId(src));
             ps.setInt(2,getLocId(dest));
             ps.setInt(3,getLocId(dest));
@@ -474,7 +474,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	int id=0;
        
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement("Select MAX(id)  FROM Trips;");
+          PreparedStatement ps=con.prepareStatement(Constants.getMaxTripId);
           ResultSet rs=ps.executeQuery();
           if(rs.next()){
             id=rs.getInt(1);
@@ -487,18 +487,18 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	Trip trip=null;
        
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement("Select * from Trips where id=?");
+          PreparedStatement ps=con.prepareStatement(Constants.getTripById);
           ps.setInt(1, id);
           ResultSet rs=ps.executeQuery();
           
           if(rs.next()){
-            int uid=rs.getInt("uid");
-            int cabid=rs.getInt("cabid");
-            int pointsid=rs.getInt("pointsid");
-            String otp=String.valueOf(rs.getInt("otp"));
-            String status=rs.getString("Status");
-            Timestamp timeCreated=rs.getTimestamp("time_started");
-            Timestamp timeEnded=rs.getTimestamp("time_ended"); 
+            int uid=rs.getInt(Constants.uid);
+            int cabid=rs.getInt(Constants.cabid);
+            int pointsid=rs.getInt(Constants.pointsid);
+            String otp=String.valueOf(rs.getInt(Constants.otp));
+            String status=rs.getString(Constants.status);
+            Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
+            Timestamp timeEnded=rs.getTimestamp(Constants.timeEnded); 
             trip=new Trip(id,uid,cabid,pointsid,otp,status,timeCreated,timeEnded);
           }
       
@@ -508,7 +508,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     public static void changeTripStatus(int tid,String status) throws SQLException,ClassNotFoundException,NullPointerException{
     	    
             Connection con=DatabaseConnection.initializeDatabase();
-            PreparedStatement ps=con.prepareStatement("Update Trips set Status=? where id=?");
+            PreparedStatement ps=con.prepareStatement(Constants.updateTripsStatus);
             ps.setString(1,status);
             ps.setInt(2,tid);
             ps.executeUpdate();

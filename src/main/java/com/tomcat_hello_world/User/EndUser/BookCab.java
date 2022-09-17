@@ -1,10 +1,12 @@
 package com.tomcat_hello_world.User.EndUser;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.*;
 import com.tomcat_hello_world.User.Driver.*;
 import java.util.*;
@@ -17,12 +19,12 @@ public class BookCab extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	public static String upgradeCarType(String carType) {
 		String upgradedCarType=carType;
-		if(carType.equals("hatchback")) {
-			upgradedCarType="sedan";
+		if(carType.equals(Constants.car1)) {
+			upgradedCarType=Constants.car2;
 			
 		}
-		else if(carType.equals("sedan")) {
-			upgradedCarType="suv";
+		else if(carType.equals(Constants.car2)) {
+			upgradedCarType=Constants.car3;
 			
 		}
 		return upgradedCarType;
@@ -53,7 +55,7 @@ public class BookCab extends HttpServlet{
 		}
 		
 		
-		if((cars.isEmpty())&&(!(carType.equals("suv")))){
+		if((cars.isEmpty())&&(!(carType.equals(Constants.car3)))){
 			Cab d=assignCab(src,dest,upgradeCarType(carType));
 			cars.add(d);
 		}
@@ -73,9 +75,9 @@ public class BookCab extends HttpServlet{
 		return c;
 	}
 	public void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-        String dest=request.getParameter("dest");
-        String src=request.getParameter("src");
-        String carType=request.getParameter("carType");
+        String dest=request.getParameter(Constants.dest);
+        String src=request.getParameter(Constants.src);
+        String carType=request.getParameter(Constants.carType);
         Cab c=null;
         try {
         c=assignCab(src,dest,carType);
@@ -84,17 +86,17 @@ public class BookCab extends HttpServlet{
         	e.printStackTrace();
         }
         HttpSession session=request.getSession(true);
-        response.setContentType("text/html");
-        PrintWriter out=response.getWriter();
+        response.setContentType(Constants.contentHtml);
+       
         
-        request.setAttribute("cab",c);
-        session.setAttribute("cab", c);
+        request.setAttribute(Constants.cab,c);
+        session.setAttribute(Constants.cab, c);
         BigDecimal fare=null,dist=null;
         int eta=0;
         try {
         dist=SQLQueries.getDistance(src,dest);
         if(c!=null) {
-   	       if(("hatchback").equals(c.getType())){
+   	       if((Constants.car1).equals(c.getType())){
    		     fare=dist.multiply(new BigDecimal(20));
    		     if(src.equals(c.getLoc())) {
    		    	 eta=5;
@@ -103,7 +105,7 @@ public class BookCab extends HttpServlet{
    		    	eta=5+((SQLQueries.getDistance(src,c.getLoc())).divide(new BigDecimal(Double.toString(0.8)))).intValue();
    		     }
    	       }
-   	       else if(("sedan").equals(c.getType())){
+   	       else if((Constants.car2).equals(c.getType())){
    		       fare=dist.multiply(new BigDecimal(30));
    		       if(src.equals(c.getLoc())) {
   		    	 eta=7;
@@ -127,17 +129,16 @@ public class BookCab extends HttpServlet{
         	e.printStackTrace();
         }
        
-        session.setAttribute("dist",dist);
-        session.setAttribute("eta",eta);
-        request.setAttribute("src",src);
-        request.setAttribute("dest",dest);
-        session.setAttribute("fare",fare);
-        session.setAttribute("src", src);
-        session.setAttribute("dest", dest);
-        String email=(String) request.getSession(false).getAttribute("email");
-        session.setAttribute("email",email);
-        out.print("hi");
-        response.sendRedirect("ReqConfirm.jsp");
+        session.setAttribute(Constants.dist,dist);
+        session.setAttribute(Constants.eta,eta);
+        request.setAttribute(Constants.src,src);
+        request.setAttribute(Constants.dest,dest);
+        session.setAttribute(Constants.fare,fare);
+        session.setAttribute(Constants.src, src);
+        session.setAttribute(Constants.dest, dest);
+        String email=(String) request.getSession(false).getAttribute(Constants.email);
+        session.setAttribute(Constants.email,email);
+        response.sendRedirect(Constants.reqConfirm);
         
     }
 }

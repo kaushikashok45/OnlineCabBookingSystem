@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.*;
 
 
@@ -15,7 +17,7 @@ public class Admin extends HttpServlet{
 	private int id;
 	private String name,email,password;
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-	      request.getRequestDispatcher("Admin.jsp").forward(request, response);
+	      request.getRequestDispatcher(Constants.adminJSP).forward(request, response);
 	}
 	
 	public Admin addAdmin(String name,String email,String password) throws SQLException,ClassNotFoundException,NullPointerException{
@@ -23,7 +25,7 @@ public class Admin extends HttpServlet{
 		a.setEmail(email);
 		a.setName(name);
 		a.setPassword(password);
-		SQLQueries.insertUser(name,email,password,"Admin");
+		SQLQueries.insertUser(name,email,password,Constants.bigAdmin);
 		return a;
 	}
 	

@@ -4,6 +4,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.http.Cookie;
+
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.*;
 
 
@@ -11,8 +13,8 @@ public class Auth extends HttpServlet{
     private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-          String userEmail=request.getParameter("email");
-          String userPassword=request.getParameter("pass");
+          String userEmail=request.getParameter(Constants.email);
+          String userPassword=request.getParameter(Constants.pass);
           try {
           if((SQLQueries.checkEmailExists(userEmail))){
             if(SQLQueries.checkPassword(userEmail, userPassword)){
@@ -20,32 +22,32 @@ public class Auth extends HttpServlet{
                 HttpSession sessionsa=request.getSession(true);
                 String userId=SQLQueries.getUserId(userEmail);
                 String userName=SQLQueries.getUserName(userEmail);
-                sessionsa.setAttribute("id",userId);
-                sessionsa.setAttribute("name",userName);
-                sessionsa.setAttribute("email",userEmail);
-                Cookie cid=new Cookie("id",userId);
-                Cookie cname=new Cookie("name",userName);
-                Cookie cemail=new Cookie("email",userEmail);
+                sessionsa.setAttribute(Constants.id,userId);
+                sessionsa.setAttribute(Constants.smallName,userName);
+                sessionsa.setAttribute(Constants.email,userEmail);
+                Cookie cid=new Cookie(Constants.id,userId);
+                Cookie cname=new Cookie(Constants.smallName,userName);
+                Cookie cemail=new Cookie(Constants.email,userEmail);
                 response.addCookie(cid);
                 response.addCookie(cname);
                 response.addCookie(cemail);
                 String userRole=SQLQueries.getUserType(userEmail);
-                if(("Customer").equals(userRole)){
-                	response.sendRedirect("/com.tomcat_hello_world/account");
+                if((Constants.bigCustomer).equals(userRole)){
+                	response.sendRedirect(Constants.accountURL);
                 }
-                else if(("Admin").equals(userRole)){
-                	response.sendRedirect("/com.tomcat_hello_world/admin");
+                else if((Constants.bigAdmin).equals(userRole)){
+                	response.sendRedirect(Constants.adminURL);
                 }
-                else if(("Driver").equals(userRole)){
-                	response.sendRedirect("/com.tomcat_hello_world/partner");
+                else if((Constants.bigDriver).equals(userRole)){
+                	response.sendRedirect(Constants.driverURL);
                 }
            }
            else{
-            response.sendRedirect("/com.tomcat_hello_world/?error=1");
+            response.sendRedirect(Constants.indexErrorURL);
            }
           }
           else{
-            response.sendRedirect("/com.tomcat_hello_world/?error=1");
+            response.sendRedirect(Constants.indexErrorURL);
           }
           }
           catch(Exception e) {

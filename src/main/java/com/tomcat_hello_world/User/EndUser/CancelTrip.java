@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.User.Trip;
 import java.math.BigDecimal;
@@ -18,21 +19,21 @@ public class CancelTrip extends HttpServlet{
 
 public void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
 	HttpSession sessionsa = request.getSession(false);
-	BigDecimal fare=new BigDecimal("100");
+	BigDecimal fare=new BigDecimal(Constants.penalty);
 	int id=0;
 	Trip t=null;
 	try {
 	id=SQLQueries.getLastTripId();
 	t=SQLQueries.getTrip(id);
-	SQLQueries.changeTripStatus(id,"Cancelled");
-	SQLQueries.changeCabStatus(t.getCabId(),"Available");
+	SQLQueries.changeTripStatus(id,Constants.tripStatus3);
+	SQLQueries.changeCabStatus(t.getCabId(),Constants.cabStatus1);
 	SQLQueries.changeTripTimeEnded(id);
 	BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(fare);
 	SQLQueries.changeCabWallet(t.getCabId(),newWallet);
-	SQLQueries.changeCabLoc(t.getCabId(),SQLQueries.getLocId((String)sessionsa.getAttribute("src")));
-	sessionsa.setAttribute("trip", t);
-	sessionsa.setAttribute("fare", fare);
-	request.getRequestDispatcher("TripCancelled.jsp").forward(request, response);
+	SQLQueries.changeCabLoc(t.getCabId(),SQLQueries.getLocId((String)sessionsa.getAttribute(Constants.src)));
+	sessionsa.setAttribute(Constants.trip, t);
+	sessionsa.setAttribute(Constants.fare, fare);
+	request.getRequestDispatcher(Constants.tripCancelled).forward(request, response);
 	}
 	catch(Exception e) {
 		e.printStackTrace();

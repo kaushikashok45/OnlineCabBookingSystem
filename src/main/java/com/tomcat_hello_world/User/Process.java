@@ -5,6 +5,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.regex.*;
+
+import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.*;
 
 
@@ -13,13 +15,11 @@ public class Process extends HttpServlet{
     private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
-        String name=request.getParameter("name");
-        String email=request.getParameter("email");
-        String pwd=request.getParameter("pass");
+        String name=request.getParameter(Constants.smallName);
+        String email=request.getParameter(Constants.email);
+        String pwd=request.getParameter(Constants.pass);
         boolean isPasswordValid=true;
-        String regex = "^(?=.*[0-9])"
-        + "(?=.*[a-z])(?=.*[A-Z])"
-        + "(?=\\S+$).{8,15}$";
+        String regex = Constants.passwordRegex;
         if (pwd == null) {
             isPasswordValid=false;
         }
@@ -33,24 +33,24 @@ public class Process extends HttpServlet{
         catch(Exception e) {
         	e.printStackTrace();
         }
-        if((!doesEmailExist)&&(pwdmatch)&&(isPasswordValid)&&(name!=null)&&(!(name.equals("")))&&(!name.equals(" "))){
+        if((!doesEmailExist)&&(pwdmatch)&&(isPasswordValid)&&(name!=null)&&(!(name.equals(Constants.emptyString)))&&(!name.equals(Constants.emptySpaceString))){
           boolean insertedUser=false;
           try {
-        	  insertedUser=SQLQueries.insertUser(name,email,pwd,"Customer");
+        	  insertedUser=SQLQueries.insertUser(name,email,pwd,Constants.bigCustomer);
           }
           catch(Exception e) {
         	  e.printStackTrace();
           }
           if(insertedUser){
-            response.sendRedirect("/com.tomcat_hello_world/?success=1");
+            response.sendRedirect(Constants.indexSuccessURL);
           }
           else{
-            response.sendRedirect("/com.tomcat_hello_world/?regError=1");
+            response.sendRedirect(Constants.indexRegErrorURL);
           }
        
         }
         else{
-            response.sendRedirect("/com.tomcat_hello_world/?regError=1");
+            response.sendRedirect(Constants.indexRegErrorURL);
         }
     }    
 }
