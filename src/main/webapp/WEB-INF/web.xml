@@ -89,6 +89,14 @@
      <servlet-name>FetchLocations</servlet-name>  
      <url-pattern>/fetchLocations/*</url-pattern>  
     </servlet-mapping>  
+     <servlet>  
+      <servlet-name>GetTrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.User.EndUser.GetTrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>GetTrips</servlet-name>  
+     <url-pattern>/GetTrips/*</url-pattern>  
+    </servlet-mapping>  
     <servlet>  
       <servlet-name>BookCab</servlet-name>  
       <servlet-class>com.tomcat_hello_world.User.EndUser.BookCab</servlet-class>  
@@ -121,6 +129,22 @@
      <servlet-name>CancelTrip</servlet-name>  
      <url-pattern>/CancelTrip/*</url-pattern>  
     </servlet-mapping> 
+      <servlet>
+      <servlet-name>UpdateProfile</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.User.EndUser.Updateprofile</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>UpdateProfile</servlet-name>  
+     <url-pattern>/updateProfile/*</url-pattern>  
+    </servlet-mapping> 
+    <filter>
+      <filter-name>ProfileFilter</filter-name>
+      <filter-class>com.tomcat_hello_world.Security.ProfileFilter</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>ProfileFilter</filter-name>
+      <url-pattern>/updateProfile</url-pattern>
+    </filter-mapping>  
     <error-page>
      <error-code>404</error-code>
      <location>/Error404.jsp</location>

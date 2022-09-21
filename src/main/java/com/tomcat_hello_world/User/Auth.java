@@ -20,12 +20,12 @@ public class Auth extends HttpServlet{
             if(SQLQueries.checkPassword(userEmail, userPassword)){
 
                 HttpSession sessionsa=request.getSession(true);
-                String userId=SQLQueries.getUserId(userEmail);
+                int userId=Integer.parseInt(SQLQueries.getUserId(userEmail));
                 String userName=SQLQueries.getUserName(userEmail);
                 sessionsa.setAttribute(Constants.id,userId);
                 sessionsa.setAttribute(Constants.smallName,userName);
                 sessionsa.setAttribute(Constants.email,userEmail);
-                Cookie cid=new Cookie(Constants.id,userId);
+                Cookie cid=new Cookie(Constants.id,String.valueOf(userId));
                 Cookie cname=new Cookie(Constants.smallName,userName);
                 Cookie cemail=new Cookie(Constants.email,userEmail);
                 response.addCookie(cid);

@@ -1,12 +1,16 @@
 package com.tomcat_hello_world.User;
 
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import com.tomcat_hello_world.Security.Constants;
+
 public class Trip{
-    private int id,uid,cabid,pointsid,src,dest;
-    String otp,status;
+    private int id,uid,cabid,pointsid;
+    String otp,status,src,dest,cabType;
     Timestamp timeCreated,timeEnded;
+    BigDecimal fare,distance;
     
     public Trip(){}
     
@@ -22,17 +26,20 @@ public class Trip{
 
     }
     
-    public Trip(int id,int uid,int cabid,int pointsid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded,int src,int dest){
-    	setId(id);
-    	setCabId(cabid);
-    	setUid(uid);
-    	setPointsId(pointsid);
-    	setOtp(otp);
-    	setStatus(status);
-    	setTimeCreated(timeCreated);
-    	setTimeEnded(timeEnded);
-    	setSrc(src);
-    	setDest(dest);
+    public Trip(int id,int uid,int cabid,int pointsid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded,String src,String dest,String cabType,BigDecimal distance){
+    	this.setId(id);
+    	this.setCabId(cabid);
+    	this.setUid(uid);
+    	this.setPointsId(pointsid);
+    	this.setOtp(otp);
+    	this.setStatus(status);
+    	this.setTimeCreated(timeCreated);
+    	this.setTimeEnded(timeEnded);
+    	this.setSrc(src);
+    	this.setDest(dest);
+    	this.setDistance(distance);
+    	this.setCabType(cabType);
+    	this.setFare(cabType, distance);
     }
     
     public void setId(int id) {
@@ -59,6 +66,31 @@ public class Trip{
     	this.otp=otp;
     }
     
+    public void setCabType(String cabType) {
+    	this.cabType=cabType;
+    }
+    
+    public void setDistance(BigDecimal dist) {
+    	this.distance=dist;
+    }
+    
+    public void setFare(String cabType,BigDecimal dist){
+    	BigDecimal fare=null;
+    	if(cabType.equals(Constants.car1)) {
+    		fare=dist.multiply(new BigDecimal(20));
+    	}
+    	else if(cabType.equals(Constants.car2)) {
+    		fare=dist.multiply(new BigDecimal(30));
+    	}
+    	else if(cabType.equals(Constants.car3)) {
+    		fare=dist.multiply(new BigDecimal(50));
+    	}
+    	if(status.equals("Cancelled")) {
+    		fare=new BigDecimal("100");
+    	}
+    	this.fare=fare;
+    }
+    
     public void setTimeCreated(Timestamp timeCreated) {
     	this.timeCreated=timeCreated;
     }
@@ -67,12 +99,12 @@ public class Trip{
     	this.timeEnded=timeEnded;
     }
     
-    public void setSrc(int src) {
+    public void setSrc(String src) {
     	this.src=src;
     }
     
-    public void setDest(int dest) {
-    	this.cabid=dest;
+    public void setDest(String dest) {
+    	this.dest=dest;
     }
     
     public int getId() {
@@ -107,11 +139,23 @@ public class Trip{
     	return this.timeEnded;
     }
     
-    public int getSrc() {
+    public String getSrc() {
     	return this.src;
     }
     
-    public int getDest() {
+    public String getDest() {
     	return this.dest;
+    }
+    
+    public String getCabType() {
+    	return this.cabType;
+    }
+    
+    public BigDecimal getDistance() {
+    	return this.distance;
+    }
+    
+    public BigDecimal getFare() {
+    	return this.fare;
     }
 }

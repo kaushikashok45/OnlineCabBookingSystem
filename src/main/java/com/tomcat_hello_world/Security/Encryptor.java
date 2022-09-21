@@ -4,9 +4,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
 
 public class Encryptor {
-    protected static String encrypt(String pwd){
+    public static String encrypt(String pwd) throws NoSuchAlgorithmException,NullPointerException{
         String encryptedPwd=null;
-        try{
             MessageDigest m=MessageDigest.getInstance(Constants.md5);
             m.update(pwd.getBytes());
             byte[] bytes=m.digest();
@@ -16,10 +15,6 @@ public class Encryptor {
                 s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
             }  
             encryptedPwd=s.toString();
-        }
-        catch(NoSuchAlgorithmException e){
-           e.printStackTrace();
-        }
         return encryptedPwd;
     }
 }

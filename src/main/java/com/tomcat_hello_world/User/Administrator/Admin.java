@@ -1,6 +1,7 @@
 package com.tomcat_hello_world.User.Administrator;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ public class Admin extends HttpServlet{
 	      request.getRequestDispatcher(Constants.adminJSP).forward(request, response);
 	}
 	
-	public Admin addAdmin(String name,String email,String password) throws SQLException,ClassNotFoundException,NullPointerException{
+	public Admin addAdmin(String name,String email,String password) throws SQLException,ClassNotFoundException,NullPointerException, NoSuchAlgorithmException{
 		Admin a=new Admin();
 		a.setEmail(email);
 		a.setName(name);

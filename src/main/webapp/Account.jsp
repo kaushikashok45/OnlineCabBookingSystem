@@ -14,7 +14,11 @@ response.setDateHeader ("Expires", 0);
 HttpSession a=request.getSession(false);
 String email=(String)a.getAttribute("email");
 String name=(String)(request.getSession().getAttribute("name"));
-
+int id=(int)(a.getAttribute("id"));
+HttpSession b=request.getSession(true);
+b.setAttribute("name",name);
+b.setAttribute("email",email);
+b.setAttribute("id",id);
 %>
 <!DOCTYPE html>
   <html>
@@ -26,16 +30,72 @@ String name=(String)(request.getSession().getAttribute("name"));
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
     </head>
     <body>
     <div id="accountbox">
-    <h1>Ashok Cabs</h1>
+    
     <div id="link">
-      <form action="logout" method="POST">
-        <div id="email" data-email="<%=email %>"></div>
-        <button id="logout" type="submit">Log out!</button>
-      </form>
+      
     </div>
+  </div>
+  <div id="navbar">
+    <aside class="side-bar-wrap">
+  <nav class="side-bar">
+    <div class="logo-area">  
+      <h1 class="min" id="logo">Ashok Cabs</h1>
+     
+    </div>
+    <ul>
+      <li class="active">
+        <a href="/com.tomcat_hello_world/account">
+           <span class="icon">
+             <img class="filter-white sizer" src="./resources/images/home.svg">
+            </span>
+          <span class="title">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="./Profile.jsp">
+           <span class="icon">
+             <img class="filter-white sizer" src="./resources/images/profile.svg">
+            </span>
+          <span class="title">Profile</span>
+        </a>
+      </li>
+      <li>
+        <a href="About.jsp">
+          <span class="icon">
+             <img class="filter-white sizer" src="./resources/images/about.svg">
+            </span>
+          <span class="title">About Us</span>
+        </a>
+      </li>
+      <li>
+        <a href="Pricing.jsp">
+          <span class="icon">
+             <img class="filter-white sizer" src="./resources/images/pricing.svg">
+            </span>
+          <span class="title">Pricing</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="icon">
+             <img class="filter-white sizer" src="./resources/images/logout.svg">
+            </span>
+          <span class="title"><form action="logout" method="POST">
+        <div id="email" data-email="<%=email %>"></div>
+        <div id="logoutWrapper">
+           <button  id="logout2" type="submit">Log out!</button>
+        </div>
+      </form></span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
   </div>
   <div id="formbox">
         <form id="bookingForm" action="BookCab" method="POST">
