@@ -32,7 +32,7 @@ public class Updateprofile extends HttpServlet{
         String query="Update Users SET Name=?,Password=? WHERE id=?";
         try {
         if((newName==null)||(newName.trim().isEmpty())||(newName.equals(oldName))) {
-        	if((newPassword==null)||(pwdmatch)) {
+        	if((newPassword==null)||(!pwdmatch)) {
         		query=null;
         	}
         	else {

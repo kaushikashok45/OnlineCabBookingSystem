@@ -1,6 +1,8 @@
 package com.tomcat_hello_world.User;
 
 import java.io.*;
+import java.net.URLEncoder;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.http.Cookie;
@@ -26,7 +28,8 @@ public class Auth extends HttpServlet{
                 sessionsa.setAttribute(Constants.smallName,userName);
                 sessionsa.setAttribute(Constants.email,userEmail);
                 Cookie cid=new Cookie(Constants.id,String.valueOf(userId));
-                Cookie cname=new Cookie(Constants.smallName,userName);
+                String name=URLEncoder.encode(userName, "UTF-8");
+                Cookie cname=new Cookie(Constants.smallName,name);
                 Cookie cemail=new Cookie(Constants.email,userEmail);
                 response.addCookie(cid);
                 response.addCookie(cname);

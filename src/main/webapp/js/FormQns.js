@@ -39,20 +39,20 @@ function goBack(){
 	}
 }
 
-function report(dest){
+function report(src){
 	 $.get('fetchLocations',{
             email:"Requesting available destinations.."
         },function(responseText){
             if(responseText!=null){
-                var src=document.getElementById("src");
+                var dest=document.getElementById("dest");
                 var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
                 const locs=responseText.split(",");
                 for(var i=0;i<locs.length;i++){
-	              if(locs[i]!=dest){
+	              if(locs[i]!=src){
 		              options=options+"<option id=\""+"option"+i+"\" class=\"options\" value=\""+locs[i]+"\">"+locs[i]+"</option>"
 	               }
                 }
-                src.innerHTML=options;
+                dest.innerHTML=options;
                 
             }
         });

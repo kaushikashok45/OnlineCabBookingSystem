@@ -4,7 +4,7 @@ window.onload=function(){
             email:"Requesting available destinations.."
         },function(responseText){
             if(responseText!=null){
-                var dest=document.getElementById("dest");
+                var dest=document.getElementById("src");
                 var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your destination</option>";
                 const locs=responseText.split(",");
                 for(var i=0;i<locs.length;i++){

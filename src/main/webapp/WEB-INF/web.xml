@@ -129,6 +129,14 @@
      <servlet-name>CancelTrip</servlet-name>  
      <url-pattern>/CancelTrip/*</url-pattern>  
     </servlet-mapping> 
+     <servlet>
+      <servlet-name>AdminDashboardDetails</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.User.Administrator.AdminDashboardDetails</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>AdminDashboardDetails</servlet-name>  
+     <url-pattern>/AdminDashboardDetails/*</url-pattern>  
+    </servlet-mapping> 
       <servlet>
       <servlet-name>UpdateProfile</servlet-name>  
       <servlet-class>com.tomcat_hello_world.User.EndUser.Updateprofile</servlet-class>  

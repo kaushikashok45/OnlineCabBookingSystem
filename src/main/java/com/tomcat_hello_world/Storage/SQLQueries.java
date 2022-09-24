@@ -12,6 +12,7 @@ import com.tomcat_hello_world.User.Driver.*;
 import com.tomcat_hello_world.User.Trip;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class SQLQueries{
 
@@ -447,7 +448,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	return dist;
     }
     
-    public static boolean insertTrip(int uid,int cabid,int pointsid,String otp,String status,int time) throws SQLException,ClassNotFoundException,NullPointerException{
+    public static boolean insertTrip(int uid,int cabid,int src,int dest,String otp,String status,int time) throws SQLException,ClassNotFoundException,NullPointerException{
     	boolean insertedTrip=false;
     	
     		int OTP=Integer.parseInt(otp);
@@ -455,12 +456,13 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             PreparedStatement ps=con.prepareStatement(Constants.insertTrip);
             ps.setInt(1,uid);
             ps.setInt(2, cabid);
-            ps.setInt(3, pointsid);
-            ps.setInt(4,OTP);
-            ps.setString(5,status);
+            ps.setInt(3, src);
+            ps.setInt(4, dest);
+            ps.setInt(5,OTP);
+            ps.setString(6,status);
             Date date = new Date();
             Timestamp timestamp2 = new Timestamp(date.getTime());
-            ps.setTimestamp(6,new Timestamp(timestamp2.getTime()+(TimeUnit.MINUTES.toMillis(time))));
+            ps.setTimestamp(7,new Timestamp(timestamp2.getTime()+(TimeUnit.MINUTES.toMillis(time))));
             ps.executeUpdate();
             con.close();
             insertedTrip=true;
@@ -512,12 +514,13 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
           if(rs.next()){
             int uid=rs.getInt(Constants.uid);
             int cabid=rs.getInt(Constants.cabid);
-            int pointsid=rs.getInt(Constants.pointsid);
+            int src=rs.getInt(Constants.src);
+            int dest=rs.getInt(Constants.dest);
             String otp=String.valueOf(rs.getInt(Constants.otp));
             String status=rs.getString(Constants.status);
             Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
             Timestamp timeEnded=rs.getTimestamp(Constants.timeEnded); 
-            trip=new Trip(id,uid,cabid,pointsid,otp,status,timeCreated,timeEnded);
+            trip=new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,getLocName(src),getLocName(dest));
           }
       
        return trip;
@@ -534,7 +537,6 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
           while(rs.next()){
             int id=rs.getInt(Constants.id);
             int cabid=rs.getInt(Constants.cabid);
-            int pointsid=rs.getInt(Constants.pointsid);
             String otp=String.valueOf(rs.getInt(Constants.otp));
             String status=rs.getString(Constants.status);
             Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
@@ -543,7 +545,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             String dest=SQLQueries.getLocName(rs.getInt(Constants.dest));
             String cabType=rs.getString("Type");
             BigDecimal distance=rs.getBigDecimal("distance");
-            trip.add(new Trip(id,uid,cabid,pointsid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance));
+            trip.add(new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance));
           }
       
        return trip;
@@ -610,6 +612,54 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
         ps.executeUpdate();
         isUpdated=true;
     	return isUpdated;
+    }
+    
+    public static HashMap<String,HashMap<String,Integer>> getCabsStats()  throws SQLException,ClassNotFoundException,NullPointerException{
+    	HashMap<String,HashMap<String,Integer>> cabStats=new HashMap<String,HashMap<String,Integer>>();
+    	Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement(Constants.getCabCounts);
+        ResultSet rs=ps.executeQuery();
+        int count;
+        String loc,type;
+        HashMap<String,Integer> typeCount=new HashMap<String,Integer>();
+        if(rs.next()) {
+        	count=rs.getInt("count");
+        	loc=getLocName(rs.getInt("locid"));
+        	type=rs.getString("Type");
+        	typeCount.put(type,count);
+        	if(cabStats.containsKey(loc)) {
+        		(cabStats.get(loc)).put(type,Integer.valueOf(count));
+        	}
+        	else {
+        		HashMap<String,Integer> temp=new HashMap<String,Integer>();
+        		temp.put(type,count);
+        		cabStats.put(loc,temp);
+        	}
+        }
+        
+    	return cabStats;
+    }
+    
+    public static HashMap<String,HashMap<String,Integer>> getAdminDashboardDetails() throws SQLException,ClassNotFoundException,NullPointerException{
+    	HashMap<String,HashMap<String,Integer>> dashboardDetails=new HashMap<String,HashMap<String,Integer>>();
+    	Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement(Constants.getTripCounts);
+        ResultSet rs=ps.executeQuery();
+        HashMap<String,Integer> totalTrips=new HashMap<String,Integer>();
+        HashMap<String,Integer> completedTrips=new HashMap<String,Integer>();
+        HashMap<String,Integer> cancelledTrips=new HashMap<String,Integer>();
+        if(rs.next()) {
+        	totalTrips.put("totalTrips", rs.getInt("total"));
+        	completedTrips.put("completedTrips",rs.getInt("completedTrip"));
+        	cancelledTrips.put("cancelledTrips",rs.getInt("cancelledTrip"));
+        	
+        }
+        dashboardDetails.put("totalTrips",totalTrips);
+        dashboardDetails.put("completedTrips",completedTrips);
+        dashboardDetails.put("cancelledTrips",cancelledTrips);
+        HashMap<String,HashMap<String,Integer>> cabDetails=getCabsStats();
+        dashboardDetails.putAll(cabDetails);
+    	return dashboardDetails;
     }
 }
 

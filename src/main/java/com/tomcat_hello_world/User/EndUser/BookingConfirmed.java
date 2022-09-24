@@ -53,7 +53,7 @@ public class BookingConfirmed extends HttpServlet{
 		     boolean insertedTrip=false;
 		     if(email!=null) {
 		    	 try {
-		    	  insertedTrip=SQLQueries.insertTrip(Integer.parseInt(uid),c.getId(),SQLQueries.getPointsId(src, dest),numbers,Constants.tripStatus1,time);
+		    	  insertedTrip=SQLQueries.insertTrip(Integer.parseInt(uid),c.getId(),SQLQueries.getLocId(src), SQLQueries.getLocId(dest),numbers,Constants.tripStatus1,time);
 		    	  SQLQueries.changeCabStatus(c.getId(),Constants.cabStatus2);
 		    	 }
 		    	 catch(Exception e) {

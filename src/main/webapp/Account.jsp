@@ -100,11 +100,11 @@ b.setAttribute("id",id);
   <div id="formbox">
         <form id="bookingForm" action="BookCab" method="POST">
          <div class="group">
-           <h2 id="qn">Where do you want to go,<span id="name"><%= name%></span>?</h2>
+          <h2 id="qn">What's your current<span id="name"> location</span>?</h2>
            <br>
            <span id="input"> 
-                          <select name="dest" class="field" id="dest" onchange="report(this.value)">
-                            <option id="placeholder" value="" disabled selected>Select your destination</option>
+                          <select name="src" class="field" id="src" onchange="report(this.value)">
+                            <option id="placeholder" value="" disabled selected>Select your location</option>
 						  </select> 
 		   </span>
            <br>
@@ -115,11 +115,11 @@ b.setAttribute("id",id);
            <div id="backbtn">
              <button class="back">&#8592; Back</button>
            </div>
-           <h2 id="qn">What's your current<span id="name"> location</span>?</h2>
+            <h2 id="qn">Where do you want to go,<span id="name"><%= name%></span>?</h2>
            <br>
            <span id="input"> 
-                          <select name="src" class="field" id="src">
-                            <option id="placeholder" value="" disabled selected>Select your location</option>
+                          <select name="dest" class="field" id="dest" >
+                            <option id="placeholder" value="" disabled selected>Select your destination</option>
 						  </select> 
 		   </span>
            <br>

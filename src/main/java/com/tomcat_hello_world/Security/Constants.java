@@ -85,11 +85,13 @@ public class Constants {
     public static final String getDistanceId="Select id from Distance where (src=? AND dest=?) OR (src=? AND dest=?);";
     public static final String getMaxTripId="Select MAX(id)  FROM Trips;";
     public static final String getTripById="Select * from Trips where id=?";
-    public static final String getTripByUid="SELECT Trips.id,Trips.uid,Trips.cabid,Cabs.Type,Trips.pointsid,Trips.otp,Trips.Status,Trips.time_started,Trips.time_ended,Distance.src,Distance.dest,Distance.distance FROM Trips,Distance,Cabs WHERE (Trips.pointsid=Distance.id AND Trips.uid=?) AND (Trips.cabid=Cabs.id);";
+    public static final String getTripByUid="SELECT Trips.id,Trips.uid,Trips.cabid,Cabs.Type,Trips.src,Trips.dest,Trips.otp,Trips.Status,Trips.time_started,Trips.time_ended,Distance.distance FROM Trips,Distance,Cabs WHERE (((Trips.src=Distance.src AND  Trips.dest=Distance.dest) OR (Trips.dest=Distance.src AND Trips.src=Distance.dest)) AND Trips.uid=?) AND (Trips.cabid=Cabs.id);";
     public static final String getUserDetails="Select Name,Email FROM Users where id=?";
+    public static final String getTripCounts="SELECT COUNT(*) AS total,sum(case when Trips.Status='Completed' then 1 else 0 end) AS completedTrip,sum(case when Trips.Status='Cancelled' then 1 else 0 end) AS cancelledTrip FROM Trips;";
+    public static final String getCabCounts="SELECT Count(*) AS count,Type as type,locid FROM Cabs GROUP BY Type,locid;";
     public static final String insertUser="insert into Users(Name,Email,Password,Role) VALUES(?,?,?,?)";
     public static final String insertLoc="insert into Location(Point) VALUES(?)";
-    public static final String insertTrip="insert into Trips(uid,cabid,pointsid,otp,Status,time_ended) VALUES(?,?,?,?,?,?)";
+    public static final String insertTrip="insert into Trips(uid,cabid,src,dest,otp,Status,time_ended) VALUES(?,?,?,?,?,?,?)";
     public static final String insertDistance="insert into Distance(src,dest,distance) VALUES(?,?,?)";
     public static final String updateUsersName="Update Users set Name=? where Email=?";
     public static final String updateUsersEmail="Update Users set Email=? where Email=?";

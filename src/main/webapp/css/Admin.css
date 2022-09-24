@@ -1,0 +1,24 @@
+.flexbox{
+	justify-content:center;
+     align-items:center;
+     flex-direction:column;
+     margin-top:13%;
+}
+
+#dashboardWrapper{
+	margin-top:16%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.headline{
+	font-family:sans-serif;
+	text-align:center;
+	color:red;
+}
+
+.caption{
+	font-family:sans-serif;
+	text-align:center;
+	color:green;
+}

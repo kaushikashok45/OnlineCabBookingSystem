@@ -14,23 +14,22 @@ public class Trip{
     
     public Trip(){}
     
-    public Trip(int id,int uid,int cabid,int pointsid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded){
+    public Trip(int id,int uid,int cabid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded,String src,String dest){
     	this.setId(id);
     	this.setCabId(cabid);
     	this.setUid(uid);
-    	this.setPointsId(pointsid);
     	this.setOtp(otp);
     	this.setStatus(status);
     	this.setTimeCreated(timeCreated);
     	this.setTimeEnded(timeEnded);
-
+        this.setSrc(src);
+        this.setDest(dest);
     }
     
-    public Trip(int id,int uid,int cabid,int pointsid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded,String src,String dest,String cabType,BigDecimal distance){
+    public Trip(int id,int uid,int cabid,String otp,String status,Timestamp timeCreated,Timestamp timeEnded,String src,String dest,String cabType,BigDecimal distance){
     	this.setId(id);
     	this.setCabId(cabid);
     	this.setUid(uid);
-    	this.setPointsId(pointsid);
     	this.setOtp(otp);
     	this.setStatus(status);
     	this.setTimeCreated(timeCreated);
