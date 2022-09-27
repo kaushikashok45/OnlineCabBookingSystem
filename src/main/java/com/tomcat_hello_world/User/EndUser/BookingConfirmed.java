@@ -1,6 +1,7 @@
 package com.tomcat_hello_world.User.EndUser;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.tomcat_hello_world.Security.Constants;
 import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.User.Driver.Cab;
@@ -18,16 +20,56 @@ import java.util.Random;
 
 public class BookingConfirmed extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-
-	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
+    private String otp;
+    private BookCab bookingDetails;
+    
+    public String getOtp() {
+    	return this.otp;
+    }
+    
+    public BookCab getBookingDetails() {
+    	return this.bookingDetails;
+    }
+    
+    
+    public void setOtp(String otp) {
+    	this.otp=otp;
+    }
+    
+    public void setBookingDetails(BookCab bookingDetails) {
+    	this.bookingDetails=bookingDetails;
+    }
+    
+    
+    public BookingConfirmed() {}
+    
+    public BookingConfirmed(String otp,BookCab bookingDetails) {
+    	this.setOtp(otp);
+    	this.setBookingDetails(bookingDetails);
+    }
+    
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException,NullPointerException{
+		      String jsonparam=request.getParameter("bookingDetails");
+		      Gson gson=new Gson();
+		      BookCab bookingDetails = gson.fromJson(jsonparam, BookCab.class);
+		      String email=request.getParameter("email");
 		      HttpSession sessionsa = request.getSession(true);
-		     Cab c=(Cab) sessionsa.getAttribute(Constants.cab); 
-		     BigDecimal fare=(BigDecimal) sessionsa.getAttribute(Constants.fare);
-		     int eta=(int) sessionsa.getAttribute(Constants.eta);
-		     BigDecimal dist=(BigDecimal) sessionsa.getAttribute(Constants.dist);
-		     double speed=(double) sessionsa.getAttribute(Constants.speed);
+		     Cab c=bookingDetails.getAssignedCab();
+		     BigDecimal fare=bookingDetails.getFare();
+		     int eta=bookingDetails.getEta();
+		     BigDecimal dist=bookingDetails.getDistance();
+		     double speed=0;
+		     if((c.getType()).equals("hatchback")){
+		    	 speed=0.8;
+		     }
+		     else if((c.getType()).equals("sedan")){
+		    	 speed=0.6;
+		     }
+		     else if((c.getType()).equals("suv")){
+		    	 speed=0.4;
+		     }	 
 		     int time=(dist.divide(new BigDecimal(speed),2, RoundingMode.HALF_UP)).intValue();
-		     String email=(String) sessionsa.getAttribute(Constants.email);
+		     
 		     String uid=null;
 		     try {
 		     uid=SQLQueries.getUserId(email);
@@ -35,8 +77,8 @@ public class BookingConfirmed extends HttpServlet{
 		     catch(Exception e) {
 		    	 e.printStackTrace();
 		     }
-		     String src=(String) sessionsa.getAttribute(Constants.src);
-		     String dest=(String) sessionsa.getAttribute(Constants.dest);
+		     String src=bookingDetails.getSrc();
+		     String dest=bookingDetails.getDest();
 		     Random rnd = new Random();
 		     int number = rnd.nextInt(999999);
 		     String numbers=String.format(Constants.otpFormat, number);
@@ -60,11 +102,20 @@ public class BookingConfirmed extends HttpServlet{
 		    		 e.printStackTrace();
 		    	 }
 		     }
+		     else {
+		    	 throw new NullPointerException();
+		     }
 		     if(insertedTrip) {
-		    	 request.getRequestDispatcher(Constants.bookingConfirm).forward(request, response);
+		    	 BookingConfirmed details=new BookingConfirmed(numbers,bookingDetails);
+		    	 String json = new Gson().toJson(details);
+		     	 PrintWriter out = response.getWriter();
+		     	 response.setContentType("application/json");
+		     	 response.setCharacterEncoding("UTF-8");
+		     	 out.print(json);
+		     	 out.flush();
 		     }
 		     else {
-		    	 request.getRequestDispatcher(Constants.account).forward(request, response);
+		    	 throw new NullPointerException();
 		     }
 	}
 }

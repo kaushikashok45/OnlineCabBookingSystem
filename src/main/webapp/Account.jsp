@@ -19,6 +19,7 @@ HttpSession b=request.getSession(true);
 b.setAttribute("name",name);
 b.setAttribute("email",email);
 b.setAttribute("id",id);
+
 %>
 <!DOCTYPE html>
   <html>
@@ -30,12 +31,17 @@ b.setAttribute("id",id);
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Profile.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/renderAccount.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/editProfile.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     </head>
     <body>
     <div id="accountbox">
-    
+     <input type="hidden" id="name" value="<%=name %>"></input> 
+      <input type="hidden" id="email" value="<%=email %>"></input>
     <div id="link">
       
     </div>
@@ -48,32 +54,32 @@ b.setAttribute("id",id);
      
     </div>
     <ul>
-      <li class="active">
-        <a href="/com.tomcat_hello_world/account">
+      <li class="active" id="home">
+        <a href="#" id="homeLink" onClick="renderHome()">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/home.svg">
             </span>
           <span class="title">Home</span>
         </a>
       </li>
-      <li>
-        <a href="./Profile.jsp">
+      <li id="profile">
+        <a href="#" onClick="renderProfile()">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/profile.svg">
             </span>
           <span class="title">Profile</span>
         </a>
       </li>
-      <li>
-        <a href="About.jsp">
+      <li id="about">
+        <a href="#" onClick="renderAbout()">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/about.svg">
             </span>
           <span class="title">About Us</span>
         </a>
       </li>
-      <li>
-        <a href="Pricing.jsp">
+      <li id="pricing">
+        <a href="#" onclick="renderPricing()">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/pricing.svg">
             </span>
@@ -98,7 +104,7 @@ b.setAttribute("id",id);
 </aside>
   </div>
   <div id="formbox">
-        <form id="bookingForm" action="BookCab" method="POST">
+        <form id="bookingForm" >
          <div class="group">
           <h2 id="qn">What's your current<span id="name"> location</span>?</h2>
            <br>

@@ -25,6 +25,7 @@ if ( email== null) {
 
 
 %>
+
 <!DOCTYPE html>
   <html>
     <head>
@@ -115,4 +116,9 @@ if ( email== null) {
         </div>
       </div>
    </body>
+   <script type="text/javascript">
+ {
+	 var name=<%=name%>;
+ }
+</script>
 </html>

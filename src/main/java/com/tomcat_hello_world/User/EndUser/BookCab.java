@@ -1,7 +1,7 @@
 package com.tomcat_hello_world.User.EndUser;
 
 import java.io.IOException;
-
+import java.io.PrintWriter;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -13,10 +13,92 @@ import java.util.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import com.google.gson.*;   
 
 public class BookCab extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
+	private String src,dest,cabType,driverName;
+	private BigDecimal fare,distance;
+	private int eta;
+	private Cab assignedCab;
+	
+	public BookCab() {}
+	
+	public String getSrc() {
+		return this.src;
+	}
+	
+	public String getDest() {
+		return this.dest;
+	}
+	
+	public String getCabType() {
+		return this.cabType;
+	}
+	
+	public String getDriverName() {
+		return this.driverName;
+	}
+	
+	public BigDecimal getFare() {
+		return this.fare;
+	}
+	
+	public BigDecimal getDistance() {
+		return this.distance;
+	}
+	
+	public int getEta() {
+		return this.eta;
+	}
+	
+	public Cab getAssignedCab() {
+		return this.assignedCab;
+	}
+	
+	public void setSrc(String src) {
+		this.src=src;
+	}
+	
+	public void setDest(String dest) {
+		this.dest=dest;
+	}
+	
+	public void setCabType(String cabType) {
+		this.cabType=cabType;
+	}
+	
+	public void setDriverName(String driverName) {
+		this.driverName=driverName;
+	}
+	
+	public void setFare(BigDecimal fare) {
+		this.fare=fare;
+	}
+	
+	public void setDistance(BigDecimal distance) {
+		this.distance=distance;
+	}
+	
+	public void setEta(int eta) {
+		this.eta=eta;
+	}
+	
+	public void setAssignedCab(Cab assignedCab) {
+		this.assignedCab=assignedCab;
+	}
+	
+	public BookCab(String src,String dest,String cabtype,String driverName,BigDecimal fare,BigDecimal distance,int eta,Cab assignedcab) {
+		this.setSrc(src);
+		this.setDest(dest);
+		this.setCabType(cabtype);
+		this.setDriverName(driverName);
+		this.setFare(fare);
+		this.setDistance(distance);
+		this.setEta(eta);
+		this.setAssignedCab(assignedcab);
+	}
 	public static String upgradeCarType(String carType) {
 		String upgradedCarType=carType;
 		if(carType.equals(Constants.car1)) {
@@ -128,7 +210,13 @@ public class BookCab extends HttpServlet{
         catch(Exception e) {
         	e.printStackTrace();
         }
-       
+        String driverName=null;
+		try {
+			driverName = SQLQueries.getUserNameById(c.getUid());
+		} catch (ClassNotFoundException | NullPointerException | SQLException e) {
+			// TODO Auto-generated catch block
+			response.sendRedirect("./Error1.jsp");
+		}
         session.setAttribute(Constants.dist,dist);
         session.setAttribute(Constants.eta,eta);
         request.setAttribute(Constants.src,src);
@@ -138,7 +226,13 @@ public class BookCab extends HttpServlet{
         session.setAttribute(Constants.dest, dest);
         String email=(String) request.getSession(false).getAttribute(Constants.email);
         session.setAttribute(Constants.email,email);
-        response.sendRedirect(Constants.reqConfirm);
+        BookCab bookingDetails=new BookCab(src,dest,c.getType(),driverName,fare,dist,eta,c);
+        String json = new Gson().toJson(bookingDetails);
+    	PrintWriter out = response.getWriter();
+    	response.setContentType("application/json");
+    	response.setCharacterEncoding("UTF-8");
+    	out.print(json);
+    	out.flush();
         
     }
 }

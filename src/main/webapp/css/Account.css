@@ -62,29 +62,22 @@
      justify-content:center;
      align-items:center;
      flex-direction:column;
-     margin-top:13%;
+     border:2px solid black;
+     border-radius:10px;
+	 width:fit-content;
+	  position:fixed;
+     top:27%;
+     left:40%;
+     width:fit-content;
+    padding:7px;
+     min-width:350px;
+    min-height:376px;
+    margin-left:auto;
+    margin-right:auto;
     
    }
    
-   @media only screen and (max-width: 1300px) {
-     #formbox{
-       margin-top:15%;
-     }
-   }
    
-   @media only screen and (max-width: 900px) {
-     #formbox{
-       margin-top:17%;
-     }
-     
-     
-   }
-   
-   @media only screen and (max-width: 700px) {
-     #formbox{
-       margin-top:39%;
-     }
-   }
    
    
    
@@ -210,7 +203,6 @@
      margin-right:auto;
      align-items: center;
      grid-column-gap: 25%;
-     border:1px solid black;
      border-radius:7px;
      width:max-content;
      margin-left:auto;
@@ -297,7 +289,6 @@
      margin-right:auto;
      align-items: center;
     /* grid-column-gap: 25%;*/
-     border:1px solid black;
      border-radius:7px;
      width:max-content;
      margin-left:auto;

@@ -135,6 +135,21 @@ public class SQLQueries{
      
        return name;
     }
+    
+    public static String getUserNameById(int id) throws SQLException,ClassNotFoundException,NullPointerException{
+        String name=null;
+         
+          Connection con=DatabaseConnection.initializeDatabase();
+          PreparedStatement ps=con.prepareStatement("Select Name AS name FROM Users WHERE id=?");
+          ps.setInt(1,id);
+          ResultSet rs=ps.executeQuery();
+          if(rs.next()){
+            name=rs.getString("name");
+          }
+          con.close();
+     
+       return name;
+    }
 
     public static String getUserId(String email) throws SQLException,ClassNotFoundException,NullPointerException {
         String id=null;

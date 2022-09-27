@@ -22,8 +22,15 @@ public class FetchLocations extends HttpServlet{
     	   e.printStackTrace();
        }
        String locationsString=Constants.emptyString;
+       String lastLoc=locations.get(locations.size() - 1);
        for(String loc:locations) {
-    	   locationsString=locationsString+loc+Constants.comma;
+    	   if((loc.equals(lastLoc))) {
+    		   locationsString=locationsString+loc;
+    	   }
+    	   else {
+    		   locationsString=locationsString+loc+Constants.comma;
+    	   }
+    	   
        }
        locationsString=locationsString.trim();
        response.setContentType(Constants.contentPlain);

@@ -1,7 +1,7 @@
 $( document ).ready(function(){
 	console.log("hi");
  var rawUser=document.getElementById("email"),usr;
- usr=rawUser.getAttribute("data-email");
+ usr=rawUser.value;
  console.log(usr);
  if(localStorage.getItem("Users")!=null){
     if(!(checkIfUserExists(usr))){

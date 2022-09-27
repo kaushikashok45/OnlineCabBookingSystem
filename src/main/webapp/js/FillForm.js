@@ -5,8 +5,10 @@ window.onload=function(){
         },function(responseText){
             if(responseText!=null){
                 var dest=document.getElementById("src");
-                var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your destination</option>";
+                var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
+                responseText=responseText.trim();
                 const locs=responseText.split(",");
+                window.localStorage.setItem("Locations", JSON.stringify(locs));
                 for(var i=0;i<locs.length;i++){
 	              options=options+"<option id=\""+"option"+i+"\" class=\"options\" value=\""+locs[i]+"\">"+locs[i]+"</option>"
                 }
@@ -16,6 +18,8 @@ window.onload=function(){
         });
       
 }
+
+
 
 
 

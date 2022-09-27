@@ -2,22 +2,45 @@
  * 
  */
  var q = 1, qMax = 0;
- $(function () {
+var bookingDetails;
+ $(document).on('click','#homeLink',function () {
          qMax = $('#bookingForm div.group').length;
          $('#bookingForm div.group').hide();
          $('#bookingForm div.group:nth-child(1)').show();
          $('#next').on('click', function (event) {
             event.preventDefault();
-            handleClick();
+            handleClick(event);
          });
          $('.back').on('click', function (event) {
             event.preventDefault();
             goBack();
          });
+         var locs=JSON.parse(localStorage.getItem("Locations"));
+         console.log(locs);
+	     var src=document.getElementById("src");
+         var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
+         for(var i=0;i<locs.length;i++){
+	      options=options+"<option id=\""+"option"+i+"\" class=\"options\" value=\""+locs[i]+"\">"+locs[i]+"</option>"
+         }
+         src.innerHTML=options;
          });
+         
+$(function () {
+         qMax = $('#bookingForm div.group').length;
+         $('#bookingForm div.group').hide();
+         $('#bookingForm div.group:nth-child(1)').show();
+         $('#next').on('click', function (event) {
+            event.preventDefault();
+            handleClick(event);
+         });
+         $('.back').on('click', function (event) {
+            event.preventDefault();
+            goBack();
+         });
+         });         
 
 
-function handleClick() {
+function handleClick(event) {
     if (q < qMax) {
         $('#bookingForm div.group:nth-child(' + q + ')').hide();
         $('#bookingForm div.group:nth-child(' + (q + 1) + ')').show();
@@ -26,8 +49,109 @@ function handleClick() {
         }
         q++;
     } else {
-        document.getElementById("bookingForm").submit(); // Add code to submit your form
+	    var src=document.getElementById("src").value;
+	    var dest=document.getElementById("dest").value;
+	    var carType=document.getElementsByName("carType")[0].value;
+        $(function() {
+	    event.preventDefault();
+        $.ajax({
+        type: "POST",
+        url: "/com.tomcat_hello_world/BookCab",
+        data: { 
+            src:src,
+            dest:dest,
+            carType:carType 
+        },
+        success: function(result) {
+	        console.log(result);
+	        bookingDetails=result;
+            var formbox=document.getElementById("formbox");
+            var bookingData=Handlebars.compile("<div id=\"cabBox\"><div id=\"header\"><h3>Cab Details</h3></div>{{#with result}}<div id=\"item1\"<h4><span id=\"qn\"> Driver Name: </span>{{driverName}}</h4></div><div id=\"item2\"><h4> <span id=\"qn\">  Type: </span>{{cabType}}</h4></div><div id=\"item3\"><h4><span id=\"qn\">  Trip Distance: </span>{{distance}} kms</h4></div><div id=\"item4\"><h4> <span id=\"qn\"> ETA: </span>{{eta}} mins</h4></div><div id=\"item5\"><h4> <span id=\"qn\"> Fare: &#8377;</span>{{fare}}</h4>{{/with}}</div><div id=\"BookBtn\"><button  id=\"submit\" onClick=\"handleSubmit()\">Confirm Booking &#8594;</button></div></div>");
+            var html=bookingData({result:result});
+            formbox.innerHTML=html;
+        },
+        error: function(result) {
+            alert('Error while finding cabs...Please try again later!');
+        }
+    });
+}); 
     }
+}
+
+function handleSubmit(){  
+	    console.log(bookingDetails);
+	    var email=document.getElementById("email").value;
+	    
+        $.ajax({
+        type: "GET",
+        url: "/com.tomcat_hello_world/BookingConfirmed",
+        contentType: "application/json",
+        data: { 
+	       bookingDetails:JSON.stringify(bookingDetails),
+	       email:email
+        },
+        success: function(result) {
+            var formbox=document.getElementById("formbox");
+            console.log(result);
+            var bookingData=Handlebars.compile("<div id=\"confirmbox\">{{#with result}}<h2 class=\"confirmation\" id=\"tick\">&#10004;</h2><h2 class=\"confirmation\">Booking Confirmed</h2><h3 class=\"details\">OTP: <span class=\"detailans\"> {{otp}} </span></h3><div id=\"btns\"><div id=\"start\"><form><input type=\"hidden\" name=\"fare\" value=\"{{bookingDetails.fare}}\"><input type=\"hidden\" name=\"dest\" value=\"{{bookingDetails.dest}}\">{{/with}}<button id=\"startbtn\" onClick=\"startTrip(event)\">START TRIP &#8594;</button></form></div><div id=\"cancel\"><form><button id=\"cancelbtn\" onClick=\"cancelTrip(event)\">&#8592; CANCEL TRIP</button></form></div></div></div>");
+            var html=bookingData({result:result});
+            formbox.innerHTML=html;
+        },
+        error: function(result) {
+            alert('Error while booking cab...Please try again later!');
+        }
+    });
+}
+
+function startTrip(e){  
+	    e.preventDefault();
+	    var email=document.getElementById("email").value;
+        $.ajax({
+        type: "GET",
+        url: "/com.tomcat_hello_world/StartTrip",
+        contentType: "application/json",
+        data: { 
+	       bookingDetails:JSON.stringify(bookingDetails),
+	       email:email
+        },
+        success: function(result) {
+            var formbox=document.getElementById("formbox");
+            console.log(result);
+            var bookingData=Handlebars.compile("<div id=\”confirmbox\”><h2 class=\"confirmation\" id=\"tick\">&#10004;</h2><h2 class=\"confirmation\">Trip Completed!</h2><h3 class=\"details\">Fare:&#8377; <span class=\"detailans\"> {{result.fare}} </span></h3><div id=\"btns\"><div id=\"start\"><a href=\"/com.tomcat_hello_world/account\"><button id=\"startbtn\">GO HOME &#8594;</button></a></div></div></div>");
+            var html=bookingData({result:result});
+            formbox.innerHTML=html;
+        },
+        error: function(result) {
+	        console.log(JSON.stringify(result));
+            alert('Error while starting trip...Please try again later!');
+        }
+    });
+}
+
+function cancelTrip(e){  
+	    e.preventDefault();
+	    console.log(bookingDetails);
+	    var email=document.getElementById("email").value;
+	    
+        $.ajax({
+        type: "GET",
+        url: "/com.tomcat_hello_world/CancelTrip",
+        contentType: "application/json",
+        data: { 
+	       bookingDetails:JSON.stringify(bookingDetails),
+	       email:email
+        },
+        success: function(result) {
+            var formbox=document.getElementById("formbox");
+            console.log(result);
+            var bookingData=Handlebars.compile("<div id=\"confirmbox\"><h2 class=\"confirmation\" id=\"cross\">&#10060;</h2><h2 class=\"cancellation\">Trip Cancelled!</h2><h3 class=\"details\">Penalty:&#8377; <span class=\"detailans\"> {{result.fare}} </span></h3><p>Amount will be automatically credited from your account.<p><div id=\"btns\"><div id=\"start\"><a href=\"/com.tomcat_hello_world/account\"><button id=\"startbtn\">GO HOME &#8594;</button></a></div></div></div>");
+            var html=bookingData({result:result});
+            formbox.innerHTML=html;
+        },
+        error: function(result) {
+            alert('Error while cancelling cab...Please try again later!');
+        }
+    });
 }
 
 function goBack(){
@@ -78,3 +202,6 @@ function selector(btn){
 	document.getElementById(car).style.backgroundColor="aliceblue";
 	
 }
+
+  
+

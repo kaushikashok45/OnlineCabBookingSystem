@@ -1,15 +1,5 @@
 
-#formbox{
-	border:1px solid black;
-	margin-left:auto;
-	margin-right:auto;
-	border-radius:7px;
-	width:fit-content;
-	border-radius:7px;
-    width:fit-content;
-    padding: 30px;
-    margin-top:5%;
-}
+
 
 #profileIcon{
   width:20%;
@@ -17,6 +7,8 @@
    border:5px solid black;
    border-radius:50%;
     padding: 15px;
+    max-width:66px;
+    max-height:66px;
 }
 
 .image{
@@ -73,6 +65,18 @@
     border-color: #0f0700;
 }
 
+#editProfileBtn{
+    background-color: green;
+    color:white;
+    cursor:pointer;
+    padding: 15px;
+    font-size: 0.6em;
+    font-weight: bold;
+    border-radius: 7px;
+    border-color: white;
+    border-color: #0f0700;
+}
+
 #tripHistory:hover{
     background-color: #018749;
     opacity: 0.9;
@@ -81,9 +85,7 @@
 
 #editProfile{
 	display:flexbox;
-	padding-left:20%;
-	padding-right:20%;
-	margin-top:0px;
+	
 }
 
 .label{
@@ -99,10 +101,9 @@
     border-top: none;
     border-radius: 1.2px;
     padding:5px;
-    width:100%;
+    width:17em;
     margin-left:auto;
-    margin-right:auto;
-    text-align:center;
+    margin-right:auto;	
     color:black;
     margin-bottom:8px;
   }
@@ -143,6 +144,8 @@ th{
 td:first-child, th:first-child {
  border-left: none;
 }
+
+
 
 @media only screen and (max-width: 900px) {
 	 .flexbox{
