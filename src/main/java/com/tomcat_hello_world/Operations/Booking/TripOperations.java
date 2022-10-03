@@ -134,8 +134,6 @@ public class TripOperations {
 		 ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
 		 ArrayList<TripOperations> filteredTrips=new ArrayList<TripOperations>();
 		 trips=SQLQueries.getTrips(uid);
-		 sortTrips(trips);
-		
 		 if(filter.equals("today")){
 			 LocalDate today = LocalDate.now( ZoneOffset.UTC );
 			 for(TripOperations tripOp:trips) {
