@@ -22,7 +22,7 @@ public class SQLQueries{
     public static boolean checkEmailExists(String email) throws SQLException,ClassNotFoundException,NullPointerException{
         boolean emailExists=false;
         Connection con=DatabaseConnection.initializeDatabase();
-        PreparedStatement ps=con.prepareStatement(Constants.getUserCountByEmail);
+        PreparedStatement ps=con.prepareStatement("Select Count(*) from Users  where Email=?");
         ps.setString(1,email);
         ResultSet rs=ps.executeQuery();
         int count=0;
@@ -582,7 +582,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
        
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement(Constants.getTripByUid);
+          PreparedStatement ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,t.src,t.dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) WHERE t.uid=? ORDER BY t.id desc;");
           ps.setInt(1, uid);
           ResultSet rs=ps.executeQuery();
           
@@ -623,7 +623,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     public static boolean startTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
    	    boolean isTripStarted=false;
     	Connection con=DatabaseConnection.initializeDatabase();
-        PreparedStatement ps=con.prepareStatement(Constants.updateTripStart); 
+        PreparedStatement ps=con.prepareStatement("UPDATE Cabs c INNER JOIN Trips t ON c.id=t.cabid set c.Status=?,c.wallet=?,c.locid=?,t.Status=? WHERE t.id=?;"); 
         ps.setString(1,Constants.cabStatus1);
         ps.setBigDecimal(2,fare);
         ps.setInt(3, locid);
@@ -639,7 +639,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	 boolean isTripcancelled=false;
     	 Timestamp ts=new Timestamp(System.currentTimeMillis());
     	 Connection con=DatabaseConnection.initializeDatabase();
-         PreparedStatement ps=con.prepareStatement(Constants.updateTrip); 
+         PreparedStatement ps=con.prepareStatement("UPDATE Cabs c INNER JOIN Trips t ON c.id=t.cabid set c.Status=?,c.wallet=?,c.locid=?,t.Status=?,t.time_ended=? WHERE t.id=?;"); 
          ps.setString(1,Constants.cabStatus1);
          ps.setBigDecimal(2,fare);
          ps.setInt(3, locid);
