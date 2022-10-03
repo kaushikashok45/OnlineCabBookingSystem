@@ -8,17 +8,16 @@ response.setHeader("Cache-Control","no-store");
 response.setHeader("Pragma","no-cache");
 response.setDateHeader ("Expires", 0);
 %> 
+<%@ page import="com.tomcat_hello_world.Operations.Authentication.UserOperations" %>
 <%
 	
 
 HttpSession a=request.getSession(false);
-String email=(String)a.getAttribute("email");
-String name=(String)(request.getSession().getAttribute("name"));
-int id=(int)(a.getAttribute("id"));
-HttpSession b=request.getSession(true);
-b.setAttribute("name",name);
-b.setAttribute("email",email);
-b.setAttribute("id",id);
+UserOperations user=(UserOperations)a.getAttribute("User");
+String name=user.getUser().getName();
+String email=user.getUser().getEmail();
+int uid=user.getUser().getId();
+
 
 %>
 <!DOCTYPE html>
@@ -42,6 +41,7 @@ b.setAttribute("id",id);
     <div id="accountbox">
      <input type="hidden" id="name" value="<%=name %>"></input> 
       <input type="hidden" id="email" value="<%=email %>"></input>
+      <input type="hidden" id="uid" value="<%=uid %>"></input>
     <div id="link">
       
     </div>
@@ -94,7 +94,7 @@ b.setAttribute("id",id);
           <span class="title"><form action="logout" method="POST">
         <div id="email" data-email="<%=email %>"></div>
         <div id="logoutWrapper">
-           <button  id="logout2" type="submit">Log out!</button>
+           <button  id="logout2" type="submit" onClick="removeItems()">Log out!</button>
         </div>
       </form></span>
         </a>

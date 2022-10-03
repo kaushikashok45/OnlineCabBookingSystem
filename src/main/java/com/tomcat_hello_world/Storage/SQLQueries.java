@@ -7,10 +7,13 @@ import java.util.concurrent.TimeUnit;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 
-import com.tomcat_hello_world.Security.*;
-import com.tomcat_hello_world.User.Driver.*;
-import com.tomcat_hello_world.User.Trip;
 
+import com.tomcat_hello_world.Entity.Cab;
+import com.tomcat_hello_world.Entity.Trip;
+import com.tomcat_hello_world.Entity.User;
+import com.tomcat_hello_world.Operations.Booking.CabOperations;
+import com.tomcat_hello_world.Operations.Booking.TripOperations;
+import com.tomcat_hello_world.Utility.*;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -63,7 +66,7 @@ public class SQLQueries{
             if(rs.next()){
                 pwd=rs.getString(Constants.password);
             }
-            if(pwd.equals(Encryptor.encrypt(password))){
+            if(pwd.equals(password)){
                 isEqual=true;
             }
       
@@ -134,6 +137,21 @@ public class SQLQueries{
           con.close();
      
        return name;
+    }
+    
+    public static User getUser(String email) throws SQLException,ClassNotFoundException,NullPointerException{
+          User user=null;
+         
+          Connection con=DatabaseConnection.initializeDatabase();
+          PreparedStatement ps=con.prepareStatement("Select * from Users WHERE email=?");
+          ps.setString(1,email);
+          ResultSet rs=ps.executeQuery();
+          if(rs.next()){
+            user=new User(rs.getInt("id"),rs.getString(Constants.name),rs.getString(Constants.bigEmail),rs.getString(Constants.password),rs.getString(Constants.role));
+          }
+          con.close();
+     
+       return user;
     }
     
     public static String getUserNameById(int id) throws SQLException,ClassNotFoundException,NullPointerException{
@@ -355,7 +373,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             	String loc= getLocName(rs.getInt(Constants.location));
             	BigDecimal wallet=rs.getBigDecimal(Constants.wallet);
             	String status=rs.getString(Constants.status);
-            	Cab c=new Cab(id,uid,type,loc,wallet,status);
+            	Cab c=new Cab(id,uid,type,loc,wallet,status,getUserNameById(uid));
             	cabs.add(c);
             }
             con.close();
@@ -381,7 +399,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             	String loc= getLocName(rs.getInt(Constants.locid));
             	BigDecimal wallet=rs.getBigDecimal(Constants.wallet);
             	String status=rs.getString(Constants.status);
-            	Cab c=new Cab(id,uid,type,loc,wallet,status);
+            	Cab c=new Cab(id,uid,type,loc,wallet,status,getUserNameById(uid));
             	cabs.add(c);
             }
             con.close();
@@ -413,6 +431,24 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
    
        
     	return locs;
+    }
+    
+    public static Cab getCabById(int cabid) throws SQLException, ClassNotFoundException {
+    	Cab c=null;
+    	Connection con=DatabaseConnection.initializeDatabase();
+    	PreparedStatement ps=con.prepareStatement("Select Cabs.uid,Cabs.Type,Cabs.locid,Cabs.wallet,Cabs.Status,Users.Name FROM Cabs,Users WHERE Cabs.id=? AND Cabs.uid=Users.id");
+    	ps.setInt(1, cabid);
+    	ResultSet rs=ps.executeQuery();
+    	if(rs.next()) {
+    		int uid=rs.getInt("uid");
+    		String type=rs.getString("Type");
+    		int locid=rs.getInt("locid");
+    		BigDecimal wallet=rs.getBigDecimal("wallet");
+    		String status=rs.getString("Status");
+    		String name=rs.getString("Name");
+    		c=new Cab(cabid,uid,type,getLocName(locid),wallet,status,name);
+    	}
+    	return c;
     }
     
     public static ArrayList<Cab> getFreeCabs(String cloc,String carType,int range) throws SQLException,ClassNotFoundException,NullPointerException{
@@ -505,11 +541,12 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	return pid;
     }
     
-    public static int getLastTripId() throws SQLException,ClassNotFoundException,NullPointerException{
+    public static int getLastTripId(int uid) throws SQLException,ClassNotFoundException,NullPointerException{
     	int id=0;
        
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement(Constants.getMaxTripId);
+          PreparedStatement ps=con.prepareStatement("SELECT MAX(id) AS id FROM Trips WHERE uid=?");
+          ps.setInt(1,uid);
           ResultSet rs=ps.executeQuery();
           if(rs.next()){
             id=rs.getInt(1);
@@ -541,8 +578,8 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
        return trip;
     }
     
-    public static ArrayList<Trip> getTrips(int uid) throws SQLException,ClassNotFoundException,NullPointerException{
-    	ArrayList<Trip> trip=new ArrayList<Trip>();
+    public static ArrayList<TripOperations> getTrips(int uid) throws SQLException,ClassNotFoundException,NullPointerException{
+    	ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
        
           Connection con=DatabaseConnection.initializeDatabase();
           PreparedStatement ps=con.prepareStatement(Constants.getTripByUid);
@@ -560,10 +597,15 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             String dest=SQLQueries.getLocName(rs.getInt(Constants.dest));
             String cabType=rs.getString("Type");
             BigDecimal distance=rs.getBigDecimal("distance");
-            trip.add(new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance));
+            Trip  trip=new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance,getUserNameById(uid));
+            CabOperations cab=new CabOperations(getCabById(cabid));
+            TripOperations temp=new TripOperations();
+            temp.setTrip(trip);
+            temp.setCab(cab);
+            trips.add(temp);
           }
       
-       return trip;
+       return trips;
     }
     
     public static void changeTripStatus(int tid,String status) throws SQLException,ClassNotFoundException,NullPointerException{
@@ -578,8 +620,9 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
         
     }
     
-    public static void startTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
-   	 Connection con=DatabaseConnection.initializeDatabase();
+    public static boolean startTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
+   	    boolean isTripStarted=false;
+    	Connection con=DatabaseConnection.initializeDatabase();
         PreparedStatement ps=con.prepareStatement(Constants.updateTripStart); 
         ps.setString(1,Constants.cabStatus1);
         ps.setBigDecimal(2,fare);
@@ -588,10 +631,12 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
         ps.setInt(5,id);
         ps.executeUpdate();
         con.close();
-    
+        isTripStarted=true;
+        return isTripStarted;
    }
     
-    public static void cancelTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
+    public static boolean cancelTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{
+    	 boolean isTripcancelled=false;
     	 Timestamp ts=new Timestamp(System.currentTimeMillis());
     	 Connection con=DatabaseConnection.initializeDatabase();
          PreparedStatement ps=con.prepareStatement(Constants.updateTrip); 
@@ -603,6 +648,8 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
          ps.setInt(6,id);
          ps.executeUpdate();
          con.close();
+         isTripcancelled=true;
+         return isTripcancelled;
      
     }
     

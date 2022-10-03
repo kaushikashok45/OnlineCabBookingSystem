@@ -8,7 +8,7 @@ response.setHeader("Cache-Control","no-store");
 response.setHeader("Pragma","no-cache");
 response.setDateHeader ("Expires", 0);
 %> 
-<%@page import="com.tomcat_hello_world.User.Driver.Cab" %>
+<%@page import="com.tomcat_hello_world.Entity.Cab" %>
 <%@page import="java.math.BigDecimal" %>
 <%@page import="javax.servlet.http.HttpSession" %>
 <%

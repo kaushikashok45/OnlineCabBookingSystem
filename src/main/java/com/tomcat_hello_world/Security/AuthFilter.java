@@ -4,6 +4,7 @@ package com.tomcat_hello_world.Security;
 import javax.servlet.*;
 import java.io.*;
 import javax.servlet.http.*;
+import com.tomcat_hello_world.Utility.*;
 
 
 public class AuthFilter implements Filter{
@@ -12,12 +13,8 @@ public class AuthFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession(false);
-        String loginURI = request.getContextPath() + Constants.authURL;
-
-        boolean loggedIn = session != null && session.getAttribute(Constants.smallName) != null;
-        boolean loginRequest = request.getRequestURI().equals(loginURI);
-
-        if (loggedIn || loginRequest) {
+        boolean loggedIn = session != null && session.getAttribute("User") != null;
+        if (loggedIn) {
             chain.doFilter(request, response);
         } else {
             response.sendRedirect(Constants.indexURL);
