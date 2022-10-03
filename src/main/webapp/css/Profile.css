@@ -9,6 +9,8 @@
     padding: 15px;
     max-width:66px;
     max-height:66px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .image{

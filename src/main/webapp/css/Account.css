@@ -416,6 +416,142 @@
   
    }
    
+ #about{
+   max-height:394px;
+   max-width:384px;
+ }
+ 
+ .trip{
+   border:1px solid black;
+   border-radius: 10px;
+   box-sizing: border-box;
+   width: fit-content;
+   min-width:80%;
+   padding: 15px;
+   margin-bottom:8px;
+   opacity: 0.8;
+   margin-left:1em;
+   margin-right: 1em;
+   whitespace:no-wrap;
+ }
+ 
+ .trip:hover{
+    background-color: aliceblue;
+    transform:scale(1.03);
+    transition-duration: 900ms;
+    cursor:pointer;
+ }
+ 
+ #down{
+   text-align:right;
+   font-size:0.7em;
+ }
+ 
+ .detail{
+  color:red;
+  font-family:sans-serif;
+  font-weight:bold;
+ }
+ 
+ #tripTable{
+   max-width:414px;
+   max-height:434px;
+    overflow-y:auto;
+  
+ }  
+ 
+ .hide{
+   display:none;
+ }
+ 
+ .show{
+   display:block;
+ }
+ 
+ #filter{
+   display:flex;
+   flex-direction:row;
+   margin-left:auto;
+   margin-right:auto;
+   margin-bottom:4px;
+   justify-content:center;
+ }
+ 
+ .filterOptions{
+   white-space:no-wrap;
+   font-family:sans-serif;
+   cursor:pointer;
+   border:1px solid black;
+   border-radius:20%;
+   padding:0 4px 0px 4px;
+   min-width:70px;
+   max-height:51px;
+   text-align:center;
+   margin-right:4px;
+ }
+
+.filterOptions:hover{
+	background-color: #90EE90;
+    transform:scale(1.03);
+    transition-duration: 900ms;
+    cursor:pointer;
+}
+
+.activeFilter,.activeFilter:hover{
+	background-color:green;
+	color:white;
+}
+
+.noTrips{
+	font-family:bold;
+	font-weight:bold;
+	text-align:center;
+	min-width:372px;
+	min-height:103px;
+}
+
+#dummyTrip{
+	min-width:372px;
+	min-height:93px;
+	background-color:gray;
+	border-radius:10px;
+	padding:15px;
+	border-color:1px solid black;
+	animation: skeleton-loading 1s linear infinite alternate;
+}
+
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 80%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
+@keyframes skeleton-text {
+  0% {
+    background-color: #A9A9A9;
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
+#dummyText {
+  width: 350px;
+  min-height:44px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:27px;
+  height: 0.7rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  border-radius: 0.25rem;
+  background-color:#A9A9A9;
+  animation: skeleton-text 1s linear infinite alternate;
+}
  
 @media only screen and (max-width: 300px) {
 	 #confirmbox{
