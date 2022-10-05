@@ -582,7 +582,7 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
     	ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
        
           Connection con=DatabaseConnection.initializeDatabase();
-          PreparedStatement ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,t.src,t.dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) WHERE t.uid=? ORDER BY t.id desc;");
+          PreparedStatement ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.uid=? ORDER BY t.id desc;");
           ps.setInt(1, uid);
           ResultSet rs=ps.executeQuery();
           
@@ -593,8 +593,8 @@ public static void changeTripTimeEnded(int cabid) throws SQLException,ClassNotFo
             String status=rs.getString(Constants.status);
             Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
             Timestamp timeEnded=rs.getTimestamp(Constants.timeEnded); 
-            String src=SQLQueries.getLocName(rs.getInt(Constants.src));
-            String dest=SQLQueries.getLocName(rs.getInt(Constants.dest));
+            String src=rs.getString(Constants.src);
+            String dest=rs.getString(Constants.dest);
             String cabType=rs.getString("Type");
             BigDecimal distance=rs.getBigDecimal("distance");
             Trip  trip=new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance,getUserNameById(uid));
