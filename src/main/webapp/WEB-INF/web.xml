@@ -67,7 +67,7 @@
     </servlet-mapping> 
      <servlet>  
       <servlet-name>Admin</servlet-name>  
-      <servlet-class>com.tomcat_hello_world.User.Administrator.Admin</servlet-class>  
+      <servlet-class>com.tomcat_hello_world.Servlets.Admin</servlet-class>  
     </servlet>  
     <servlet-mapping>  
      <servlet-name>Admin</servlet-name>  
