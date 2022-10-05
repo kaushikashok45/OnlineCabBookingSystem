@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.tomcat_hello_world.Entity.Cab;
-import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.Utility.Constants;
 
 public class CabOperations {

@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import com.tomcat_hello_world.Entity.User;
 import com.tomcat_hello_world.Utility.Encryptor;
-import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.Utility.Constants;
 
 public class UserOperations {

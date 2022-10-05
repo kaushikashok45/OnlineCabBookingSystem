@@ -12,7 +12,6 @@ import java.util.Date;
 import org.json.simple.JSONObject;
 import com.tomcat_hello_world.Entity.Cab;
 import com.tomcat_hello_world.Entity.Trip;
-import com.tomcat_hello_world.Storage.SQLQueries;
 import com.tomcat_hello_world.Utility.Constants;
 
 public class TripOperations {
