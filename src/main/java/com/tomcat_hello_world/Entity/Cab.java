@@ -125,6 +125,7 @@ public class Cab{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject toJson(int uid) {
 		JSONObject cab=new JSONObject();
 		cab.put("name",this.getDriverName());

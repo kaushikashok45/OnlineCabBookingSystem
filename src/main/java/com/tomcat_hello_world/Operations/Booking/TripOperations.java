@@ -6,12 +6,15 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Random;
-import java.util.Date;
 import org.json.simple.JSONObject;
 import com.tomcat_hello_world.Entity.Cab;
 import com.tomcat_hello_world.Entity.Trip;
+import com.tomcat_hello_world.Exceptions.CabAlreadyBookedException;
+import com.tomcat_hello_world.Exceptions.CabNotFoundException;
+import com.tomcat_hello_world.Exceptions.InvalidInputException;
+import com.tomcat_hello_world.Exceptions.NoUnderwayTripsException;
+import com.tomcat_hello_world.Exceptions.TripTimeOutException;
 import com.tomcat_hello_world.Utility.Constants;
 
 public class TripOperations {
@@ -48,23 +51,37 @@ public class TripOperations {
 	     this.getTrip().setOtp(numbers);
 	 }
 	 
-	 public boolean confirmBooking() throws ClassNotFoundException, NullPointerException, SQLException {
+	 public boolean confirmBooking() throws ClassNotFoundException, NullPointerException, SQLException, CabAlreadyBookedException {
 		 boolean bookingConfirmed=false;
 		 this.generateOtp();
 		 this.setTripDuration();
-		 bookingConfirmed=SQLQueries.insertTrip(this.getTrip().getUid(),this.getCab().getAssignedCab().getId(),SQLQueries.getLocId(this.getTrip().getSrc()), SQLQueries.getLocId(this.getTrip().getDest()),this.getTrip().getOtp(),this.getTrip().getStatus(),this.getTrip().getTripDuration());
-    	  SQLQueries.changeCabStatus(this.getCab().getAssignedCab().getId(),Constants.cabStatus2);
+		 if(this.getCab().checkCabAvailability()) {
+		   bookingConfirmed=SQLQueries.insertTrip(this.getTrip().getUid(),this.getCab().getAssignedCab().getId(),SQLQueries.getLocId(this.getTrip().getSrc()), SQLQueries.getLocId(this.getTrip().getDest()),this.getTrip().getOtp(),this.getTrip().getStatus(),this.getTrip().getTripDuration());
+    	   SQLQueries.changeCabStatus(this.getCab().getAssignedCab().getId(),Constants.cabStatus2);
+		 } 
+		 else {
+			 throw new CabAlreadyBookedException();
+		 }
 		 return bookingConfirmed;
+	 }
+	 
+	 public static TripOperations checkUserTripUnderway(int uid) throws ClassNotFoundException, SQLException, TripTimeOutException, NoUnderwayTripsException {
+		 TripOperations tripUnderway=null;
+		 Trip trip=getLastTripByUid(uid);
+		 tripUnderway=SQLQueries.getTripsByStatus(uid,Constants.tripStatus1,trip.getId(),trip.getCabId());
+		 return tripUnderway;
 	 }
 	 
 	 public boolean startTrip(int uid) throws ClassNotFoundException, NullPointerException, SQLException {
 		 boolean tripStarted=false;
-		 int id=SQLQueries.getLastTripId(uid);
-	     Trip t=SQLQueries.getTrip(id);
-	     this.getTrip().setDistance(SQLQueries.getDistance(this.getTrip().getSrc(),this.getTrip().getDest()));
-	     this.getTrip().setFare(this.getCab().getAssignedCab().getType(),this.getTrip().getDistance());
-		 BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(this.getTrip().getFare());
-		 tripStarted=SQLQueries.startTrip(newWallet, SQLQueries.getLocId(this.getTrip().getDest()), id);
+		 if(this.getCab().checkCabIsStillAvailable(this.getTrip().getId())) {
+		  int id=SQLQueries.getLastTripId(uid);
+	      Trip t=SQLQueries.getTrip(id);
+	      this.getTrip().setDistance(SQLQueries.getDistance(this.getTrip().getSrc(),this.getTrip().getDest()));
+	      this.getTrip().setFare(this.getCab().getAssignedCab().getType(),this.getTrip().getDistance());
+		  BigDecimal newWallet=(SQLQueries.getCabWallet(t.getCabId())).add(this.getTrip().getFare());
+		  tripStarted=SQLQueries.startTrip(newWallet, SQLQueries.getLocId(this.getTrip().getDest()), id);
+		 }
 		 return tripStarted;
 	 }
 	 
@@ -120,6 +137,19 @@ public class TripOperations {
 	                     o1.getTrip().getTimeCreated()));
 	      
 	   }
+	 
+	 public static boolean validateBookingInput(String src,String dest,String cabType) throws ClassNotFoundException, NullPointerException, SQLException, InvalidInputException {
+		 boolean isValidInput=false;
+		 if(SQLQueries.checkLocPairExists(src, dest)) {
+			 if((cabType.equals("hatchback"))||(cabType.equals("sedan"))||(cabType.equals("suv"))) {
+				 isValidInput=true;
+			 }
+		 }
+		 if(!isValidInput) {
+			 throw new InvalidInputException();
+		 }
+		 return isValidInput;
+	 }
 	 
 	 public static Trip getLastTripByUid(int uid) throws ClassNotFoundException, NullPointerException, SQLException {
 		 Trip trip=null;
@@ -180,6 +210,11 @@ public class TripOperations {
 		 return temp;
 	 }
 	 
+	 public static ArrayList<String> getLocations() throws ClassNotFoundException, NullPointerException, SQLException{
+		 ArrayList<String> locs=SQLQueries.getLocations();
+		 return locs;
+	 }
+	 
 	 public JSONObject toJson() {
 		 JSONObject json =new JSONObject();
 		 JSONObject trip=this.getTrip().toJson();
@@ -187,6 +222,34 @@ public class TripOperations {
 		 json.put("trip",trip);
 		 json.put("cab", cab);
 		 return json;
+	 }
+	 
+	 public JSONObject toBookingJson() {
+		 JSONObject json=new JSONObject();
+		 json.put("cabid",this.getCab().getAssignedCab().getId());
+		 json.put("src",this.getTrip().getSrc());
+		 json.put("dest", this.getTrip().getDest());
+		 json.put("driverName",this.getCab().getAssignedCab().getDriverName());
+		 json.put("cabType",this.getCab().getAssignedCab().getType());
+		 json.put("distance",this.getTrip().getDistance());
+		 json.put("eta",this.getTrip().getEta());
+		 json.put("fare",this.getTrip().getFare());
+		 return json;
+	 }
+	 
+	 public static TripOperations objectFromBookingJson(JSONObject json,int uid) throws ClassNotFoundException, NullPointerException, SQLException {
+		 TripOperations tripOp=new TripOperations();
+		 tripOp.setCab(new CabOperations(SQLQueries.getCabById(Math.toIntExact((Long)json.get("cabid")))));
+		 Trip trip=new Trip();
+		 trip.setUid(uid);
+		 trip.setSrc((String) json.get("src"));
+		 trip.setDest((String)json.get("dest"));
+		 trip.setStatus(Constants.tripStatus1);
+		 trip.setFare(new BigDecimal((Long)json.get("fare")));
+		 trip.setDistance(new BigDecimal((Long)json.get("distance")));
+		 trip.setEta(Math.toIntExact((Long)json.get("eta")));
+		 tripOp.setTrip(trip);
+		 return tripOp;
 	 }
 	 
 	 public static TripOperations toObject(JSONObject json) throws ClassNotFoundException, NullPointerException, SQLException {
@@ -231,7 +294,7 @@ public class TripOperations {
 		 return tripOp;
 	 }
 	 
-	 public TripOperations(String src,String dest,String cabType,int uid) throws ClassNotFoundException, NullPointerException, SQLException {
+	 public TripOperations(String src,String dest,String cabType,int uid) throws ClassNotFoundException, NullPointerException, SQLException, CabNotFoundException {
 		   this.setCab(new CabOperations(src,dest,cabType));
 		   BigDecimal distance=SQLQueries.getDistance(src, dest);
 		   if(this.getCab().getAssignedCab()==null) {

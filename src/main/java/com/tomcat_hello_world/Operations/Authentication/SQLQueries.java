@@ -35,7 +35,7 @@ public class SQLQueries extends DatabaseConnection{
 	        boolean isEqual=false;
 	        
 	            Connection con=DatabaseConnection.initializeDatabase();
-	            PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+	            PreparedStatement ps=con.prepareStatement("Select Password from Users  where Email=?");
 	            ps.setString(1,email);
 	            ResultSet rs=ps.executeQuery();
 	            String pwd=null;
@@ -72,7 +72,7 @@ public class SQLQueries extends DatabaseConnection{
 	        String name=null;
 	         
 	          Connection con=DatabaseConnection.initializeDatabase();
-	          PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+	          PreparedStatement ps=con.prepareStatement("Select Name from Users  where Email=?");
 	          ps.setString(1,email);
 	          ResultSet rs=ps.executeQuery();
 	          if(rs.next()){
@@ -117,7 +117,7 @@ public class SQLQueries extends DatabaseConnection{
        String id=null;
        
          Connection con=DatabaseConnection.initializeDatabase();
-         PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+         PreparedStatement ps=con.prepareStatement("Select id from Users  where Email=?");
          ps.setString(1,email);
          ResultSet rs=ps.executeQuery();
          if(rs.next()){
@@ -132,7 +132,7 @@ public class SQLQueries extends DatabaseConnection{
    	String userType=null;
    	  
            Connection con=DatabaseConnection.initializeDatabase();
-           PreparedStatement ps=con.prepareStatement("Select * from Users  where Email=?");
+           PreparedStatement ps=con.prepareStatement("Select Role from Users  where Email=?");
            ps.setString(1,email);
            ResultSet rs=ps.executeQuery();
            if(rs.next()){

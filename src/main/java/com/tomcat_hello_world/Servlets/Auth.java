@@ -22,7 +22,6 @@ public class Auth extends HttpServlet{
           try {
 			isUserAuthorized=userAuthorizer.authenticateUser(userEmail, userPassword);
 		} catch (ClassNotFoundException | NullPointerException | NoSuchAlgorithmException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
           if(isUserAuthorized){

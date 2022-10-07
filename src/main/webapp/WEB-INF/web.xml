@@ -89,6 +89,14 @@
      <servlet-name>GetTrips</servlet-name>  
      <url-pattern>/account/GetTrips/*</url-pattern>  
     </servlet-mapping>  
+     <servlet>  
+      <servlet-name>CheckUsertrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.CheckUsertrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>CheckUsertrips</servlet-name>  
+     <url-pattern>/account/CheckUsertrips/*</url-pattern>  
+    </servlet-mapping>  
     <servlet>  
       <servlet-name>BookCab</servlet-name>  
       <servlet-class>com.tomcat_hello_world.Servlets.BookCab</servlet-class>  

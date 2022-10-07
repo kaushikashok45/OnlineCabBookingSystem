@@ -4,9 +4,6 @@ import java.io.*;
 import java.sql.SQLException;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.json.simple.JSONObject;
-
 import com.google.gson.*;
 import com.tomcat_hello_world.Operations.Authentication.UserOperations;
 import com.tomcat_hello_world.Operations.Booking.TripOperations;
@@ -25,7 +22,6 @@ public void doGet(HttpServletRequest request,HttpServletResponse response) throw
 	try {
 		json = new Gson().toJson(TripOperations.getAllTrips(user.getUser().getId(),filter));
 	} catch (ClassNotFoundException | NullPointerException | SQLException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	PrintWriter out = response.getWriter();

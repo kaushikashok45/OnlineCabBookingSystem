@@ -10,6 +10,7 @@
      <title>Login </title>
      <script type="text/javascript" src="${pageContext.request.contextPath}/js/AutoFill.js"></script>
      <script src="https://code.jquery.com/jquery-1.10.2.js" type="text/javascript"></script> 
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css"> 
    </head>
    <body>

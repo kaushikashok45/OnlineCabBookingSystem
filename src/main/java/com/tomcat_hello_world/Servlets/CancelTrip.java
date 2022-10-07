@@ -31,7 +31,6 @@ public void doGet(HttpServletRequest request,HttpServletResponse response) throw
 		isTripCancelled = bookingDetails.cancelTrip(bookingDetails.getTrip().getUid());
 		jsonparam=TripOperations.getMinimalJSONObject(bookingDetails);
 	} catch (ClassNotFoundException | NullPointerException | SQLException  | ParseException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	if(isTripCancelled) {

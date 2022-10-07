@@ -3,9 +3,8 @@ package com.tomcat_hello_world.Servlets;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
+import com.tomcat_hello_world.Operations.Booking.TripOperations;
 import com.tomcat_hello_world.Utility.Constants;
-import com.tomcat_hello_world.Storage.*;
 import java.util.*;
 
 
@@ -16,7 +15,7 @@ public class FetchLocations extends HttpServlet{
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException{
        ArrayList<String> locations=new ArrayList<String>();
        try {
-    	   locations=SQLQueries.getLocations();
+    	   locations=TripOperations.getLocations();
        }
        catch(Exception e){
     	   e.printStackTrace();

@@ -55,7 +55,7 @@ int uid=user.getUser().getId();
     </div>
     <ul>
       <li class="active" id="home">
-        <a href="#" id="homeLink" onClick="renderHome()">
+        <a href="#home" id="homeLink" onClick="renderHome(event)">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/home.svg">
             </span>
@@ -63,7 +63,7 @@ int uid=user.getUser().getId();
         </a>
       </li>
       <li id="profile">
-        <a href="#" onClick="renderProfile()">
+        <a href="#profile" onClick="renderProfile()">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/profile.svg">
             </span>
@@ -71,7 +71,7 @@ int uid=user.getUser().getId();
         </a>
       </li>
       <li id="about">
-        <a href="#" onClick="renderAbout()">
+        <a href="#about" onClick="renderAbout()">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/about.svg">
             </span>
@@ -79,7 +79,7 @@ int uid=user.getUser().getId();
         </a>
       </li>
       <li id="pricing">
-        <a href="#" onclick="renderPricing()">
+        <a href="#pricing" onclick="renderPricing()">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/pricing.svg">
             </span>

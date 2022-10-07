@@ -27,7 +27,6 @@ public class StartTrip extends HttpServlet{
 			bookingDetails = TripOperations.objectFromMinimalJson(jsonparam);
 			isTripStarted = bookingDetails.startTrip(bookingDetails.getTrip().getUid());
 		} catch (ClassNotFoundException | NullPointerException | SQLException  | ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	if(isTripStarted) {
