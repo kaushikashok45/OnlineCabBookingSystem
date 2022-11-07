@@ -1,3 +1,24 @@
+body{
+    height: 100%;
+}
+
+.raised{
+    z-index:2;
+}
+#dash{
+	display:flex;
+	flex-direction:column;
+    margin-left:20%;
+    height:100vh;
+    overflow: none;
+}
+
+#dashrow1{
+	display:flex;
+	flex-direction:row;
+     padding: 0 1%;
+    height:55%;
+}
 .flexbox{
 	justify-content:center;
      align-items:center;
@@ -7,6 +28,13 @@
 
 #dashboardWrapper{
 	margin-top:16%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+#dashboardWrapper2{
+	
 	margin-left:auto;
 	margin-right:auto;
 }
@@ -21,4 +49,290 @@
 	font-family:sans-serif;
 	text-align:center;
 	color:green;
+}
+
+#formbox{
+	border:none;
+    margin: 0 1%;
+}
+
+#formbox1{
+	border: 2px solid black;
+    position: relative;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    min-width: 200px;
+    height:100%;
+    overflow-y:auto;
+    position: relative;
+    margin: 0 1%;
+}
+
+#formbox2{
+	border: 2px solid black;
+    position: relative;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    min-width: 200px;
+    height:100%;
+    overflow-y:auto;
+    position: relative;
+    margin: 0 1%;
+}
+
+#formbox3{
+	border: 2px solid black;
+    position: relative;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    min-width: 200px;
+    height:100%;
+    overflow-y:auto;
+    margin: 0 1%;
+}
+
+#formbox4{
+	border:2px solid black;
+	position: relative;
+	width: fit-content;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    min-width: 200px;
+    height:100%;
+    overflow-y:auto;
+    max-height:428px;
+    max-width:218px;
+    overflow-y:auto;
+    margin: 0 1%;
+}
+
+#total,.blackBottom{
+	border-bottom:1px solid black;
+}
+
+.statTitle{
+	font-weight:bold;
+	font-family:sans-serif;
+	text-align:center;
+	
+}
+
+#tripTitle{
+	margin-top:16%;
+}
+
+#dashrow2{
+	display:flex;
+	flex-direction:row;
+    padding: 0 1%;
+    height:45%;
+    width:fit-content;
+}
+
+#formbox5{
+	border:2px solid black;
+	position: relative;
+	width: fit-content;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    min-width: 200px;
+    height:70%;
+    width:40%;
+    overflow-y:auto;
+    max-height:428px;
+    /*max-width:218px;*/
+    overflow-y:auto;
+    margin: 3% 1%;
+}
+
+#formbox6{
+	border:2px solid black;
+	position: relative;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    height:70%;
+    width:fit-content;
+    overflow-y:auto;
+    max-height:428px;
+    /*max-width:218px;*/
+    margin: 3% 1%;
+}
+
+#userDataBox{
+	 overflow-y:auto;
+}
+
+.resultNone{
+	font-family:sans-serif;
+	font-weight:bold;
+	text-align:center;
+}
+
+#dashCabRow,#dashLocRow,#dashUserRow{
+    height:100%;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.dashCabColumn,.dashLocColumn,.dashUserColumn{
+	border:2px solid black;
+	position: relative;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    height:70%;
+    width:50%;
+    max-width:50%;
+    overflow-y:auto;
+    max-height:428px;
+    /*max-width:218px;*/
+    margin: 3% 1%;
+    flex-direction:column;
+  
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+#dashCabColumn2,#dashLocColumn2,#dashUserColumn2{
+    align-items: center;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+
+
+.cab,.loc{
+	border: 1px solid black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: fit-content;
+    min-width: 80%;
+    padding: 15px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: auto;
+ 
+}
+
+.select{ 
+     color: black;
+    
+    }
+
+.field{
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        border-radius: 1.2px;
+        padding:5px;
+        outline:none
+}
+       
+.field:focus{
+         border-left: none;
+         border-right: none;
+         border-top: none;
+         outline:none;
+         border-bottom:2px solid green;
+}   
+
+.greenBtn{
+    background-color: green;
+    color:white;
+    cursor:pointer;
+    padding: 15px;
+    font-size: 0.6em;
+    font-weight: bold;
+    border-radius: 7px;
+    border-color: white;
+    border-color: #0f0700;
+    display:table;
+    margin:0 auto;
+   }
+
+   .fullForm{
+    display:flex;
+    flex-direction: column;
+    overflow-y: auto;
+   }
+
+   .cabsSubForm,.usersSubForm{
+    border:2px solid black;
+    display: flex;
+    flex-direction: row;
+    border-radius: 7px;
+    padding: 5%;
+    margin-top:3%;
+   }
+
+   .form{
+    flex-direction: column;
+   }
+
+   .addBtn{
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    color: black;
+    padding: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    border:solid black;
+    /*min-width: 42px;
+    min-height: 51px;*/
+   }
+
+   .addBtn:hover{
+    background-color: green;
+    color:white;
+    border:solid green;
+    transition-duration: 450ms;
+   }
+   
+   .removeBtn{
+    font-weight: bold;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    color: red;
+    padding: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    height: 17px;
+    width:15px;
+    margin-left: 45px;
+    border:2px solid red;
+    text-align: center;
+   }
+
+   .removeBtn:hover{
+    background-color: red;
+    cursor: pointer;
+    color: white;
+    transition-duration: 450ms;
+   }
+
+   #submitAddCabs{
+    margin-top: 3%;
+   }
+
+@media only screen and (max-width: 800px) {
+    #dashCabRow{
+        flex-direction: column;
+    }
 }

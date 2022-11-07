@@ -3,6 +3,7 @@ package com.tomcat_hello_world.Operations.Booking;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -278,6 +279,20 @@ public class TripOperations {
 		 json.put("dest",tripOp.getTrip().getDest());
 		 json.put("timeCreated",tripOp.getTrip().getTimeCreated());
 		 json.put("timeEnded",tripOp.getTrip().getTimeEnded());
+		 json.put("driverName",tripOp.getCab().getAssignedCab().getDriverName());
+		 json.put("distance",tripOp.getTrip().getDistance());
+		 json.put("status",tripOp.getTrip().getStatus());
+		 json.put("fare",tripOp.getTrip().getFare());
+		 return json;
+	 }
+	 
+	 public static JSONObject getAdminTripHistoryJSONObject(TripOperations tripOp) {
+		 JSONObject json=new JSONObject();
+		 json.put("id",tripOp.getTrip().getId());
+		 json.put("src",tripOp.getTrip().getSrc());
+		 json.put("dest",tripOp.getTrip().getDest());
+		 json.put("timeCreated",new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(tripOp.getTrip().getTimeCreated()));
+		 json.put("timeEnded",new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(tripOp.getTrip().getTimeEnded()));
 		 json.put("driverName",tripOp.getCab().getAssignedCab().getDriverName());
 		 json.put("distance",tripOp.getTrip().getDistance());
 		 json.put("status",tripOp.getTrip().getStatus());

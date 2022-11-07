@@ -69,7 +69,7 @@ public class SQLQueries extends DatabaseConnection{
         ps.setInt(1,locid);
         ps.setInt(2,cabid);
         ps.executeUpdate();
-        
+        con.close();
     
     }
 
@@ -564,6 +564,33 @@ public class SQLQueries extends DatabaseConnection{
         }
         con.close();
     	return tripOp;
+    }
+
+    protected static boolean checkDriverExists(String email) throws SQLException, ClassNotFoundException{
+        boolean doesDriverExist=true;
+        Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement("SELECT COUNT(c.id) AS driverCount FROM Cabs c INNER JOIN Users u ON c.uid=u.id WHERE u.email='"+email+"';");
+        ResultSet rs=ps.executeQuery();
+        System.out.println(rs.getStatement().toString());
+        if(rs.next()){
+            int count=rs.getInt("driverCount");
+            System.out.println(email);
+            System.out.println(count);
+            if(count==0){
+                doesDriverExist=false;
+            }
+        }
+        con.close();
+        return doesDriverExist;
+    }
+
+    protected static boolean executeStringQuery(String query) throws ClassNotFoundException, SQLException{
+        boolean queryExecuted=false;
+        Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement(query);
+        ps.executeUpdate();
+        queryExecuted=true;
+        return queryExecuted;
     }
     
     protected static boolean startTrip(BigDecimal fare,int locid,int id) throws SQLException,ClassNotFoundException,NullPointerException{

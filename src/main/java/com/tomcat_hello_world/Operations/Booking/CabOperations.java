@@ -2,6 +2,10 @@ package com.tomcat_hello_world.Operations.Booking;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.tomcat_hello_world.Entity.Cab;
 import com.tomcat_hello_world.Exceptions.CabNotFoundException;
@@ -113,6 +117,29 @@ public class CabOperations {
 			throw new CabNotFoundException();
 		}
 		return c;
+	}
+
+	public static boolean checkDriverAlreadyExists(String email) throws ClassNotFoundException, SQLException{
+		boolean doesDriverExist=true;
+		doesDriverExist=SQLQueries.checkDriverExists(email);
+		return doesDriverExist;
+	}
+
+	public static boolean addCabs(JSONArray cabsToBeAdded,HashMap<String,Integer> driverids) throws ClassNotFoundException, SQLException{
+		boolean cabsAdded=false;
+		String query="Insert Into Cabs(uid,Type,locid,wallet,Status) Values";
+		ArrayList<String> queryValues=new ArrayList<String>();
+		for(int i=0;i<cabsToBeAdded.size();i++) {
+			JSONObject keyvalue = (JSONObject)cabsToBeAdded.get(i);
+            queryValues.add("("+driverids.get(keyvalue.get("email"))+",'"+keyvalue.get("cabType")+"',"+keyvalue.get("cabLoc")+",0,'Available'"+"),");
+		}
+		for(String queryValue:queryValues){
+			query=query+queryValue;
+		} 
+		query= query.replaceAll(",$", "");
+		System.out.println(query);
+		cabsAdded=SQLQueries.executeStringQuery(query);
+		return cabsAdded;
 	}
 	
 	

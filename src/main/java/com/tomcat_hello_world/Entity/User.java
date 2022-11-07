@@ -21,6 +21,13 @@ public class User{
 		this.setId(id);
 	}
 	
+	public User(int id,String name,String email,String role){
+		this.setEmail(email);
+		this.setName(name);
+		this.setRole(role);
+		this.setId(id);
+	}
+	
 	public int getId() {
 		return this.id;
 	}

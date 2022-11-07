@@ -8,7 +8,7 @@
     color: #2dccd3;
     outline: #ffffff solid thick;
     outline-offset: -5px;
-    -webkit-border-radius: 0px !important;/* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
+    -webkit-border-radius: 5px !important;/* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
   }
   #accountbox{
     display:flex;
@@ -432,7 +432,7 @@
    opacity: 0.8;
    margin-left:1em;
    margin-right: 1em;
-   whitespace:no-wrap;
+   white-space:no-wrap;
  }
  
  .trip:hover{
@@ -497,7 +497,7 @@
     cursor:pointer;
 }
 
-.activeFilter,.activeFilter:hover{
+.activeFilter,.activeFilter2,.activeFilterCabs,.activeFilter:hover,.activeFilter2:hover,.activeFilterCabs:hover{
 	background-color:green;
 	color:white;
 }

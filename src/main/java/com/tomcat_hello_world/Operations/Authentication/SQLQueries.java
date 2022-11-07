@@ -31,6 +31,54 @@ public class SQLQueries extends DatabaseConnection{
 	        return emailExists;
 	    }
 	 
+	     protected static boolean[] checkEmailExists(String email,String role) throws SQLException,ClassNotFoundException,NullPointerException{
+	        boolean[] emailExists= {false,false};
+	        Connection con=DatabaseConnection.initializeDatabase();
+	        PreparedStatement ps=con.prepareStatement("SELECT Email,Role FROM Users WHERE email=?;");
+	        ps.setString(1,email);
+	        ResultSet rs=ps.executeQuery();
+	        String Role=null,Email=null;
+	        if(rs.next()){
+	              Email=rs.getString("Email");
+	              Role=rs.getString("Role");
+	        }
+	        if(Email!=null && Role!=null) {
+	        	if(email.equals(Email)){
+	  	           emailExists[0]=true;
+	  	        }
+	 
+	  	        if(role.equals(Role)) {
+	  	        	emailExists[1]=true;
+	  	        }
+	        }
+	        con.close();
+	       
+	        return emailExists;
+	    }
+	 
+	 protected static boolean checkMultipleEmailsExist(String emails) throws ClassNotFoundException, SQLException {
+		 boolean emailsExist=true;
+		 Connection con=DatabaseConnection.initializeDatabase();
+		 String query="SELECT COUNT(id) as emailCount FROM USERS WHERE Email IN "+emails;
+		 PreparedStatement ps=con.prepareStatement(query);
+		 ResultSet rs=ps.executeQuery();
+		 if(rs.next()) {
+			 if(rs.getInt("emailCount")==0) {
+				 emailsExist=false;
+			 }
+		 }
+		 return emailsExist;
+	 }
+	 
+	 protected static boolean addUsers(String query) throws ClassNotFoundException, SQLException {
+		 boolean addedUsers=false;
+		 Connection con=DatabaseConnection.initializeDatabase();
+		 PreparedStatement ps=con.prepareStatement(query);
+		 ps.executeUpdate();
+		 addedUsers=true;
+		 return addedUsers;
+	 }
+	 
 	 protected static boolean checkPassword(String email,String password) throws SQLException,ClassNotFoundException,NullPointerException,NoSuchAlgorithmException{
 	        boolean isEqual=false;
 	        
@@ -82,6 +130,19 @@ public class SQLQueries extends DatabaseConnection{
 	     
 	       return name;
 	    }
+
+      protected static int getIdFromEmail(String email) throws ClassNotFoundException, SQLException{
+        int id=0;
+        Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement("Select id FROM Users WHERE email=?");
+        ps.setString(1, email);
+        ResultSet rs=ps.executeQuery();
+        if(rs.next()){
+          id=rs.getInt("id");
+        }
+        con.close();
+        return id;
+      }
 	 
 	 protected static User getUser(String email) throws SQLException,ClassNotFoundException,NullPointerException{
          User user=null;
