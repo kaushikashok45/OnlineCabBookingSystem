@@ -25,58 +25,64 @@ int uid=user.getUser().getId();
       <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script> 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Admin.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Admin.css">
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/Dashboard.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageCabs.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageLocations.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageUsers.js"></script>
+      <script type="text/javascript" src="${pageContext.request.contextPath}/js/renderAdmin.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     </head>
     <body>
     <div id="accountbox">
-    
+        <input type="hidden" id="name" value="<%=name %>"></input> 
+      <input type="hidden" id="email" value="<%=email %>"></input>
+      <input type="hidden" id="uid" value="<%=uid %>"></input>
     <div id="link">
       
     </div>
   </div>
   <div id="navbar">
     <aside class="side-bar-wrap">
-  <nav class="side-bar">
+  <nav class="side-bar raised">
     <div class="logo-area">  
       <h1 class="min" id="logo">Ashok Cabs</h1>
      
     </div>
     <ul>
-      <li class="active">
-        <a href="/com.tomcat_hello_world/admin">
+      <li id="dashboard" class="active" >
+        <a href="/com.tomcat_hello_world/admin#dashboard" onClick="renderAdmin.changeCurrentRender('dashboard')">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/home.svg">
             </span>
-          <span class="title">Home</span>
+          <span class="title">Dashboard</span>
         </a>
       </li>
-      <li>
-        <a href="#">
+      <li id="manageCabs">
+        <a href="#manageCabs" onClick="renderAdmin.changeCurrentRender('manageCabs')">
            <span class="icon">
              <img class="filter-white sizer" src="./resources/images/car.svg">
             </span>
-          <span class="title">Add Cabs</span>
+          <span class="title">Manage Cabs</span>
         </a>
       </li>
-      <li>
-        <a href="#">
+      <li id="manageLocs">
+        <a href="#manageLocs" onClick="renderAdmin.changeCurrentRender('manageLocs')">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/location.svg">
             </span>
-          <span class="title">Add Locations</span>
+          <span class="title">Manage Locations</span>
         </a>
       </li>
-      <li>
-        <a href="#">
+      <li id="manageUsers">
+        <a href="#manageUsers" onClick="renderAdmin.changeCurrentRender('manageUsers')">
           <span class="icon">
              <img class="filter-white sizer" src="./resources/images/admin.svg">
             </span>
-          <span class="title">Add Admins</span>
+          <span class="title">Manage Users</span>
         </a>
       </li>
       <li>
@@ -96,17 +102,8 @@ int uid=user.getUser().getId();
   </nav>
 </aside>
   </div>
-  <div id="formbox">
-        <div class="flexbox" id="dashboardWrapper">
-     <div class="flexbox" id="stats">
-       <div class="flexbox" id="total">
-        <h2 id="totaltripsMade" class="headline"></h2>
-        <h3 class="caption">Trips made</h3>
-        </div>
-     </div>
-  </div>
-
-        
-      </div>
+  <div id="dash">
+    
+  </div>    
    </body>
 </html>

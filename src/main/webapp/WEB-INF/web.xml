@@ -89,6 +89,14 @@
      <servlet-name>GetTrips</servlet-name>  
      <url-pattern>/account/GetTrips/*</url-pattern>  
     </servlet-mapping>  
+     <servlet>  
+      <servlet-name>CheckUsertrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.CheckUsertrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>CheckUsertrips</servlet-name>  
+     <url-pattern>/account/CheckUsertrips/*</url-pattern>  
+    </servlet-mapping>  
     <servlet>  
       <servlet-name>BookCab</servlet-name>  
       <servlet-class>com.tomcat_hello_world.Servlets.BookCab</servlet-class>  
@@ -137,6 +145,62 @@
      <servlet-name>UpdateProfile</servlet-name>  
      <url-pattern>/updateProfile/*</url-pattern>  
     </servlet-mapping> 
+     <servlet>
+      <servlet-name>FetchStats</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.FetchStats</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>FetchStats</servlet-name>  
+     <url-pattern>/admin/FetchStats/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>GetAdminTrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.GetAdminTrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>GetAdminTrips</servlet-name>  
+     <url-pattern>/admin/GetAdminTrips/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>GetAdminCabs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.GetAdminCabs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>GetAdminCabs</servlet-name>  
+     <url-pattern>/admin/GetAdminCabs/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>AddCabs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.AddCabs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>AddCabs</servlet-name>  
+     <url-pattern>/admin/AddCabs/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>AddLocs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.AddLocs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>AddLocs</servlet-name>  
+     <url-pattern>/admin/AddLocs/*</url-pattern>  
+    </servlet-mapping>
+     <servlet>
+      <servlet-name>AddUsers</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.AddUsers</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>AddUsers</servlet-name>  
+     <url-pattern>/admin/AddUsers/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>GetAdminLocs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.GetAdminLocs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>GetAdminLocs</servlet-name>  
+     <url-pattern>/admin/GetAdminLocs/*</url-pattern>  
+    </servlet-mapping>
     <filter>
       <filter-name>ProfileFilter</filter-name>
       <filter-class>com.tomcat_hello_world.Security.ProfileFilter</filter-class>

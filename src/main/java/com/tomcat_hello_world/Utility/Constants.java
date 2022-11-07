@@ -56,7 +56,7 @@ public class Constants {
     public static final String comma=",";
     public static final String bigCustomer="Customer";
     public static final String md5="MD5";
-    public static final String accountURL="/com.tomcat_hello_world/account";
+    public static final String accountURL="/com.tomcat_hello_world/account#home";
     public static final String adminURL="/com.tomcat_hello_world/admin";
     public static final String indexURL="/com.tomcat_hello_world/";
     public static final String logoutURL="/logout";

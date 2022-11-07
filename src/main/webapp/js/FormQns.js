@@ -2,61 +2,32 @@
  * 
  */
  var q = 1, qMax = 0;
+ var userInput={src:null,dest:null,carType:null,uid:0};
 var bookingDetails;
  $(document).on('click','#homeLink',function () {
+	     console.log("here");
 	     q=1;
-	     if(window.localStorage.getItem("bookingStatus")=="pending"){
-		  let text="You have an unfinished booking.Do you wish to discard it?";
-		  result=confirmOperation(text);
-		  if(result=="false"){	
-		   var formbox=document.getElementById("formbox");
-		   var result=JSON.parse(window.localStorage.getItem("bookingDetails"));
-		   var bookingData=Handlebars.compile("<div id=\"cabBox\"><div id=\"header\"><h3>Cab Details</h3></div>{{#with result}}<div id=\"item1\"<h4><span id=\"qn\"> Driver Name: </span>{{cab.name}}</h4></div><div id=\"item2\"><h4> <span id=\"qn\">  Type: </span>{{cab.type}}</h4></div><div id=\"item3\"><h4><span id=\"qn\">  Trip Distance: </span>{{trip.distance}} kms</h4></div><div id=\"item4\"><h4> <span id=\"qn\"> ETA: </span>{{trip.eta}} mins</h4></div><div id=\"item5\"><h4> <span id=\"qn\"> Fare: &#8377;</span>{{trip.fare}}</h4>{{/with}}</div><div id=\"BookBtn\"><button  id=\"submit\" onClick=\"handleSubmit()\">Confirm Booking &#8594;</button></div></div>");
-           var html=bookingData({result:result});
-           formbox.innerHTML=html;
-          }
-          else{
-	         window.localStorage.removeItem("bookingStatus");
-	         window.localStorage.removeItem("bookingDetails");
-	         renderHome();
-           }   
-	     }
-	     else if(window.localStorage.getItem("bookingStatus")=="confirmed"){
-		   let text="You have confirmed booking and will be charged a penalty for discarding it.Do you wish to discard it?";
-		   var promptResult=confirmOperation(text);
-		   if(promptResult=="false"){	
-		     var result=JSON.parse(window.localStorage.getItem("confirmationDetails"));
-		     var formbox=document.getElementById("formbox");
-             console.log(result);
-             var bookingData=Handlebars.compile("<div id=\"confirmbox\">{{#with result}}<h2 class=\"confirmation\" id=\"tick\">&#10004;</h2><h2 class=\"confirmation\">Booking Confirmed</h2><h3 class=\"details\">OTP: <span class=\"detailans\"> {{otp}} </span></h3><div id=\"btns\"><div id=\"start\"><form><input type=\"hidden\" name=\"fare\" value=\"{{fare}}\"><input type=\"hidden\" name=\"dest\" value=\"{{dest}}\">{{/with}}<button id=\"startbtn\" onClick=\"startTrip(event)\">START TRIP &#8594;</button></form></div><div id=\"cancel\"><form><button id=\"cancelbtn\" onClick=\"cancelTrip(event)\">&#8592; CANCEL TRIP</button></form></div></div></div>");
-             var html=bookingData({result:result});
-            formbox.innerHTML=html;
-	      }
-	      else{
-		    cancelBooking();
-		    renderHome();
-	      }
-		}
-	     
-         qMax = $('#bookingForm div.group').length;
-         $('#bookingForm div.group').hide();
-         $('#bookingForm div.group:nth-child(1)').show();
-         $('#next').on('click', function (event) {
+	     if(result=="false" || result==null){
+          qMax = $('#bookingForm div.group').length;
+          $('#bookingForm div.group').hide();
+          $('#bookingForm div.group:nth-child(1)').show();
+          $('#next').on('click', function (event) {
             event.preventDefault();
             handleClick(event);
-         });
-         $('.back').on('click', function (event) {
+          });
+          $('.back').on('click', function (event) {
             event.preventDefault();
             goBack();
-         });
-         var locs=JSON.parse(localStorage.getItem("Locations"));
-         console.log(locs);
-	     var src=document.getElementById("src");
-         var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
-         for(var i=0;i<locs.length;i++){
-	      options=options+"<option id=\""+"option"+i+"\" class=\"options\" value=\""+locs[i]+"\">"+locs[i]+"</option>"
-         }
-         src.innerHTML=options;
+          });
+          console.log(locs);
+	      var src=document.getElementById("src");
+          var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
+          for(var i=0;i<locs.length;i++){
+	       options=options+"<option id=\""+"option"+i+"\" class=\"options\" value=\""+locs[i]+"\">"+locs[i]+"</option>"
+          }
+          console.log(src);
+          src.innerHTML=options;
+         } 
          });
          
 $(function () {
@@ -101,10 +72,23 @@ function handleClick(event) {
     } else {
 	   if( $('#bookingForm div.group:nth-child(' + q + ')').find('input[name=carType]:checked').val()!=null){
 	    q=1,qMax=3;
-	    var src=document.getElementById("src").value;
-	    var dest=document.getElementById("dest").value;
-	    var carType=document.getElementsByName("carType")[0].value;
-	    var uid=document.getElementById("uid").value;
+	    var src,dest,carType,uid;
+	    if(document.getElementById('src').value!=null){
+	     src=document.getElementById("src").value;
+	     userInput.src=src;
+	     dest=document.getElementById("dest").value;
+	     userInput.dest=dest;
+	     carType=document.querySelector('input[name="carType"]:checked').value;
+	     userInput.carType=carType;
+	     uid=document.getElementById("uid").value;
+	     userInput.uid=uid;
+	    }
+	    else{
+		  src=userInput.src;
+		  dest=userInput.dest;
+		  carType=userInput.carType;
+		  uid=userInput.uid;
+	    } 
         $(function() {
 	    event.preventDefault();
         $.ajax({
@@ -120,10 +104,8 @@ function handleClick(event) {
 	        console.log(result);
 	        if(result!=null){
 	          bookingDetails=result;
-	          window.localStorage.setItem("bookingStatus","pending");
-	          window.localStorage.setItem("bookingDetails",JSON.stringify(bookingDetails));
               var formbox=document.getElementById("formbox");
-              var bookingData=Handlebars.compile("<div id=\"cabBox\"><div id=\"header\"><h3>Cab Details</h3></div>{{#with result}}<div id=\"item1\"<h4><span id=\"qn\"> Driver Name: </span>{{cab.name}}</h4></div><div id=\"item2\"><h4> <span id=\"qn\">  Type: </span>{{cab.type}}</h4></div><div id=\"item3\"><h4><span id=\"qn\">  Trip Distance: </span>{{trip.distance}} kms</h4></div><div id=\"item4\"><h4> <span id=\"qn\"> ETA: </span>{{trip.eta}} mins</h4></div><div id=\"item5\"><h4> <span id=\"qn\"> Fare: &#8377;</span>{{trip.fare}}</h4>{{/with}}</div><div id=\"BookBtn\"><button  id=\"submit\" onClick=\"handleSubmit()\">Confirm Booking &#8594;</button></div></div>");
+              var bookingData=Handlebars.compile("<div id=\"cabBox\"><div id=\"header\"><h3>Booking Details</h3></div>{{#with result}}<div id=\"item1\"<h4><span id=\"qn\"> Driver Name: </span>{{driverName}}</h4></div><div id=\"item2\"><h4> <span id=\"qn\">  Type: </span>{{cabType}}</h4></div><div id=\"item3\"><h4><span id=\"qn\">  Trip Distance: </span>{{distance}} kms</h4></div><div id=\"item4\"><h4> <span id=\"qn\"> ETA: </span>{{eta}} mins</h4></div><div id=\"item5\"><h4> <span id=\"qn\"> Fare: &#8377;</span>{{fare}}</h4>{{/with}}</div><div id=\"BookBtn\"><button  id=\"submit\" onClick=\"handleSubmit()\">Confirm Booking &#8594;</button></div></div>");
               var html=bookingData({result:result});
               formbox.innerHTML=html;
             }
@@ -132,9 +114,17 @@ function handleClick(event) {
 	            alert("Sorry....no cabs found!");
             }  
         },
-        error: function(result) {
+        error: function(xhr) {
 	        q=3;
-            alert('Error while finding cabs...Please try again later!');
+	        if(xhr.status==406){
+		       alert("Sorry....no cabs found!");
+	        }
+	        else if(xhr.status==400){
+		       alert("Invalid input details"); 
+	        }
+	        else{
+              alert('Error while finding cabs...Please try again later!');
+            }  
         }
     });
 }); 
@@ -145,8 +135,50 @@ function handleClick(event) {
     }
 }
 
+function handleReassign(){
+	$(function() {
+	   
+        $.ajax({
+        type: "POST",
+        url: "/com.tomcat_hello_world/BookCab",
+        data: { 
+            src:userInput.src,
+            dest:userInput.dest,
+            carType:userInput.carType,
+            uid:userInput.uid
+        },
+        success: function(result) {
+	        console.log(result);
+	        if(result!=null){
+	          bookingDetails=result;
+              var formbox=document.getElementById("formbox");
+              var bookingData=Handlebars.compile("<div id=\"cabBox\"><div id=\"header\"><h3>Cab Details</h3></div>{{#with result}}<div id=\"item1\"<h4><span id=\"qn\"> Driver Name: </span>{{cab.name}}</h4></div><div id=\"item2\"><h4> <span id=\"qn\">  Type: </span>{{cab.type}}</h4></div><div id=\"item3\"><h4><span id=\"qn\">  Trip Distance: </span>{{trip.distance}} kms</h4></div><div id=\"item4\"><h4> <span id=\"qn\"> ETA: </span>{{trip.eta}} mins</h4></div><div id=\"item5\"><h4> <span id=\"qn\"> Fare: &#8377;</span>{{trip.fare}}</h4>{{/with}}</div><div id=\"BookBtn\"><button  id=\"submit\" onClick=\"handleSubmit()\">Confirm Booking &#8594;</button></div></div>");
+              var html=bookingData({result:result});
+              formbox.innerHTML=html;
+            }
+            else{
+	            q=3;
+	            alert("Sorry....no cabs found!");
+            }  
+        },
+        error: function(xhr) {
+	        q=3;
+	        if(xhr.status==406){
+		       alert("Sorry....no cabs found!");
+	        }
+	        else if(xhr.status==400){
+		       alert("Invalid input details"); 
+	        }
+	        else{
+              alert('Error while finding cabs...Please try again later!');
+            }  
+        }
+    });
+}); 
+}
+
 function handleSubmit(){  
-	    bookingDetails=JSON.parse(window.localStorage.getItem("bookingDetails"));
+	    
 	    var email=document.getElementById("email").value;
 	    
         $.ajax({
@@ -159,23 +191,26 @@ function handleSubmit(){
         },
         success: function(result) {
 	        bookingDetails=result;
-	        window.localStorage.setItem("bookingStatus","confirmed");
-	        window.localStorage.setItem("confirmationDetails",JSON.stringify(result));
             var formbox=document.getElementById("formbox");
             console.log(result);
             var bookingData=Handlebars.compile("<div id=\"confirmbox\">{{#with result}}<h2 class=\"confirmation\" id=\"tick\">&#10004;</h2><h2 class=\"confirmation\">Booking Confirmed</h2><h3 class=\"details\">OTP: <span class=\"detailans\"> {{otp}} </span></h3><div id=\"btns\"><div id=\"start\"><form><input type=\"hidden\" name=\"fare\" value=\"{{fare}}\"><input type=\"hidden\" name=\"dest\" value=\"{{dest}}\">{{/with}}<button id=\"startbtn\" onClick=\"startTrip(event)\">START TRIP &#8594;</button></form></div><div id=\"cancel\"><form><button id=\"cancelbtn\" onClick=\"cancelTrip(event)\">&#8592; CANCEL TRIP</button></form></div></div></div>");
             var html=bookingData({result:result});
             formbox.innerHTML=html;
         },
-        error: function(result) {
-            alert('Error while booking cab...Please try again later!');
+        error: function(xhr) {
+	        if(xhr.status==404){
+		      alert("Sorry,your assigned cab is no longer available.You will be assigned a new cab shortly.");
+		      handleReassign();
+	        }
+	        else{
+              alert('Error while booking cab...Please try again later!');
+            }  
         }
     });
 }
 
 function startTrip(e){  
 	    e.preventDefault();
-	    bookingDetails=JSON.parse(window.localStorage.getItem("confirmationDetails"));
 	    var email=document.getElementById("email").value;
         $.ajax({
         type: "GET",
@@ -186,9 +221,6 @@ function startTrip(e){
 	       email:email
         },
         success: function(result) {
-	        window.localStorage.removeItem("bookingStatus");
-	        window.localStorage.removeItem("bookingDetails");
-            window.localStorage.removeItem("confirmationDetails");
             var formbox=document.getElementById("formbox");
             console.log(result);
             var bookingData=Handlebars.compile("<div id=\”confirmbox\”><h2 class=\"confirmation\" id=\"tick\">&#10004;</h2><h2 class=\"confirmation\">Trip Completed!</h2><h3 class=\"details\">Fare:&#8377; <span class=\"detailans\"> {{result.fare}} </span></h3><div id=\"btns\"><div id=\"start\"><a href=\"/com.tomcat_hello_world/account\"><button id=\"startbtn\" onClick=\"renderHome()\">GO HOME &#8594;</button></a></div></div></div>");
@@ -206,7 +238,6 @@ function cancelTrip(e){
 	    e.preventDefault();
 	    console.log(bookingDetails);
 	    var email=document.getElementById("email").value;
-	    bookingDetails=JSON.parse(window.localStorage.getItem("confirmationDetails"));
         $.ajax({
         type: "GET",
         url: "/com.tomcat_hello_world/CancelTrip",
@@ -216,9 +247,6 @@ function cancelTrip(e){
 	       email:email
         },
         success: function(result) {
-	        window.localStorage.removeItem("bookingStatus");
-	        window.localStorage.removeItem("bookingDetails");
-	        window.localStorage.removeItem("confirmationDetails");
             var formbox=document.getElementById("formbox");
             console.log(result);
             var bookingData=Handlebars.compile("<div id=\"confirmbox\"><h2 class=\"confirmation\" id=\"cross\">&#10060;</h2><h2 class=\"cancellation\">Trip Cancelled!</h2><h3 class=\"details\">Penalty:&#8377; <span class=\"detailans\"> {{result.fare}} </span></h3><p>Amount will be automatically credited from your account.<p><div id=\"btns\"><div id=\"start\"><a href=\"/com.tomcat_hello_world/account\"><button id=\"startbtn\">GO HOME &#8594;</button></a></div></div></div>");
@@ -226,6 +254,7 @@ function cancelTrip(e){
             formbox.innerHTML=html;
         },
         error: function(result) {
+	        console.log(result);
             alert('Error while cancelling cab...Please try again later!');
         }
     });
@@ -242,7 +271,6 @@ function goBack(){
 }
 
 function report(src){
-	        var locs=JSON.parse(localStorage.getItem("Locations"));
             var dest=document.getElementById("dest");
             var options="<option id=\"placeholder\" value=\"\" disabled selected>Select your location</option>";
                 for(var i=0;i<locs.length;i++){
@@ -276,6 +304,7 @@ function selector(btn){
 	document.getElementById(car).style.backgroundColor="aliceblue";
 	
 }
+
 
   
 

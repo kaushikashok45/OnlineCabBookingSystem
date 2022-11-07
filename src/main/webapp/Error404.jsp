@@ -33,7 +33,7 @@ HttpSession sessionsc = request.getSession(true);
         <h3 class="details">Sorry...we couldn't find that page.</h3>
         <div id="btns">
            <div id="start">
-             <a href="/com.tomcat_hello_world/account"><button id="startbtn">GO HOME &#8594;</button></a>
+             <a href="/com.tomcat_hello_world/"><button id="startbtn">GO HOME &#8594;</button></a>
            </div>
         </div>
        </div>
