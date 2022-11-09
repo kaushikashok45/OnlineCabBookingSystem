@@ -118,10 +118,20 @@ public class SQLQueries extends DatabaseConnection{
 	 return locs;
    }
    
-   protected static ArrayList<UserOperations> getAllUsers() throws ClassNotFoundException, SQLException{
+   protected static ArrayList<UserOperations> getAllUsers(String filter,int limit) throws ClassNotFoundException, SQLException{
 	   ArrayList<UserOperations> users=new ArrayList<UserOperations>();
 	   Connection con=DatabaseConnection.initializeDatabase();
-       PreparedStatement ps=con.prepareStatement("SELECT u.id,u.Name,u.Email,u.Role FROM Users u;");
+	   PreparedStatement ps;
+	   System.out.println(filter.equals("AllUsers"));
+	   if(filter.equals("AllUsers")) {
+		   ps=con.prepareStatement("SELECT u.id,u.Name,u.Email,u.Role FROM Users u WHERE limit ?,5;");
+		   ps.setInt(1,limit*5);
+	   }
+	   else {
+         ps=con.prepareStatement("SELECT u.id,u.Name,u.Email,u.Role FROM Users u WHERE u.Role=? limit ?,5;");
+         ps.setString(1,filter);
+         ps.setInt(2, limit*5);
+	   } 
        ResultSet rs=ps.executeQuery();
        while(rs.next()) {
     	   int id=rs.getInt("id");

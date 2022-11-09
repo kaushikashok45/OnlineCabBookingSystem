@@ -8,5 +8,4 @@ window.onload=function(){
     else{
         HTMLelement.focus();
     }
-    document.getElementById()
 }

@@ -16,12 +16,14 @@ HttpSession sessionsc = request.getSession(true);
 %>
 
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
     <head>
       <title>Error 500!</title>  
-      <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script> 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
+      <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js" async></script> 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" async></script>
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css" media="none" onload="if(media!='all')media='all'"> 
     </head>
     <body>
     <div id="accountbox">

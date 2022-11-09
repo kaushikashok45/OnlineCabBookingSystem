@@ -181,11 +181,11 @@ public class AdminOperations {
 	   return json;
    }
    
-   public static JSONObject getAllUsers() throws ClassNotFoundException, SQLException {
+   public static JSONObject getAllUsers(String filter,int limit) throws ClassNotFoundException, SQLException {
 	   JSONObject json=new JSONObject();
 	   JSONArray  array=new JSONArray();
 	   try {
-	   ArrayList<UserOperations> users=SQLQueries.getAllUsers();
+	   ArrayList<UserOperations> users=SQLQueries.getAllUsers(filter,limit);
 	   for(UserOperations user:users) {
 		   JSONObject jsonUser=new JSONObject();
 		   jsonUser.put("id",user.getUser().getId());
@@ -203,7 +203,7 @@ public class AdminOperations {
 	   return json;
    }
    
-   public JSONObject getDashboardDetails() throws ClassNotFoundException, SQLException {
+   public JSONObject getDashboardDetails(String filter,int limit) throws ClassNotFoundException, SQLException {
 	   JSONObject json=SQLQueries.getDashboardDetails();
 	   JSONObject tripsByStatus=(JSONObject) json.get("tripsByStatus");
 	   JSONObject cabsByStatus=(JSONObject) json.get("cabsByStatus");
@@ -239,7 +239,7 @@ public class AdminOperations {
 	   json.put("usersByRole",usersByRole);
 	   JSONObject trips=getAllTrips();
 	   json.put("trips",trips);
-	   json.put("users", getAllUsers());
+	   json.put("users", getAllUsers(filter,limit));
 	   return json;
    }
 }
