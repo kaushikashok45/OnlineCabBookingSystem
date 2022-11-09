@@ -81,6 +81,10 @@ class StatsDOM{
 		var element=document.getElementById("userDataBox");
 		return element;
 	}
+
+	getTripById(id){
+		return document.getElementById(id);
+	} 
 }
 
 
@@ -94,9 +98,34 @@ class Stats{
         this._self=context;
     }
 
+	get usersLazyLoadCount(){
+		return this._usersLazyLoadCount;
+	}
+
+	set usersLazyLoadCount(newCount){
+		this._usersLazyLoadCount=newCount;
+	}
+
+	get usersLazyLoadedRecords(){
+		return this._usersLazyLoadedRecords;
+	}
+
+	set usersLazyLoadedRecords(newRecords){
+		this._usersLazyLoadedRecords=newRecords;
+	}
+
+	get filter(){
+		return this._filter;
+	}
+
+	set filter(newFilter){
+        this._filter=newFilter;
+	}
+
     constructor(){
 	  this.self=this;	
-	  this.self.adminStats=this.self.fetchStats();
+	  this.self.filter="Customer";
+	  this.usersLazyLoadCount=0;
 	  this.self.writeStats();
     }	
 	get adminStats() {
@@ -205,67 +234,39 @@ class Stats{
     }
     
      filterUsers(filter,element){
-	  console.log(this.self);	
-	  var allUsers=this.self.adminStats.users.users;
-	  const filteredUser=[];
-	  if(filter=="Customers"){
-		this.self.changeActiveFilter2(filter);
-		allUsers.forEach((jsonUser)=>{
-			if(jsonUser.role=="Customer"){
-				filteredUser.push(jsonUser);
-			}
-		})
-		this.self.filteredUsers=filteredUser;
-		this.self.writeUsers(element);
-	  }
-	  else if(filter=="first"){
-		allUsers.forEach((jsonUser)=>{
-			if(jsonUser.role=="Customer"){
-				filteredUser.push(jsonUser);
-			}
-		})
-		this.self.filteredUsers=filteredUser;
-	  }
-	  else if(filter=="Drivers"){
-		this.self.changeActiveFilter2(filter);
-		allUsers.forEach((jsonUser)=>{
-			if(jsonUser.role=="Driver"){
-				filteredUser.push(jsonUser);
-			}
-		})
-		 this.self.filteredUsers=filteredUser;
-		 this.self.writeUsers(element);
-	  }
-	  else if(filter=="Admins"){
-		this.self.changeActiveFilter2(filter);
-		allUsers.forEach((jsonUser)=>{
-			if(jsonUser.role=="Admin"){
-				filteredUser.push(jsonUser);
-			}
-		})
-		this.self.filteredUsers=filteredUser;
-		var dom=new StatsDOM();
-		console.log(element);
-		if(filter!="first"){
-			this.self.writeUsers(element);
-		}
-	  }
+	  this.self.filter=filter;	
+	  var lazyLoadedData=this.self.fetchStats(this.self.filter,0);	
+	  this.self.adminStats=lazyLoadedData;
+	  if(element=="usersBox"){
+		renderAdmin.currentRender.userStats.adminStats.users.users=[];
+		renderAdmin.currentRender.lazyLoadCount=0;
+		renderAdmin.currentRender.userStats.adminStats.users.users=renderAdmin.currentRender.userStats.adminStats.users.users.concat(lazyLoadedData.users.users);
+	  }	
 	  else{
-		this.self.changeActiveFilter2(filter);
-		this.self.filteredUsers=allUsers;
-	    this.self.writeUsers(element);
-	   }
-	   
+		this.self.usersLazyLoadCount=0;
+	  }
+	  console.log(filter);
+	  this.self.changeActiveFilter2(filter);
+	  var userData=Handlebars.compile("{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}");
+	  var html=userData({parsedUsers:lazyLoadedData.users.users});
+	  console.log(lazyLoadedData);
+      var dom=new StatsDOM();
+	  dom.getUserDataBox().scrollTop=0;
+	  dom.getUserDataBox().innerHTML=html;
     }
     
     
-	fetchStats(){
+	fetchStats(filter,lazyLoadCount){
 	 var result=null;	
 	 console.log(1);
 	 $.ajax({
         type: "GET",
         url: "/com.tomcat_hello_world/admin/FetchStats",
-		async:false
+		async:false,
+		data:{
+			filter:filter,
+			limit:lazyLoadCount
+		}
      }).done(
 		    function(data, textStatus,jqXHR){
 				console.log(data,textStatus,jqXHR);
@@ -280,6 +281,7 @@ class Stats{
 		}	
 	
 	writeStats(){
+		     this.self.adminStats=this.self.fetchStats("Customer",0);
 		     var dashHtml="<div id=\"dashrow1\"><div id=\"formbox1\"><div class=\"flexbox\" id=\"dashboardWrapper2\"><h2 class=\"statTitle\" id=\"tripTitle\">Trips</h2><div class=\"flexbox\" id=\"stats\"><div class=\"flexbox\" id=\"total\"><h2 id=\"totalTripsMade\" class=\"headline\"></h2><h3 class=\"caption\">Trips Booked</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"totalTripsCompleted\" class=\"headline\"></h2><h3 class=\"caption\">Trips completed</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"totalTripsCancelled\" class=\"headline\"></h2><h3 class=\"caption\">Trips cancelled</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"totalTripsUnderway\" class=\"headline\"></h2><h3 class=\"caption\">Trips underway</h3></div></div></div></div><div id=\"formbox2\"><div class=\"flexbox\" id=\"dashboardWrapper2\"><h2 class=\"statTitle\">Cabs</h2><div class=\"flexbox\" id=\"stats\"><div class=\"flexbox\" id=\"total\"><h2 id=\"totalCabs\" class=\"headline\"></h2><h3 class=\"caption\">Total Cabs</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"availableCabs\" class=\"headline\"></h2><h3 class=\"caption\">Available Cabs</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"bookedCabs\" class=\"headline\"></h2><h3 class=\"caption\">Booked Cabs</h3></div></div></div></div><div id=\"formbox3\"><div class=\"flexbox\" id=\"dashboardWrapper2\"><h2 class=\"statTitle\">Users</h2><div class=\"flexbox\" id=\"stats\"><div class=\"flexbox\" id=\"total\"><h2 id=\"customers\" class=\"headline\"></h2><h3 class=\"caption\">Customers</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"admins\" class=\"headline\"></h2><h3 class=\"caption\">Admins</h3></div><div class=\"flexbox\" id=\"total\"><h2 id=\"drivers\" class=\"headline\"></h2><h3 class=\"caption\">Drivers</h3></div></div></div></div><div id=\"formbox4\"></div></div><div id=\"dashrow2\"><div id=\"formbox5\"><div class=\"flexbox\" id=\"dashboardWrapper2\"><h2 class=\"statTitle\">Trips Overview</h2></div></div><div id=\"formbox6\"><div class=\"flexbox\" id=\"dashboardWrapper2\"><h2 class=\"statTitle\">Users Overview</h2></div></div></div>";
 		     if(this.self.adminStats==undefined){
 				this.self.adminStats="waiting for data";
@@ -312,17 +314,8 @@ class Stats{
 	             dom.formBox().innerHTML="<h2 class=\"statTitle\" id=\"tripTitle\">Trips</h2><div id=\"tripTable\">"+"<div id=\"editProfile\"><div id=\"filter\"><div id=\"today\" class=\"filterOptions  activeFilter\" onClick=\"filterTodayTrips()\"><h6>Today</h6></div><div id=\"yesterday\" class=\"filterOptions\" onClick=\"filterYesterdayTrips()\"><h6>Yesterday</h6></div><div id=\"week\" class=\"filterOptions\" onclick=\"filterThisWeekTrips()\"><h6>This week</h6></div><div id=\"all\" class=\"filterOptions\" onClick=\"allTrips()\"><h6>All Trips</h6></div></div><div id=\"tripHistoryBox\"><h4 class=\"noTrips\">No trips made today!</h4></div></div></div>";
                } 
                /*dom.getformBox6().innerHTML="<h2 class=\"statTitle\" id=\"tripTitle\">Users overview</h2><div id=\"userTable\"><div id=\"filter\"><div id=\"Customers\" class=\"filterOptions  activeFilter2\" onClick=\"adminDash.filterUsers('Customers')\"><h6>Customers</h6></div><div id=\"Drivers\" class=\"filterOptions\" onClick=\"adminDash.filterUsers('Drivers')\"><h6>Drivers</h6></div><div id=\"Admins\" class=\"filterOptions\" onClick=\"adminDash.filterUsers('Admins')\"><h6>Admins</h6></div><div id=\"AllUsers\" class=\"filterOptions\" onClick=\"adminDash.filterUsers('AllUsers')\"><h6>All users</h6></div></div><div id=\"userDataBox\"></div></div>");*/
-               this.self.filterUsers("first","formbox6");
-               if(this.self.adminStats.users.users.length>0){
-                  var userData=Handlebars.compile("<h2 class=\"statTitle\" id=\"tripTitle\">Users overview</h2><div id=\"userTable\"><div id=\"filter\"><div id=\"Customers\" class=\"filterOptions  activeFilter2\" onClick=\"renderAdmin.currentRender.filterUsers('Customers','formbox6')\"><h6>Customers</h6></div><div id=\"Drivers\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterUsers('Drivers','formbox6')\"><h6>Drivers</h6></div><div id=\"Admins\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterUsers('Admins','formbox6')\"><h6>Admins</h6></div><div id=\"AllUsers\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterUsers('AllUsers','formbox6')\"><h6>All users</h6></div></div><div id=\"userDataBox\">{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}</div></div>");
-                  var html = userData({parsedUsers:this.self.filteredUsers});
-                  console.log()
-                  dom.getformBox6().innerHTML=html;
-               }  
-               else{
-	             dom.getformBox6().innerHTML="<h4 class=\"noTrips\">No Users found!</h4>";
-               } 
-                
+               dom.getformBox6().innerHTML="<h2 class=\"statTitle\" id=\"tripTitle\">Users overview</h2><div id=\"userTable\"><div id=\"filter\"><div id=\"Customer\" class=\"filterOptions  activeFilter2\" onClick=\"renderAdmin.currentRender.filterUsers('Customer','formbox6')\"><h6>Customers</h6></div><div id=\"Driver\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterUsers('Driver','formbox6')\"><h6>Drivers</h6></div><div id=\"Admin\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterUsers('Admin','formbox6')\"><h6>Admins</h6></div></div><div id=\"userDataBox\" onscroll=\"renderAdmin.currentRender.usersLazyLoader(event)\"></div></div>"           
+			   this.self.filterUsers(this.self.filter,"formbox6");
 	}
 	
 	expand(trip,tripParent){
@@ -346,6 +339,26 @@ class Stats{
 	  child.classList.remove("show");
 	  child.classList.add("hide");
     }
+
+	writeUserStats(){
+       var dom=new StatsDOM();
+       var userData=Handlebars.compile("{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}");
+	   var html=userData({parsedUsers:this.self.usersLazyLoadedRecords});
+	   dom.getTripById("t"+this.self.adminStats.users.users[((this.self.usersLazyLoadCount-1)*5)+4].id).insertAdjacentHTML('afterend',html);
+	   this.self.adminStats.users.users=this.self.adminStats.users.users.concat(this.self.usersLazyLoadedRecords);
+	   this.self.usersLazyLoadedRecords=null;
+	}
+
+	usersLazyLoader(event){
+		var element = event.target;
+		if (element.scrollHeight - element.scrollTop === element.clientHeight)
+		{
+		   console.log('scrolled');
+           this.self.usersLazyLoadCount=this.self.usersLazyLoadCount+1;
+		   this.self.usersLazyLoadedRecords=this.self.fetchStats(this.self.filter,this.self.usersLazyLoadCount).users.users;
+		   this.self.writeUserStats();
+		}
+	}
     
     changeActiveFilter(element){
 	console.log("changing");

@@ -19,9 +19,11 @@ String email=user.getUser().getEmail();
 int uid=user.getUser().getId();
 %>
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
     <head>
-      <title>Hello <%= name%>!</title>  
+      <title>Hello <%= name%>!</title>
+      <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />  
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script> 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>

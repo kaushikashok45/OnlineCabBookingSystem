@@ -5,11 +5,13 @@
       response.sendRedirect("/com.tomcat_hello_world/account");
 %>
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
    <head>
      <title>Sign up!</title>
-     <script type="text/javascript" src="${pageContext.request.contextPath}/js/ValidateSignUp.js"></script>
-     <script src="https://code.jquery.com/jquery-1.10.2.js" type="text/javascript"></script>
+     <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/ValidateSignUp.js"></script>
+     <script async="true" defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js" type="text/javascript"></script>
      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/signup.css"> 
     </head>
    <body>

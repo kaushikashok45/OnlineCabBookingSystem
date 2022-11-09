@@ -2,6 +2,7 @@
   --color-primary: brown;
   --color-secondary:  black;
 }
+
 aside.side-bar-wrap {
   --radius-size: 25px;
   height: 100%;
@@ -15,24 +16,28 @@ aside.side-bar-wrap {
   z-index: 5;
   padding-right: 2px;
 }
+
 aside.side-bar-wrap::-webkit-scrollbar {
   width: 10px;
 }
+
 aside.side-bar-wrap::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
 aside.side-bar-wrap::-webkit-scrollbar-thumb {
   border-radius: var(--radius-size);
   background-color: var(--color-primary);
 }
+
 nav.side-bar {
   min-height: 100%;
   background-color: var(--color-primary);
   display: inline-block;
   border-left: var(--radius-size) solid var(--color-secondary);
-  border-right: var(--radius-size) solid var(--color-primary);
- 
+  border-right: var(--radius-size) solid var(--color-primary); 
 }
+
 nav.side-bar .logo-area {
   --curve-size: calc(2 * var(--radius-size));
   position: relative;
@@ -45,6 +50,7 @@ nav.side-bar .logo-area {
   border-radius: 0 0 var(--radius-size) 0;
   box-shadow: var(--radius-size) 0 var(--color-secondary);
 }
+
 nav.side-bar .logo-area::after {
   content: '';
   width: var(--curve-size);
@@ -56,30 +62,36 @@ nav.side-bar .logo-area::after {
   left: 0;
   box-shadow:  calc(-1 * var(--curve-size) * 0.5)  calc(-1 * var(--curve-size) * 0.5) var(--color-secondary);
 }
+
 nav.side-bar .logo-area img {
   position: absolute;
   max-height: 75%;
   transition-duration: 1s;
 }
+
 aside.side-bar-wrap:hover nav.side-bar .logo-area img.min {
   max-height: 0;
   opacity: 0;
 }
+
 nav.side-bar .logo-area img.max {
   max-width: 0;
   opacity: 0;
   transition-duration: 1s;
 }
+
 aside.side-bar-wrap:hover nav.side-bar .logo-area img.max {
   max-width: 90%;
   opacity: 1;
 }
+
 nav.side-bar ul {
   padding: 0;
   margin: calc(2 * var(--radius-size)) 0;
   display: flex;
   flex-direction: column;
 }
+
 nav.side-bar ul li {
   height: 50px;
   padding: 10px var(--radius-size);
@@ -88,17 +100,21 @@ nav.side-bar ul li {
   margin-bottom: var(--radius-size);
   z-index: 1;
 }
+
 nav.side-bar ul li:not(.active) {
   z-index: 2;
 }
+
 nav.side-bar ul li:not(.active):hover #logout2{
   backdrop-filter: brightness(0.85);
 }
+
 nav.side-bar ul li.active {
   position: relative;
   background-color: var(--color-secondary);
   border-radius: 0 var(--radius-size) var(--radius-size) 0;
 }
+
 nav.side-bar ul li.active::before,
 nav.side-bar ul li.active::after {
   --curve-size: calc(2 * var(--radius-size));
@@ -109,16 +125,19 @@ nav.side-bar ul li.active::after {
   border-radius: 50%;
   position: absolute;
 }
+
 nav.side-bar ul li.active::before {
   top: calc(-1 * var(--curve-size));
   left: 0;
   box-shadow: calc(-1 * var(--curve-size) * 0.5) calc(var(--curve-size) * 0.5) var(--color-secondary);
 }
+
 nav.side-bar ul li.active::after {
   bottom: calc(-1 * var(--curve-size));
   left: 0;
   box-shadow: calc(-1 * var(--curve-size) * 0.5) calc(-1 * var(--curve-size) * 0.5) var(--color-secondary);
 }
+
 nav.side-bar ul li a{
   color: white;
   font-size: 16pt;
@@ -134,16 +153,20 @@ nav.side-bar ul li a{
 .active.title{
 	color:green;
 }
+
 aside:hover nav.side-bar ul li a{
   gap: 10px;
 }
+
 nav.side-bar ul li a span {
   display: flex;
   transition: 0.75s cubic-bezier(0.39, 0.58, 0.57, 1);
 }
+
 nav.side-bar ul li a span.icon {
   font-size: 24pt;
 }
+
 nav.side-bar ul li a span.title {
   max-width: 0;
   opacity: 0;
@@ -151,6 +174,7 @@ nav.side-bar ul li a span.title {
   font-weight:bold;
   white-space: nowrap;
 }
+
 aside:hover nav.side-bar ul li a span.title {
   width: auto;
   max-width: 10rem;
@@ -190,5 +214,36 @@ aside:hover nav.side-bar ul li a span.title {
 
 #logout2:focus{
     outline:none !important;
+}
+
+.hide{
+	display:block;
+}
+
+.mobileHeader{
+	display:none;
+	background-color:green;
+	position:fixed;
+	width:100%;
+	height:fit-content;
+	padding:2px 5px 2px 5px;
+	text-align:center;
+}
+
+.mobileTitle{
+	color:white;
+	text-align:center;
+}
+
+@media only screen and (max-width: 600px) {
+  .hide{
+   display:none;
+  }
+  .mobileHeader{
+    display:flex;
+  }
+  #formbox{
+    left:3%;
+  }
 }
 

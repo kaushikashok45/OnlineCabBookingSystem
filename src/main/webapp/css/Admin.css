@@ -169,6 +169,11 @@ body{
 
 #userDataBox{
 	 overflow-y:auto;
+	 max-height:218px;
+}
+
+#usersBox{
+	overflow-y:none;
 }
 
 .resultNone{
@@ -184,7 +189,7 @@ body{
     flex-direction: row;
 }
 
-.dashCabColumn,.dashLocColumn,.dashUserColumn{
+.dashCabColumn,.dashLocColumn{
 	border:2px solid black;
 	position: relative;
     border-radius: 10px;
@@ -194,6 +199,25 @@ body{
     width:50%;
     max-width:50%;
     overflow-y:auto;
+    max-height:428px;
+    /*max-width:218px;*/
+    margin: 3% 1%;
+    flex-direction:column;
+  
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.dashUserColumn{
+	border:2px solid black;
+	position: relative;
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    height:70%;
+    width:50%;
+    max-width:50%;
     max-height:428px;
     /*max-width:218px;*/
     margin: 3% 1%;
@@ -267,6 +291,7 @@ body{
     display:flex;
     flex-direction: column;
     overflow-y: auto;
+    max-height:270px;
    }
 
    .cabsSubForm,.usersSubForm{

@@ -8,9 +8,11 @@ response.setDateHeader ("Expires", 0);
 %> 
 
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
     <head>
       <title>Partner</title>  
+      <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
       <script src="https://code.jquery.com/jquery-1.10.2.js" type="text/javascript"></script> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 

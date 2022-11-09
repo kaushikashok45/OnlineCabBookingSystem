@@ -21,21 +21,21 @@ int uid=user.getUser().getId();
 
 %>
 <!DOCTYPE html>
-  <html>
+  <html lang="en">
     <head>
-      <title>Hello <%= name%>!</title>  
-      <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script> 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
+      <title>Hello <%= name%>!</title> 
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+      <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
+      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
+      <script async="true" type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Profile.css"> 
+      <link rel="preload" onload="this.onload=null;this.rel='stylesheet'" href="${pageContext.request.contextPath}/css/Profile.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/renderAccount.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/editProfile.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
+      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/renderAccount.js"></script>
+      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/editProfile.js"></script>
+      <script async="true" defer src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     </head>
     <body>
     <div id="accountbox">
@@ -47,7 +47,10 @@ int uid=user.getUser().getId();
     </div>
   </div>
   <div id="navbar">
-    <aside class="side-bar-wrap">
+    <div class="mobileHeader">  
+      <h1 class="mobileTitle">Ashok Cabs</h1> 
+    </div>
+    <aside class="side-bar-wrap hide">
   <nav class="side-bar">
     <div class="logo-area">  
       <h1 class="min" id="logo">Ashok Cabs</h1>
@@ -57,7 +60,7 @@ int uid=user.getUser().getId();
       <li class="active" id="home">
         <a href="#home" id="homeLink" onClick="renderHome(event)">
            <span class="icon">
-             <img class="filter-white sizer" src="./resources/images/home.svg">
+             <img class="filter-white sizer" src="./resources/images/home.svg" alt="home icon">
             </span>
           <span class="title">Home</span>
         </a>
@@ -65,7 +68,7 @@ int uid=user.getUser().getId();
       <li id="profile">
         <a href="#profile" onClick="renderProfile()">
            <span class="icon">
-             <img class="filter-white sizer" src="./resources/images/profile.svg">
+             <img class="filter-white sizer" src="./resources/images/profile.svg" alt="profile icon">
             </span>
           <span class="title">Profile</span>
         </a>
@@ -73,7 +76,7 @@ int uid=user.getUser().getId();
       <li id="about">
         <a href="#about" onClick="renderAbout()">
           <span class="icon">
-             <img class="filter-white sizer" src="./resources/images/about.svg">
+             <img class="filter-white sizer" src="./resources/images/about.svg" alt="About icon">
             </span>
           <span class="title">About Us</span>
         </a>
@@ -81,7 +84,7 @@ int uid=user.getUser().getId();
       <li id="pricing">
         <a href="#pricing" onclick="renderPricing()">
           <span class="icon">
-             <img class="filter-white sizer" src="./resources/images/pricing.svg">
+             <img class="filter-white sizer" src="./resources/images/pricing.svg" alt="Pricing icon">
             </span>
           <span class="title">Pricing</span>
         </a>
@@ -89,7 +92,7 @@ int uid=user.getUser().getId();
       <li>
         <a href="#">
           <span class="icon">
-             <img class="filter-white sizer" src="./resources/images/logout.svg">
+             <img class="filter-white sizer" src="./resources/images/logout.svg" alt="Logout icon">
             </span>
           <span class="title"><form action="logout" method="POST">
         <div id="email" data-email="<%=email %>"></div>

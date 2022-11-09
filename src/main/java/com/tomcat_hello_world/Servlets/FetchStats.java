@@ -20,9 +20,11 @@ public class FetchStats extends HttpServlet{
 		JSONObject json=null;
 		HttpSession session=request.getSession(false);
 		AdminOperations admin=null;
+		String filter=request.getParameter("filter");
+		int limit=Integer.valueOf(request.getParameter("limit"));
 		try {
 			admin=new AdminOperations(((UserOperations)session.getAttribute("User")).getUser());
-			json=admin.getDashboardDetails();
+			json=admin.getDashboardDetails(filter,limit);
 		}
 		catch(AccessDeniedException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

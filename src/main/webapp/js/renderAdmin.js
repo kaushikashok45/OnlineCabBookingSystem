@@ -29,7 +29,7 @@ class AdminRenderer{
 		this.activeClassChanger(element);
 		if(element=="dashboard"){
 			this.currentRender=new Stats();
-			this.currentRender.fetchStats(this.currentRender.writeStats.bind(this.currentRender));
+			this.currentRender.writeStats();
 		}
 		else if(element=="manageCabs"){
 			this.currentRender=new ManageCabs();
