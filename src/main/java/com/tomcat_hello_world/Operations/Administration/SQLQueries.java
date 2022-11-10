@@ -193,6 +193,76 @@ public class SQLQueries extends DatabaseConnection{
    
     return trips;
    }
+   
+   public static  ArrayList<TripOperations> tripsLazyLoader(String filter,int limit) throws ClassNotFoundException, SQLException {
+	   ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
+	   Connection con=DatabaseConnection.initializeDatabase();
+	   PreparedStatement ps=null;
+	   if(filter.equals("today")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   else if(filter.equals("yesterday")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src\n AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=SUBDATE(curdate(),1) AND t.time_started<CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   else if(filter.equals("week")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE YEARWEEK(t.time_started, 1) = YEARWEEK(CURDATE(), 1) ORDER BY t.id desc LIMIT ?,5");
+	   }
+	   else {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   ps.setInt(1, limit*5);
+	   System.out.println(ps.toString());
+       ResultSet rs=ps.executeQuery();
+       while(rs.next()){
+         int id=rs.getInt(Constants.id);
+         int uid=rs.getInt("uid");
+         int cabid=rs.getInt(Constants.cabid);
+         String otp=String.valueOf(rs.getInt(Constants.otp));
+         String status=rs.getString(Constants.status);
+         Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
+         Timestamp timeEnded=rs.getTimestamp(Constants.timeEnded); 
+         String src=rs.getString(Constants.src);
+         String dest=rs.getString(Constants.dest);
+         String cabType=rs.getString("Type");
+         BigDecimal distance=rs.getBigDecimal("distance");
+         String driverName=rs.getString("Name");
+         Trip  trip=new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance,driverName);
+         CabOperations cab=new CabOperations(getCabById(cabid));
+         TripOperations temp=new TripOperations();
+         temp.setTrip(trip);
+         temp.setCab(cab);
+         trips.add(temp);
+       }
+	   return trips;
+   }
+   
+   protected static ArrayList<CabOperations> cabsLazyLoader(String filter,int limit) throws ClassNotFoundException, SQLException{
+	   ArrayList<CabOperations> cabs=new ArrayList<CabOperations>();
+	   Connection con=DatabaseConnection.initializeDatabase();
+       PreparedStatement ps;
+       if(filter.equals("AllCabs")) {
+    	   ps=con.prepareStatement("SELECT c.id,c.uid,c.Type,l.Point,c.wallet,c.Status,u.Name FROM Cabs c INNER JOIN Users u ON  c.uid=u.id INNER JOIN Location l ON c.locid=l.id limit ?,5;");
+    	   ps.setInt(1, limit*5);
+       }
+       else {
+    	   ps=con.prepareStatement("SELECT c.id,c.uid,c.Type,l.Point,c.wallet,c.Status,u.Name FROM Cabs c INNER JOIN Users u ON  c.uid=u.id INNER JOIN Location l ON c.locid=l.id WHERE c.Status=? limit ?,5;");
+    	   ps.setString(1, filter);
+    	   ps.setInt(2, limit);
+       }
+       ResultSet rs=ps.executeQuery();
+       while(rs.next()) {
+    	   int id=rs.getInt("id");
+    	   int uid=rs.getInt("uid");
+    	   String type=rs.getString("Type");
+    	   String point=rs.getString("Point");
+    	   String name=rs.getString("Name");
+    	   String status=rs.getString("Status");
+    	   BigDecimal wallet=rs.getBigDecimal("wallet");
+    	   cabs.add(new CabOperations(new Cab(id,uid,type,point,wallet,status,name)));
+       }
+       con.close();
+       return cabs;
+   }
 
     public static boolean checkLocsExist(String[] locations) throws SQLException, ClassNotFoundException {
 	  boolean locExists=true;

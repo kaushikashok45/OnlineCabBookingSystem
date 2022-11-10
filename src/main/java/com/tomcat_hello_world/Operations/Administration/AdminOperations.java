@@ -131,11 +131,11 @@ public class AdminOperations {
 	   this.user=user;
    }
    
-   public static JSONObject getAllTrips() throws ClassNotFoundException, SQLException {
+   public static JSONObject getAllTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
 	   JSONObject json=new JSONObject();
 	   JSONArray  array=new JSONArray();
 	   try {
-	   ArrayList<TripOperations> trips=SQLQueries.getAllTrips();
+	   ArrayList<TripOperations> trips=SQLQueries.tripsLazyLoader(filter,limit);
 	   for(TripOperations tripOp:trips) {
 		   array.add(TripOperations.getAdminTripHistoryJSONObject(tripOp));
 	   }
@@ -156,11 +156,11 @@ public class AdminOperations {
 	   
    }
    
-   public static JSONObject getAllCabs() throws ClassNotFoundException, SQLException {
+   public static JSONObject getAllCabs(String filter,int limit) throws ClassNotFoundException, SQLException {
 	   JSONObject json=new JSONObject();
 	   JSONArray  array=new JSONArray();
 	   try {
-	   ArrayList<CabOperations> cabs=SQLQueries.getAllCabs();
+	   ArrayList<CabOperations> cabs=SQLQueries.cabsLazyLoader(filter,limit);
 	   for(CabOperations cab:cabs) {
 		   JSONObject jsonCab=new JSONObject();
 		   jsonCab.put("id",cab.getAssignedCab().getId());
@@ -237,9 +237,23 @@ public class AdminOperations {
 	   json.put("cabsByStatus",cabsByStatus);
 	   json.put("cabsByLoc",cabsByLoc);
 	   json.put("usersByRole",usersByRole);
-	   JSONObject trips=getAllTrips();
-	   json.put("trips",trips);
+	   /*JSONObject trips=getAllTrips();
+	   json.put("trips",trips);*/
 	   json.put("users", getAllUsers(filter,limit));
 	   return json;
+   }
+   
+   public JSONObject lazyLoadTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
+	   JSONObject trips=new JSONObject();
+	   JSONObject tripData=getAllTrips(filter,limit);
+	   trips.put("trips",tripData);
+	   return trips;
+   }
+   
+   public JSONObject lazyLoadCabs(String filter,int limit) throws ClassNotFoundException, SQLException {
+	   JSONObject cabs=new JSONObject();
+	   JSONObject cabData=getAllCabs(filter,limit);
+	   cabs.put("cabs",cabData);
+	   return cabs;
    }
 }

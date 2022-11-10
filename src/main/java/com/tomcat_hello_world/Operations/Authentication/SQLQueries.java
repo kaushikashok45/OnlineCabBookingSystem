@@ -1,13 +1,19 @@
 package com.tomcat_hello_world.Operations.Authentication;
 
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import com.tomcat_hello_world.Entity.Cab;
+import com.tomcat_hello_world.Entity.Trip;
 import com.tomcat_hello_world.Entity.User;
+import com.tomcat_hello_world.Operations.Booking.CabOperations;
+import com.tomcat_hello_world.Operations.Booking.TripOperations;
 import com.tomcat_hello_world.Storage.DatabaseConnection;
 import com.tomcat_hello_world.Utility.Constants;
 import com.tomcat_hello_world.Utility.Encryptor;
@@ -277,5 +283,65 @@ public class SQLQueries extends DatabaseConnection{
        ps.executeUpdate();
        isUpdated=true;
    	return isUpdated;
+   }
+   
+   protected static Cab getCabById(int cabid) throws SQLException, ClassNotFoundException {
+	   	Cab c=null;
+	   	Connection con=DatabaseConnection.initializeDatabase();
+	   	PreparedStatement ps=con.prepareStatement("Select Cabs.uid,Cabs.Type,Location.Point,Cabs.wallet,Cabs.Status,Users.Name FROM Cabs INNER JOIN Users ON Cabs.uid=Users.id INNER JOIN Location ON Cabs.locid=Location.id WHERE Cabs.id=? AND Cabs.uid=Users.id;");
+	   	ps.setInt(1, cabid);
+	   	ResultSet rs=ps.executeQuery();
+	   	if(rs.next()) {
+	   		int uid=rs.getInt("uid");
+	   		String type=rs.getString("Type");
+	   		String locid=rs.getString(Constants.Point);
+	   		BigDecimal wallet=rs.getBigDecimal("wallet");
+	   		String status=rs.getString("Status");
+	   		String name=rs.getString("Name");
+	   		c=new Cab(cabid,uid,type,locid,wallet,status,name);
+	   	}
+	   	return c;
+	}
+   
+    protected static  ArrayList<TripOperations> tripsLazyLoader(String filter,int limit) throws ClassNotFoundException, SQLException {
+	   ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
+	   Connection con=DatabaseConnection.initializeDatabase();
+	   PreparedStatement ps=null;
+	   if(filter.equals("today")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   else if(filter.equals("yesterday")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src\n AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=SUBDATE(curdate(),1) AND t.time_started<CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   else if(filter.equals("week")) {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE YEARWEEK(t.time_started, 1) = YEARWEEK(CURDATE(), 1) ORDER BY t.id desc LIMIT ?,5");
+	   }
+	   else {
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id ORDER BY t.id desc LIMIT ?,5;");
+	   }
+	   ps.setInt(1, limit*5);
+	   System.out.println(ps.toString());
+       ResultSet rs=ps.executeQuery();
+       while(rs.next()){
+         int id=rs.getInt(Constants.id);
+         int uid=rs.getInt("uid");
+         int cabid=rs.getInt(Constants.cabid);
+         String otp=String.valueOf(rs.getInt(Constants.otp));
+         String status=rs.getString(Constants.status);
+         Timestamp timeCreated=rs.getTimestamp(Constants.timeStarted);
+         Timestamp timeEnded=rs.getTimestamp(Constants.timeEnded); 
+         String src=rs.getString(Constants.src);
+         String dest=rs.getString(Constants.dest);
+         String cabType=rs.getString("Type");
+         BigDecimal distance=rs.getBigDecimal("distance");
+         String driverName=rs.getString("Name");
+         Trip  trip=new Trip(id,uid,cabid,otp,status,timeCreated,timeEnded,src,dest,cabType,distance,driverName);
+         CabOperations cab=new CabOperations(getCabById(cabid));
+         TripOperations temp=new TripOperations();
+         temp.setTrip(trip);
+         temp.setCab(cab);
+         trips.add(temp);
+       }
+	   return trips;
    }
 }

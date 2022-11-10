@@ -13,6 +13,14 @@
     margin-right:auto;
 }
 
+.hideTrip{
+  display:none;
+}
+
+.showTrip{
+  display:block;
+}
+
 .image{
 	width:100%;
 	height:100%;
