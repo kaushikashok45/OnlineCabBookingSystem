@@ -201,6 +201,30 @@
      <servlet-name>GetAdminLocs</servlet-name>  
      <url-pattern>/admin/GetAdminLocs/*</url-pattern>  
     </servlet-mapping>
+     <servlet>
+      <servlet-name>LazyFetchTrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.LazyFetchTrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>LazyFetchTrips</servlet-name>  
+     <url-pattern>/admin/LazyFetchTrips/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>LazyFetchCabs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.LazyFetchCabs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>LazyFetchCabs</servlet-name>  
+     <url-pattern>/admin/LazyFetchCabs/*</url-pattern>  
+    </servlet-mapping>
+     <servlet>
+      <servlet-name>userLazyFetchTrips</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.userLazyFetchTrips</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>userLazyFetchTrips</servlet-name>  
+     <url-pattern>/userLazyFetchTrips/*</url-pattern>  
+    </servlet-mapping>
     <filter>
       <filter-name>ProfileFilter</filter-name>
       <filter-class>com.tomcat_hello_world.Security.ProfileFilter</filter-class>

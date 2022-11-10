@@ -456,9 +456,14 @@
  #tripTable{
    max-width:414px;
    max-height:434px;
-    overflow-y:auto;
+
   
  }  
+
+ #tripHistoryBox{
+   max-height: 210px;
+   overflow-y: auto;
+ }
  
  .hide{
    display:none;

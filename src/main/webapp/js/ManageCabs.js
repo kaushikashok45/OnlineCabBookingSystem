@@ -38,9 +38,22 @@ class ManageCabsDOM{
 		console.log(field+id);
 		return document.getElementById(field+id);
 	}
+
+	getCabById(id){
+		return document.getElementById(id);
+	} 
 }
 
 class ManageCabs{
+
+	get self(){
+        return this._self;
+    }
+
+    set self(context){
+        this._self=context;
+    }
+
 	get cabStats(){
 		return this._cabStats;
 	}
@@ -56,13 +69,52 @@ class ManageCabs{
 	set filteredCabs(newCabStats){
 		this._filteredCabs=newCabStats;
 	}
+
+	get lazyLoadCount(){
+		return this._lazyLoadCount;
+	}
+	
+	set lazyLoadCount(newCount){
+		this._lazyLoadCount=newCount;
+	}
+
+
+	get lazyLoadedCabs(){
+		return this._lazyLoadedCabs;
+	}
+
+	set lazyLoadedCabs(newCabs){
+		this._lazyLoadedCabs=newCabs;
+	}
+
+	get cabs(){
+		return this._cabs;
+	}
+
+	set cabs(newCabs){
+		this._cabs=newCabs;
+	}
+
+	get filter(){
+		return this._filter;
+	}
+
+	set filter(newFilter){
+		this._filter=newFilter;
+	}
+
+	constructor(){
+		this.self=this;
+		this.self.lazyLoadCount=0;
+		this.self.filter="Booked";
+	}
 	
 	writeCabs(){
 	     var html;
 		 var dom=new ManageCabsDOM();
-	    if(this.filteredCabs.length>0){
+	    if(this.self.lazyLoadedCabs.cabs.cabs.length>0){
 	       var userData=Handlebars.compile("{{#with parsedCabs}}{{#each this}}<div id=\"c{{id}}\" class=\"cab\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">Driver name:<span class=\"detailans\">{{driverName}}</span></h5><h5 class=\"detail\">Wallet:<span class=\"detailans\">{{wallet}}</span></h5><h5 class=\"detail\">Cab status:<span class=\"detailans\">{{status}}</span></h5><h5 class=\"detail\">Cab type:<span class=\"detailans\">{{cabType}}</span></h5><h5 class=\"detail\">Cab location:<span class=\"detailans\">{{loc}}</span></h5><h5 class=\"detail\">Driver uid:<span class=\"detailans\">{{uid}}</span></h5></div>{{/each}}{{/with}}");
-           html = userData({parsedCabs:this.filteredCabs});
+           html = userData({parsedCabs:this.self.lazyLoadedCabs.cabs.cabs});
         }
         else{
 	      html="<h5 class=\"resultNone\">No cabs found!</h5>";
@@ -70,9 +122,27 @@ class ManageCabs{
         console.log()
         dom.getCabsBox().innerHTML=html;
     }
+
+	writeLazyLoadedCabs(){
+		var html;
+		var dom=new ManageCabsDOM();
+		var userData=Handlebars.compile("{{#with parsedCabs}}{{#each this}}<div id=\"c{{id}}\" class=\"cab\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">Driver name:<span class=\"detailans\">{{driverName}}</span></h5><h5 class=\"detail\">Wallet:<span class=\"detailans\">{{wallet}}</span></h5><h5 class=\"detail\">Cab status:<span class=\"detailans\">{{status}}</span></h5><h5 class=\"detail\">Cab type:<span class=\"detailans\">{{cabType}}</span></h5><h5 class=\"detail\">Cab location:<span class=\"detailans\">{{loc}}</span></h5><h5 class=\"detail\">Driver uid:<span class=\"detailans\">{{uid}}</span></h5></div>{{/each}}{{/with}}");
+		html = userData({parsedCabs:this.self.lazyLoadedCabs.cabs.cabs});  
+	    dom.getCabById("c"+this.self.cabs.cabs.cabs[((this.self.lazyLoadCount-1)*5)+4].id).insertAdjacentHTML('afterend',html);
+	    this.self.cabs.cabs.cabs=this.self.cabs.cabs.cabs.concat(this.self.lazyLoadedCabs);
+	    this.self.lazyLoadedCabs=null;
+    }
 	
 	filterCabStats(filter){
-		var allCabs=this.cabStats.cabs;
+		this.self.filter=filter;
+		this.changeActiveFilter(filter);
+		this.self.lazyLoadCount=0;
+		var dom=new ManageCabsDOM();
+		dom.getCabsBox().scrollTop=0;
+		this.self.lazyLoadedCabs=this.self.lazyFetchCabs(this.self.filter,this.self.lazyLoadCount);
+		this.self.cabs=this.self.lazyLoadedCabs;
+		this.self.writeCabs();
+		/*var allCabs=this.cabStats.cabs;
 		const filteredCab=[];
 		 if(filter=="Booked"){
 		this.changeActiveFilter(filter);
@@ -98,7 +168,7 @@ class ManageCabs{
 		this.changeActiveFilter(filter);
 		this.filteredCabs=allCabs;
 	    this.writeCabs();
-	   }
+	   }*/
 	}
 	
 	changeActiveFilter(element){
@@ -120,15 +190,53 @@ class ManageCabs{
         }
     });
 	}
+
+	lazyFetchCabs(cabsFilter,limit){
+		var result=null;	
+		console.log(2);
+		$.ajax({
+		   type: "GET",
+		   url: "/com.tomcat_hello_world/admin/LazyFetchCabs",
+		   async:false,
+		   data:{
+			   filter:cabsFilter,
+			   limit:limit
+		   }
+		}).done(
+			   function(data){
+				   result=data;
+			   }
+		   ).fail(
+			   function (jqXHR){
+					alert(jqXHR.status);
+			   }
+		   ).always(
+			function(jqXHR){
+				console.log(jqXHR);
+			}
+		   );
+		   return result;
+	}
 	
 	writeCabStats(result){
 		var dom=new ManageCabsDOM();
 		this.cabStats=result;
 		console.log("here");
-		var html="<div id=\"dashCabRow\"><div id=\"dashCabColumn1\" class=\"dashCabColumn\"><h2 class=\"statTitle\" id=\"tripTitle\">Cabs Overviews</h2><div id=\"filter\"><div id=\"Booked\" class=\"filterOptions  activeFilterCabs\" onClick=\"renderAdmin.currentRender.filterCabStats('Booked')\"><h6>Booked</h6></div><div id=\"Available\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('Available')\"><h6>Available</h6></div><div id=\"AllCabs\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('AllCabs')\"><h6>All Cabs</h6></div></div><div id=\"cabsBox\"></div></div><div id=\"dashCabColumn2\" class=\"dashCabColumn\"><div id=\"cabUpdateBox\"></div></div></div>";
+		var html="<div id=\"dashCabRow\"><div id=\"dashCabColumn1\" class=\"dashCabColumn\"><h2 class=\"statTitle\" id=\"tripTitle\">Cabs Overviews</h2><div id=\"filter\"><div id=\"Booked\" class=\"filterOptions  activeFilterCabs\" onClick=\"renderAdmin.currentRender.filterCabStats('Booked')\"><h6>Booked</h6></div><div id=\"Available\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('Available')\"><h6>Available</h6></div><div id=\"AllCabs\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('AllCabs')\"><h6>All Cabs</h6></div></div><div id=\"cabsBox\" onscroll=\"renderAdmin.currentRender.cabsLazyLoader(event)\"></div></div><div id=\"dashCabColumn2\" class=\"dashCabColumn\"><div id=\"cabUpdateBox\"></div></div></div>";
 		dom.getDash().innerHTML=html;
-		this.filterCabStats("Booked");
-		this.writeCabsUpdateForm();
+		this.self.filterCabStats("Booked");
+		this.self.writeCabsUpdateForm();
+	}
+
+	cabsLazyLoader(event){
+		var element = event.target;
+		if (element.scrollHeight - element.scrollTop === element.clientHeight)
+		{
+		   console.log('cabs scrolled');
+           this.self.lazyLoadCount=this.self.lazyLoadCount+1;
+		   this.self.lazyLoadedCabs=this.self.lazyFetchCabs(this.self.filter,this.self.lazyLoadCount);
+		   this.self.writeLazyLoadedCabs();
+		}
 	}
 
 	writeCabsUpdateForm(){

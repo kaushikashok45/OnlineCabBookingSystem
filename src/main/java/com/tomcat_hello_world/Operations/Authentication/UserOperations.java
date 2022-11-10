@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import com.tomcat_hello_world.Entity.User;
 import com.tomcat_hello_world.Exceptions.InvalidInputException;
 import com.tomcat_hello_world.Exceptions.UserAlreadyExistsException;
+import com.tomcat_hello_world.Operations.Booking.TripOperations;
 import com.tomcat_hello_world.Utility.Encryptor;
 import com.tomcat_hello_world.Utility.Constants;
 
@@ -175,5 +176,29 @@ public class UserOperations {
         	isUserUpdated=SQLQueries.updateProfile(query,newName,Encryptor.encrypt(newPassword),this.getUser().getId());
         }
     	return isUserUpdated;
+    }
+    
+    public static JSONObject getAllTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
+ 	   JSONObject json=new JSONObject();
+ 	   JSONArray  array=new JSONArray();
+ 	   try {
+ 	   ArrayList<TripOperations> trips=SQLQueries.tripsLazyLoader(filter,limit);
+ 	   for(TripOperations tripOp:trips) {
+ 		   array.add(TripOperations.getAdminTripHistoryJSONObject(tripOp));
+ 	   }
+ 	   json.put("trips",array);
+ 	   }
+ 	   catch(Exception e) {
+ 		   e.printStackTrace();
+ 	   }
+ 	   
+ 	   return json;
+    }
+    
+    public JSONObject lazyLoadTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
+ 	   JSONObject trips=new JSONObject();
+ 	   JSONObject tripData=getAllTrips(filter,limit);
+ 	   trips.put("trips",tripData);
+ 	   return trips;
     }
 }
