@@ -62,7 +62,7 @@ function renderProfile(){
 	 var formbox=document.getElementById("formbox");
 	 var name=document.getElementById("name").value;
 	 var email=document.getElementById("email").value;
-	 formbox.innerHTML="<div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/profile.svg\"></div><h2 id=\"header\">Profile Details</h2><div class=\"flexbox\"><div class=\"flex-item\"><h3>Name: <span class=\"dets\">"+name+"</span></h3></div><div class=\"flex-item\"><h3>Email: <span class=\"dets\">"+email+"</span></h3></div></div><div class=\"flexbox\"><div class=\"flex-item\"><button id=\"editProfileBtn\">EDIT PROFILE</button></div><div class=\"flex-item\"><button id=\"tripHistory\">VIEW TRIP HISTORY</button></div> </div>";
+	 formbox.innerHTML="<div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/profile.svg\" alt=\"User image icon\"></div><h2 id=\"header\">Profile Details</h2><div class=\"flexbox\"><div class=\"flex-item\"><h3>Name: <span class=\"dets\">"+name+"</span></h3></div><div class=\"flex-item\"><h3>Email: <span class=\"dets\">"+email+"</span></h3></div></div><div class=\"flexbox\"><div class=\"flex-item\"><button id=\"editProfileBtn\">EDIT PROFILE</button></div><div class=\"flex-item\"><button id=\"tripHistory\">VIEW TRIP HISTORY</button></div> </div>";
 	 activeClassChanger("profile");
 
 }
@@ -70,7 +70,7 @@ function renderProfile(){
 function renderPricing(){
 	
 	 var formbox=document.getElementById("formbox");
-	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/pricing.svg\"></div><h2 id=\"header\">Pricing</h2><div class=\"flexbox2\"><div class=\"flex-item2\"><h3>Hatchback:&#8377; <span class=\"dets\">20/km</span></h3></div><div class=\"flex-item2\"><h3>Sedan:&#8377; <span class=\"dets\">30/km</span></h3></div><div class=\"flex-item2\"><h3>SUV:&#8377; <span class=\"dets\">50/km</span></h3></div></div>";
+	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/pricing.svg\" alt=\"Pricing image icon\"></div><h2 id=\"header\">Pricing</h2><div class=\"flexbox2\"><div class=\"flex-item2\"><h3>Hatchback:&#8377; <span class=\"dets\">20/km</span></h3></div><div class=\"flex-item2\"><h3>Sedan:&#8377; <span class=\"dets\">30/km</span></h3></div><div class=\"flex-item2\"><h3>SUV:&#8377; <span class=\"dets\">50/km</span></h3></div></div>";
 	 activeClassChanger("pricing");
 	
 }
@@ -78,7 +78,7 @@ function renderPricing(){
 function renderAbout(){
 	
 	 var formbox=document.getElementById("formbox");
-	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/car.svg\"></div><h2 id=\"header\">About Us</h2><div id=\"about\" class=\"flexbox\"><div class=\"flex-item\"><h3><span class=\"dets\">We aim to provide high quality cab services online at affordable prices.</span></h3></div></div>";
+	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/car.svg\" alt=\"Car image icon\"></div><h2 id=\"header\">About Us</h2><div id=\"about\" class=\"flexbox\"><div class=\"flex-item\"><h3><span class=\"dets\">We aim to provide high quality cab services online at affordable prices.</span></h3></div></div>";
 	 activeClassChanger("about");
 	
 }

@@ -25,17 +25,24 @@ int uid=user.getUser().getId();
     <head>
       <title>Hello <%= name%>!</title> 
       <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-      <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script  type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
-      <script  type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
-      <script  type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
+      <script type="text/javascript">
+          function noBack(){window.history.forward();}
+          noBack();
+          window.onload=noBack;
+          window.onpageshow=function(evt){if(evt.persisted)noBack();}
+          window.onunload=function(){void(0);}
+      </script>
+      <script  defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/FillForm.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/FormQns.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Profile.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/renderAccount.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/editProfile.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/renderAccount.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/editProfile.js"></script>
+      <script defer async="true" src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     </head>
     <body>
     <div id="accountbox">

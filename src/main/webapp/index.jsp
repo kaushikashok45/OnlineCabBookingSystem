@@ -12,8 +12,8 @@
       <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="Ashok Cabs home" content="Home page with options to perform sign-in and register new users.">
-      <script async="true" defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script async="true" defer type="text/javascript" src="${pageContext.request.contextPath}/js/ShowAccounts.js"></script>
+      <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/ShowAccounts.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css"> 
     </head>
     <body>
