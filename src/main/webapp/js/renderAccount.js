@@ -28,10 +28,20 @@ $(document).ready(function renderPages(){
 	
 	
 function activeClassChanger(currentActive){
+   console.log("hi");
 	var prevElement=document.getElementsByClassName("active")[0];
-	prevElement.classList.remove("active");
-	var selectedElement=document.getElementById(currentActive);
-	selectedElement.classList.add("active");
+	var prevMobileElement=document.getElementsByClassName("activeMobileNavItem")[0];
+	if(window.innerWidth-15<=600){
+		console.log(prevMobileElement);
+		prevMobileElement.classList.remove("activeMobileNavItem");
+		var mobileSelectedElement=document.getElementById(currentActive+"Mobile");
+		mobileSelectedElement.classList.add("activeMobileNavItem")
+	}
+	else{
+        prevElement.classList.remove("active");
+	    var selectedElement=document.getElementById(currentActive);
+	    selectedElement.classList.add("active");
+	}
 }
 
 function renderHome(event){
@@ -152,4 +162,45 @@ function cancelBooking(){
               alert('Error while cancelling cab!');
           }
      });
+}
+
+const buttons = document.getElementsByClassName("mobileNavItem");
+for (const button of buttons) {
+  button.addEventListener("click", createRipple);
+}
+
+function createRipple(event){
+	console.log("ripple");
+	const button=event.currentTarget;
+	const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+	circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - (button.offsetLeft + radius)}px`;
+    circle.style.top = `${event.clientY - (button.offsetTop + radius)}px`;
+    circle.classList.add("ripple"); 
+	const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) {
+      ripple.remove();
+    }
+	button.appendChild(circle);
+	if(event.currentTarget.id=="homeMobile"){
+		renderHome(event);
+	}
+	else if(event.currentTarget.id=="profileMobile"){
+		renderProfile();
+	}
+	else if(event.currentTarget.id=="pricingMobile"){
+		renderPricing();
+	}
+	else if(event.currentTarget.id=="aboutMobile"){
+		renderAbout();
+	}
+	else if(event.currentTarget.id=="mobileLogout"){
+		logout();
+	}
+}
+
+function logout(){
+	document.getElementById("logoutForm").submit(); 
 }

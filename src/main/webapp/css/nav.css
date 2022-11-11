@@ -228,12 +228,21 @@ aside:hover nav.side-bar ul li a span.title {
 	height:fit-content;
 	padding:2px 5px 2px 5px;
 	text-align:center;
+	top:0;
+	left:0;
+	background: green;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 7.5px );
+    backdrop-filter: blur( 7.5px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .mobileTitle{
-	color:white;
+	color:black;
 	text-align:center;
 }
+
 
 @media only screen and (max-width: 600px) {
   .hide{
@@ -241,9 +250,16 @@ aside:hover nav.side-bar ul li a span.title {
   }
   .mobileHeader{
     display:flex;
+    z-index:5;
   }
   #formbox{
-    left:3%;
+   left: 1%;
+   max-width: 85%;
+   min-width: 85%;
+   margin-top: 70%;
+   margin-bottom: 30%;
+   padding-left: 7%;
+   padding-right: 7%;
   }
 }
 

@@ -173,5 +173,14 @@ int uid=user.getUser().getId();
          </div>
         </form>
       </div>
+      <div id="mobileNav" class="showHide smallNav">
+         <div id="contentWrapper" class="navContent">
+            <div id="homeMobile" class="mobileNavItem activeMobileNavItem"><p>Home</p></div>
+            <div id="profileMobile" class="mobileNavItem"><p>Profile</p></div>
+            <div id="pricingMobile" class="mobileNavItem"><p>Pricing</p></div>
+            <div id="aboutMobile" class="mobileNavItem"><p>About</p></div>
+            <div id="mobileLogout"  class="mobileNavItem"><form id="logoutForm" action="logout" method="POST"> <div id="email" data-email="<%=email %>"></div><p>Log out</p></form></div>
+         </div>
+      </div>
    </body>
 </html>
