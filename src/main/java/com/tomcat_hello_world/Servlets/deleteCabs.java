@@ -1,5 +1,6 @@
 package com.tomcat_hello_world.Servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -23,17 +24,24 @@ import com.tomcat_hello_world.Operations.Administration.AdminOperations;
 
 public class deleteCabs extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 JSONParser parser = new JSONParser();    
 	        boolean deletedCabs=false; 
 	        JSONObject result=new JSONObject();
+	        StringBuffer jb = new StringBuffer();
+	        String line = null;
 	        try{
 	           System.out.println("Deleting cabs ,msg from deleteCabs");	
-	           JSONObject json=(JSONObject)parser.parse(request.getParameter("cabsData")); 
+	           BufferedReader reader = request.getReader();
+	           while ((line = reader.readLine()) != null)
+	        	      jb.append(line);	
+	           System.out.println(jb);
+	           JSONObject json=(JSONObject) parser.parse(jb.toString()); 
+	           System.out.println(json);
 	           deletedCabs=new AdminOperations().deleteCabs(json);
 	           if(deletedCabs){
-	            response.setStatus(200);
-	            result.put("message","Cabs deleted successfully!");
+	        	   response.setStatus(200);
+	               result.put("message","Cabs deleted successfully!");
 	           }
 
 	        }
@@ -42,7 +50,7 @@ public class deleteCabs extends HttpServlet {
 	             e.printStackTrace();
 	            
 	        }
-	        System.out.println(result);
+	        System.out.println(response.getStatus()+" 45");
 	        PrintWriter out = response.getWriter();
 	    	response.setContentType("application/json");
 	    	response.setCharacterEncoding("UTF-8");

@@ -105,8 +105,9 @@ public class AdminOperations {
 	   deleteCabsQuery=deleteCabsQuery+")";
 	   deleteTripsQuery=deleteTripsQuery+")";
 	   System.out.println(checkCabsQuery);
+	   System.out.println(SQLQueries.checkCabsExist(checkCabsQuery,cabsArray.size())+"108");
 	   if(SQLQueries.checkCabsExist(checkCabsQuery,cabsArray.size())) {
-		   CabOperations.deleteCabs(deleteCabsQuery,deleteTripsQuery);
+		   cabsDeleted=CabOperations.deleteCabs(deleteCabsQuery,deleteTripsQuery);
 	   }
 	   else {
 		   throw new Exception();

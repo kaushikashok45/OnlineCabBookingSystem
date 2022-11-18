@@ -113,17 +113,16 @@ class ManageCabs{
 		this.self.filter="Booked";
 	}
 
-	asyncCallWithData(servletName,servletData){
+	asyncPOSTCallWithData(servletName,servletData){
 		const cabsData=JSON.stringify(servletData);
 		console.log(servletName);
 		return $.ajax({
 			url:servletName,
-			type: "GET",
+			type: "POST",
+			async:false,
 			contentType:"application/json; charset=utf-8",
 			dataType:"json",
-			data:{
-				cabsData:JSON.stringify(servletData)
-			}
+			data:JSON.stringify(servletData)
 	    });
 	}
 	
@@ -387,13 +386,14 @@ class ManageCabs{
 			);
 		}
 		const cabs=JSON.stringify(cabsToBeDeleted);
-		this.self.asyncCallWithData("/com.tomcat_hello_world/admin/deleteCabs",cabsToBeDeleted).done(function(){
+		this.self.asyncPOSTCallWithData("/com.tomcat_hello_world/admin/deleteCabs",cabsToBeDeleted).done(function(data){
 			alert("Cab(s) successfully deleted!");
-	}).fail(function(){
+	}).fail(function(jqXHR){
 			alert("One or more of the cabs has an underway trip or does not exist!");
+			console.log(jqXHR);
 	}).always(
-		function(){
-			console.log("AJAX call for deleting cabs successful!");
+		function(data){
+			console.log("AJAX call for deleting cabs successful!"+" "+data);
 		}
 	);
 	}
