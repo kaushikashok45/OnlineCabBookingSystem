@@ -642,5 +642,30 @@ public class SQLQueries extends DatabaseConnection{
     
    }
     
+    protected static boolean deleteTripsByCab(String query) throws ClassNotFoundException, SQLException {
+ 	   boolean cabsDeleted=false;
+ 	   Connection con=DatabaseConnection.initializeDatabase();
+        PreparedStatement ps=con.prepareStatement(query);
+        System.out.println(ps.toString()+"649");
+        ps.executeUpdate();
+        cabsDeleted=true;
+ 	   return cabsDeleted;
+    }
+    
+   protected static boolean deleteCabs(String query,String tripsQuery) throws ClassNotFoundException, SQLException {
+	   boolean cabsDeleted=false;
+	   boolean tripsDeleted=deleteTripsByCab(tripsQuery);
+	   System.out.println(tripsDeleted+"658");
+	   System.out.println(query+"659");
+	   if(tripsDeleted) {
+		   Connection con=DatabaseConnection.initializeDatabase();
+	       PreparedStatement ps=con.prepareStatement(query);
+	       System.out.println(ps.toString());
+	       ps.executeUpdate();
+	       cabsDeleted=true;
+	   }
+	   return cabsDeleted;
+   } 
+    
     
 }

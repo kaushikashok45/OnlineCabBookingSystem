@@ -162,14 +162,6 @@
      <url-pattern>/admin/GetAdminTrips/*</url-pattern>  
     </servlet-mapping>
     <servlet>
-      <servlet-name>GetAdminCabs</servlet-name>  
-      <servlet-class>com.tomcat_hello_world.Servlets.GetAdminCabs</servlet-class>  
-    </servlet>  
-    <servlet-mapping>  
-     <servlet-name>GetAdminCabs</servlet-name>  
-     <url-pattern>/admin/GetAdminCabs/*</url-pattern>  
-    </servlet-mapping>
-    <servlet>
       <servlet-name>AddCabs</servlet-name>  
       <servlet-class>com.tomcat_hello_world.Servlets.AddCabs</servlet-class>  
     </servlet>  
@@ -224,6 +216,22 @@
     <servlet-mapping>  
      <servlet-name>userLazyFetchTrips</servlet-name>  
      <url-pattern>/userLazyFetchTrips/*</url-pattern>  
+    </servlet-mapping>
+     <servlet>
+      <servlet-name>CheckUserStatus</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.CheckUserStatus</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>CheckUserStatus</servlet-name>  
+     <url-pattern>/CheckUserStatus/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>deleteCabs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.deleteCabs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>deleteCabs</servlet-name>  
+     <url-pattern>/admin/deleteCabs/*</url-pattern>  
     </servlet-mapping>
     <filter>
       <filter-name>ProfileFilter</filter-name>

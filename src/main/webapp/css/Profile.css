@@ -75,7 +75,7 @@
     border-color: #0f0700;
 }
 
-#editProfileBtn{
+#editProfileBtn,#deleteAccount{
     background-color: green;
     color:white;
     cursor:pointer;

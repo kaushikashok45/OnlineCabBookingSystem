@@ -28,10 +28,20 @@ $(document).ready(function renderPages(){
 	
 	
 function activeClassChanger(currentActive){
+   console.log("hi");
 	var prevElement=document.getElementsByClassName("active")[0];
-	prevElement.classList.remove("active");
-	var selectedElement=document.getElementById(currentActive);
-	selectedElement.classList.add("active");
+	var prevMobileElement=document.getElementsByClassName("activeMobileNavItem")[0];
+	if(window.innerWidth-15<=600){
+		console.log(prevMobileElement);
+		prevMobileElement.classList.remove("activeMobileNavItem");
+		var mobileSelectedElement=document.getElementById(currentActive+"Mobile");
+		mobileSelectedElement.classList.add("activeMobileNavItem")
+	}
+	else{
+        prevElement.classList.remove("active");
+	    var selectedElement=document.getElementById(currentActive);
+	    selectedElement.classList.add("active");
+	}
 }
 
 function renderHome(event){
@@ -62,7 +72,7 @@ function renderProfile(){
 	 var formbox=document.getElementById("formbox");
 	 var name=document.getElementById("name").value;
 	 var email=document.getElementById("email").value;
-	 formbox.innerHTML="<div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/profile.svg\"></div><h2 id=\"header\">Profile Details</h2><div class=\"flexbox\"><div class=\"flex-item\"><h3>Name: <span class=\"dets\">"+name+"</span></h3></div><div class=\"flex-item\"><h3>Email: <span class=\"dets\">"+email+"</span></h3></div></div><div class=\"flexbox\"><div class=\"flex-item\"><button id=\"editProfileBtn\">EDIT PROFILE</button></div><div class=\"flex-item\"><button id=\"tripHistory\">VIEW TRIP HISTORY</button></div> </div>";
+	 formbox.innerHTML="<div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/profile.svg\" alt=\"User image icon\"></div><h2 id=\"header\">Profile Details</h2><div class=\"flexbox\"><div class=\"flex-item\"><h3>Name: <span class=\"dets\">"+name+"</span></h3></div><div class=\"flex-item\"><h3>Email: <span class=\"dets\">"+email+"</span></h3></div></div><div class=\"flexbox\"><div class=\"flex-item\"><button id=\"editProfileBtn\">EDIT PROFILE</button></div><div class=\"flex-item\"><button id=\"tripHistory\">VIEW TRIP HISTORY</button></div><div class=\"flex-item\"><button id=\"deleteAccount\" onclick=\"confirmDelete(event)\"><form id=\"logoutForm\" action=\"logout\" method=\"POST\"> <div id=\"email\" data-email=\"<%=email%>\"></div></form>DELETE ACCOUNT</button></div></div>";
 	 activeClassChanger("profile");
 
 }
@@ -70,7 +80,7 @@ function renderProfile(){
 function renderPricing(){
 	
 	 var formbox=document.getElementById("formbox");
-	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/pricing.svg\"></div><h2 id=\"header\">Pricing</h2><div class=\"flexbox2\"><div class=\"flex-item2\"><h3>Hatchback:&#8377; <span class=\"dets\">20/km</span></h3></div><div class=\"flex-item2\"><h3>Sedan:&#8377; <span class=\"dets\">30/km</span></h3></div><div class=\"flex-item2\"><h3>SUV:&#8377; <span class=\"dets\">50/km</span></h3></div></div>";
+	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/pricing.svg\" alt=\"Pricing image icon\"></div><h2 id=\"header\">Pricing</h2><div class=\"flexbox2\"><div class=\"flex-item2\"><h3>Hatchback:&#8377; <span class=\"dets\">20/km</span></h3></div><div class=\"flex-item2\"><h3>Sedan:&#8377; <span class=\"dets\">30/km</span></h3></div><div class=\"flex-item2\"><h3>SUV:&#8377; <span class=\"dets\">50/km</span></h3></div></div>";
 	 activeClassChanger("pricing");
 	
 }
@@ -78,7 +88,7 @@ function renderPricing(){
 function renderAbout(){
 	
 	 var formbox=document.getElementById("formbox");
-	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/car.svg\"></div><h2 id=\"header\">About Us</h2><div id=\"about\" class=\"flexbox\"><div class=\"flex-item\"><h3><span class=\"dets\">We aim to provide high quality cab services online at affordable prices.</span></h3></div></div>";
+	 formbox.innerHTML=" <div id=\"profileIcon\"><img class=\"image\" src=\"./resources/images/car.svg\" alt=\"Car image icon\"></div><h2 id=\"header\">About Us</h2><div id=\"about\" class=\"flexbox\"><div class=\"flex-item\"><h3><span class=\"dets\">We aim to provide high quality cab services online at affordable prices.</span></h3></div></div>";
 	 activeClassChanger("about");
 	
 }
@@ -152,4 +162,70 @@ function cancelBooking(){
               alert('Error while cancelling cab!');
           }
      });
+}
+
+const buttons = document.getElementsByClassName("mobileNavItem");
+for (const button of buttons) {
+  button.addEventListener("click", createRipple);
+}
+
+function createRipple(event){
+	console.log("ripple");
+	const button=event.currentTarget;
+	const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+	circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - (button.offsetLeft + radius)}px`;
+    circle.style.top = `${event.clientY - (button.offsetTop + radius)}px`;
+    circle.classList.add("ripple"); 
+	const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) {
+      ripple.remove();
+    }
+	button.appendChild(circle);
+	if(event.currentTarget.id=="homeMobile"){
+		renderHome(event);
+	}
+	else if(event.currentTarget.id=="profileMobile"){
+		renderProfile();
+	}
+	else if(event.currentTarget.id=="pricingMobile"){
+		renderPricing();
+	}
+	else if(event.currentTarget.id=="aboutMobile"){
+		renderAbout();
+	}
+	else if(event.currentTarget.id=="mobileLogout"){
+		logout();
+	}
+}
+
+function logout(){
+	document.getElementById("logoutForm").submit(); 
+}
+
+function asyncCall(servletName){
+	return $.ajax({
+		type: "GET",
+		url: servletName,
+	});
+}
+
+function confirmDelete(event){
+	let deleteResponse=confirm("Do you want to delete your account?");
+	let userEmail=document.getElementById("email").value;
+    if(deleteResponse){
+		asyncCall("/com.tomcat_hello_world/CheckUserStatus")
+		.done(function(){
+			alert("Your account was successfully deleted!");
+			logout();
+			removeUser(userEmail,event);
+		})
+		.fail(function(){
+			alert("Sorry..you have an underway trip.Please wait for the trip to complete before deleting your account!");})
+	    .always(function(jqXHR){
+			console.log("AJAX call status : "+jqXHR.status);
+		})
+	}
 }

@@ -37,6 +37,41 @@ public class SQLQueries extends DatabaseConnection{
 	        return emailExists;
 	    }
 	 
+	 protected static boolean checkUserStatus(int id) throws ClassNotFoundException, SQLException {
+		 boolean userValid=false;
+		 Connection con=DatabaseConnection.initializeDatabase();
+	     PreparedStatement ps=con.prepareStatement("SELECT Count(t.id) AS trips FROM Trips t WHERE t.id=? AND t.status=?;");
+	     ps.setInt(1, id);
+	     ps.setString(2,"Underway");
+	     ResultSet rs=ps.executeQuery();
+	     if(rs.next()) {
+	    	 if(rs.getInt("trips")==0) {
+	    		 userValid=true;
+	    	 }
+	     }
+		 return userValid;
+	 }
+	 
+	 protected static boolean deleteAccountTrips(int id) throws ClassNotFoundException, SQLException {
+		 boolean tripsDeleted=false;
+		 Connection con=DatabaseConnection.initializeDatabase();
+	     PreparedStatement ps=con.prepareStatement("DELETE FROM Trips t WHERE t.uid=?");
+	     ps.setInt(1, id);
+	     ps.executeUpdate();
+	     tripsDeleted=true;
+		 return tripsDeleted;
+	 }
+	 
+	 protected static boolean deleteAccount(int id) throws ClassNotFoundException, SQLException {
+		 boolean usersDeleted=false;
+		 Connection con=DatabaseConnection.initializeDatabase();
+	     PreparedStatement ps=con.prepareStatement("DELETE FROM Users u WHERE u.id=?");
+	     ps.setInt(1, id);
+	     ps.executeUpdate();
+	     usersDeleted=true;
+		 return usersDeleted;
+	 }
+	 
 	     protected static boolean[] checkEmailExists(String email,String role) throws SQLException,ClassNotFoundException,NullPointerException{
 	        boolean[] emailExists= {false,false};
 	        Connection con=DatabaseConnection.initializeDatabase();
@@ -303,23 +338,24 @@ public class SQLQueries extends DatabaseConnection{
 	   	return c;
 	}
    
-    protected static  ArrayList<TripOperations> tripsLazyLoader(String filter,int limit) throws ClassNotFoundException, SQLException {
+    protected static  ArrayList<TripOperations> tripsLazyLoader(String filter,int startIndex,int userid) throws ClassNotFoundException, SQLException {
 	   ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
 	   Connection con=DatabaseConnection.initializeDatabase();
 	   PreparedStatement ps=null;
 	   if(filter.equals("today")) {
-		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=CURRENT_DATE AND t.uid=? ORDER BY t.id desc LIMIT ?,5;");
 	   }
 	   else if(filter.equals("yesterday")) {
-		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src\n AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=SUBDATE(curdate(),1) AND t.time_started<CURRENT_DATE ORDER BY t.id desc LIMIT ?,5;");
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src\n AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.time_started>=SUBDATE(curdate(),1) AND t.time_started<CURRENT_DATE ORDER AND t.uid=? BY t.id desc LIMIT ?,5;");
 	   }
 	   else if(filter.equals("week")) {
-		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE YEARWEEK(t.time_started, 1) = YEARWEEK(CURDATE(), 1) ORDER BY t.id desc LIMIT ?,5");
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE YEARWEEK(t.time_started, 1) = YEARWEEK(CURDATE(), 1) AND t.uid=? ORDER BY t.id desc LIMIT ?,5");
 	   }
 	   else {
-		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id ORDER BY t.id desc LIMIT ?,5;");
+		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id WHERE t.uid=? ORDER BY t.id desc LIMIT ?,5;");
 	   }
-	   ps.setInt(1, limit*5);
+	   ps.setInt(1,userid);
+	   ps.setInt(2, startIndex*5);
 	   System.out.println(ps.toString());
        ResultSet rs=ps.executeQuery();
        while(rs.next()){

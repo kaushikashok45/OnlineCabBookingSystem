@@ -73,6 +73,8 @@ box-sizing: border-box;
 width: fit-content;
 display: table;
 margin: auto;
+top: 50%;
+transform: translateY(50%);
 }
 }
 input{

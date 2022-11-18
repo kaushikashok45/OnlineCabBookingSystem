@@ -24,19 +24,19 @@ int uid=user.getUser().getId();
       <title>Hello <%= name%>!</title>
       <meta name="keywords" charset="UTF-8" content="Meta Tags, Metadata" />  
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script> 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
+      <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/StoreLogin.js"></script>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Account.css"> 
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Admin.css">
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css"> 
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/Dashboard.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageCabs.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageLocations.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ManageUsers.js"></script>
-      <script type="text/javascript" src="${pageContext.request.contextPath}/js/renderAdmin.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+      <script defer src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/nav.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/Dashboard.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/ManageCabs.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/ManageLocations.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/ManageUsers.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/showAccounts.js"></script>
+      <script defer type="text/javascript" src="${pageContext.request.contextPath}/js/renderAdmin.js"></script>
     </head>
     <body>
     <div id="accountbox">
@@ -48,7 +48,10 @@ int uid=user.getUser().getId();
     </div>
   </div>
   <div id="navbar">
-    <aside class="side-bar-wrap">
+     <div class="mobileHeader">  
+      <h1 class="mobileTitle">Ashok Cabs</h1> 
+    </div>
+    <aside class="side-bar-wrap hide">
   <nav class="side-bar raised">
     <div class="logo-area">  
       <h1 class="min" id="logo">Ashok Cabs</h1>
@@ -106,6 +109,15 @@ int uid=user.getUser().getId();
   </div>
   <div id="dash">
     
-  </div>    
+  </div> 
+   <div id="mobileNav" class="showHide smallNav">
+         <div id="contentWrapper" class="navContent">
+            <div id="dashboardMobile" class="mobileNavItem activeMobileNavItem" onclick="renderAdmin.changeCurrentRender('dashboard')"><p>Home</p></div>
+            <div id="manageCabsMobile" class="mobileNavItem" onclick="renderAdmin.changeCurrentRender('manageCabs')"><p>Cabs</p></div>
+            <div id="manageLocsMobile" class="mobileNavItem" onclick="renderAdmin.changeCurrentRender('manageLocs')"><p>Locations</p></div>
+            <div id="manageUsersMobile" class="mobileNavItem" onclick="renderAdmin.changeCurrentRender('manageUsers')"><p>Users</p></div>
+            <div id="mobileLogout"  class="mobileNavItem" onclick="renderAdmin.changeCurrentRender('logout')"><form id="logoutForm" action="logout" method="POST"> <div id="email" data-email="<%=email %>"></div><p>Log out</p></form></div>
+         </div>
+      </div>   
    </body>
 </html>

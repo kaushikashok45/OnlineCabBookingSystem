@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import com.tomcat_hello_world.Entity.User;
 import com.tomcat_hello_world.Exceptions.InvalidInputException;
 import com.tomcat_hello_world.Exceptions.UserAlreadyExistsException;
+import com.tomcat_hello_world.Exceptions.UserRoleMismatchException;
 import com.tomcat_hello_world.Operations.Booking.TripOperations;
 import com.tomcat_hello_world.Utility.Encryptor;
 import com.tomcat_hello_world.Utility.Constants;
@@ -46,6 +47,27 @@ public class UserOperations {
         ids.put(email,SQLQueries.getIdFromEmail(email));
        }
        return ids;
+    }
+    
+    public boolean checkUserTripUnderway() throws ClassNotFoundException, SQLException, UserRoleMismatchException {
+    	if(!this.getUser().getRole().equals("Customer")) {
+    		throw new UserRoleMismatchException();
+    	}
+    	boolean userStatusValid=false;
+    	userStatusValid=SQLQueries.checkUserStatus(this.getUser().getId());
+    	return userStatusValid;
+    }
+    
+    public boolean deleteAccount() throws Exception {
+    	boolean accountDeleted=false,tripsDeleted=false;
+    	tripsDeleted=SQLQueries.deleteAccountTrips(this.getUser().getId());
+    	if(tripsDeleted) {
+    		accountDeleted=SQLQueries.deleteAccount(this.getUser().getId());
+    	}
+    	else {
+    		throw new Exception();
+    	}
+    	return accountDeleted;
     }
 
     public boolean authenticateUser(String email,String userPassword) throws ClassNotFoundException, NullPointerException, NoSuchAlgorithmException, SQLException {
@@ -178,11 +200,11 @@ public class UserOperations {
     	return isUserUpdated;
     }
     
-    public static JSONObject getAllTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
+    public static JSONObject getAllTrips(String filter,int limit,int userid) throws ClassNotFoundException, SQLException {
  	   JSONObject json=new JSONObject();
  	   JSONArray  array=new JSONArray();
  	   try {
- 	   ArrayList<TripOperations> trips=SQLQueries.tripsLazyLoader(filter,limit);
+ 	   ArrayList<TripOperations> trips=SQLQueries.tripsLazyLoader(filter,limit,userid);
  	   for(TripOperations tripOp:trips) {
  		   array.add(TripOperations.getAdminTripHistoryJSONObject(tripOp));
  	   }
@@ -195,9 +217,9 @@ public class UserOperations {
  	   return json;
     }
     
-    public JSONObject lazyLoadTrips(String filter,int limit) throws ClassNotFoundException, SQLException {
+    public JSONObject lazyLoadTrips(String filter,int limit,int userid) throws ClassNotFoundException, SQLException {
  	   JSONObject trips=new JSONObject();
- 	   JSONObject tripData=getAllTrips(filter,limit);
+ 	   JSONObject tripData=getAllTrips(filter,limit,userid);
  	   trips.put("trips",tripData);
  	   return trips;
     }

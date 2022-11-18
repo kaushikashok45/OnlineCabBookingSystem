@@ -163,7 +163,7 @@ body{
     display: flex;
     flex-direction: column;
     min-width: 200px;
-    height:70%;
+    height:fit-content;
     width:40%;
     max-height:428px;
     /*max-width:218px;*/
@@ -176,7 +176,7 @@ body{
     border-radius: 10px;
     padding: 7px;
     display: flex;
-    height:70%;
+    height:fit-content;
     width:fit-content;
     overflow-y:auto;
     max-height:428px;
@@ -320,7 +320,7 @@ body{
     border-color: white;
     border-color: #0f0700;
     display:table;
-    margin:0 auto;
+    margin:5% auto;
    }
 
    .fullForm{
@@ -396,9 +396,140 @@ body{
     overflow-y: auto;
     max-height:250px;
    }
+   
+   .hideStats{
+     display:flex;
+     flex-direction:column;
+   }
+   
+   .accordion{
+     display:none;
+   }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 600px) {
+	
+	#dash{
+	   margin-left:0px;
+	   overflow-y: auto;
+       margin-bottom: 20%;
+	}
+	
     #dashCabRow{
         flex-direction: column;
     }
+    
+    #dashrow1{
+     flex-direction:column;
+     height:fit-content;
+     position: relative;
+     margin-top: 50%;
+    }
+    
+    #dashrow2{
+      flex-direction:column;
+      height:fit-content;
+    }
+    
+    .hideStats{
+     display:none;
+   }
+   
+   .accordion{
+     display:block;
+     margin: 0 15%;
+   }
+   
+   #dashboardWrapper2{
+     display:flex;
+     flex-direction:row;
+   }
+   
+   #formbox1,#formbox2,#formbox3,#formbox4{
+     height:fit-content;
+     background: hsl(221,70%,92%);
+     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+     backdrop-filter: blur( 14.5px );
+     -webkit-backdrop-filter: blur( 14.5px );
+     border-radius: 10px;
+     border: 1px solid rgba( 255, 255, 255, 0.18 );
+     margin-bottom:15%;
+     cursor:pointer;
+     display: flex;
+     flex-direction: column;
+     align-self:center;
+     border:2px solid black;
+   }
+   
+   #formbox5{
+    width:fit-content;
+    height:fit-content;
+    align-self:self-start;
+    background: hsl(221,70%,92%);
+    box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
+    backdrop-filter: blur( 14.5px );
+    -webkit-backdrop-filter: blur( 14.5px );
+    border-radius: 10px;
+   }
+   
+   #formbox6{
+     width:fit-content;
+     height:fit-content;
+     align-self:center;
+     flex-direction:column;
+     background: hsl(221,70%,92%);
+    box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
+    backdrop-filter: blur( 14.5px );
+    -webkit-backdrop-filter: blur( 14.5px );
+    border-radius: 10px;
+   }
+   
+   #showStats {
+    display: flex;
+    flex-direction: column;
+   }
+   
+   .trip,.filterOptions{
+     background-color:white;
+   }
+   
+   .dashCabColumn{
+     align-self:center;
+     margin:2% 3%;
+     background: hsl(221,70%,92%);
+    box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
+    backdrop-filter: blur( 14.5px );
+    -webkit-backdrop-filter: blur( 14.5px );
+    border-radius: 10px;
+   }
+   
+   #dashCabColumn1 {
+    width: fit-content;
+    min-width: fit-content;
+    margin-bottom: 25%;
+  }
+  
+  #dashCabColumn2{
+    min-width:fit-content;
+    height:fit-content;
+  }
+  
+  #dashLocRow,#dashUserRow{
+    flex-direction:column;
+    
+  }
+  
+  .dashLocColumn,.dashUserColumn{
+    align-self:center;
+    min-width:fit-content;
+    background: hsl(221,70%,92%);
+    box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
+    backdrop-filter: blur( 14.5px );
+    -webkit-backdrop-filter: blur( 14.5px );
+    border-radius: 10px;
+  }
+  
+  .loc{
+    background-color:white;
+  }
+  
 }

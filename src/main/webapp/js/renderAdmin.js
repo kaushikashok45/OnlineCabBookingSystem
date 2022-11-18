@@ -1,6 +1,15 @@
 class AdminRenderer{
 	
+	get count(){
+		return this._count;
+	}
+
+	set count(newCount){
+		this._count=newCount;
+	}
+
 	constructor(){
+		this.count=0;
 		var hash = window.location.hash;
 		if(hash=="#dashboard" || hash==""){
 			window.location.hash="#dashboard"
@@ -29,6 +38,10 @@ class AdminRenderer{
 		this.activeClassChanger(element);
 		if(element=="dashboard"){
 			this.currentRender=new Stats();
+			if(this.count>0){
+                this.currentRender.writeStats();
+			}
+
 		}
 		else if(element=="manageCabs"){
 			this.currentRender=new ManageCabs();
@@ -40,20 +53,36 @@ class AdminRenderer{
 		}
 		else if(element=="manageUsers"){
 			this.currentRender=new ManageUsers();
+			this.currentRender.userStats.fetchStats("Customer",renderAdmin.currentRender.lazyLoadCount).done(function(data){
+				renderAdmin.currentRender.userStats.adminStats=data;
+				console.log(renderAdmin.currentRender.userStats.adminStats);
+				renderAdmin.currentRender.writeUserStats();
+			});
 		}
 	}
 	
 	activeClassChanger(currentActive){
-	  var prevElement=document.getElementsByClassName("active")[0];
-	  prevElement.classList.remove("active");
-	  var selectedElement=document.getElementById(currentActive);
-	  selectedElement.classList.add("active");
+	  if(currentActive=='logout'){
+        document.getElementById("logoutForm").submit();
+	  }	
+	  else{
+	   var prevElement=document.getElementsByClassName("active")[0];
+	   prevElement.classList.remove("active");
+	   var selectedElement=document.getElementById(currentActive);
+	   selectedElement.classList.add("active");
+	   var prevElementMobile=document.getElementsByClassName("activeMobileNavItem")[0];
+	   prevElementMobile.classList.remove("activeMobileNavItem");
+	   var selectedElementMobile=document.getElementById(currentActive+"Mobile");
+	   selectedElementMobile.classList.add("activeMobileNavItem");
+	  } 
    }
 }
 
 var renderAdmin=null
 $(document).ready(function(){
   renderAdmin=new AdminRenderer();
+  renderAdmin.count=1;
+  renderAdmin.currentRender.writeStats();
 });
 
 

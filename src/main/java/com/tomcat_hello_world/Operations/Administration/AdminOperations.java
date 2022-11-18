@@ -83,6 +83,38 @@ public class AdminOperations {
 	   return areCabsAdded;
    }
    
+   public boolean deleteCabs(JSONObject cabs) throws Exception {
+	   boolean cabsDeleted=false;
+	   String checkCabsQuery="SELECT COUNT(c.id) AS cabsCount FROM Cabs c WHERE c.id IN (";
+	   String deleteCabsQuery="DELETE FROM Cabs WHERE id IN(";
+	   String deleteTripsQuery="DELETE FROM Trips WHERE cabid IN(";
+	   ArrayList<Integer> cabids=new ArrayList<Integer>();
+	   JSONArray cabsArray=(JSONArray)(cabs.get("cabs"));
+	   for(int i=0;i<cabsArray.size();i++) { 
+	        cabids.add(Integer.valueOf((String)cabsArray.get(i)));
+	   }
+	   for(int cabid:cabids) {
+		   checkCabsQuery=checkCabsQuery+cabid+",";
+		   deleteCabsQuery=deleteCabsQuery+cabid+",";
+		   deleteTripsQuery=deleteTripsQuery+cabid+",";
+	   }
+	   checkCabsQuery =checkCabsQuery.replaceAll(",$", "");
+	   deleteCabsQuery=deleteCabsQuery.replaceAll(",$", "");
+	   deleteTripsQuery=deleteTripsQuery.replaceAll(",$", "");
+	   checkCabsQuery =checkCabsQuery+")";
+	   deleteCabsQuery=deleteCabsQuery+")";
+	   deleteTripsQuery=deleteTripsQuery+")";
+	   System.out.println(checkCabsQuery);
+	   System.out.println(SQLQueries.checkCabsExist(checkCabsQuery,cabsArray.size())+"108");
+	   if(SQLQueries.checkCabsExist(checkCabsQuery,cabsArray.size())) {
+		   cabsDeleted=CabOperations.deleteCabs(deleteCabsQuery,deleteTripsQuery);
+	   }
+	   else {
+		   throw new Exception();
+	   }
+	   return cabsDeleted;
+   }
+   
    public boolean addUsers(JSONObject json) throws ClassNotFoundException, NullPointerException, SQLException, DriverAlreadyExistsException, InvalidInputException, UserNotFoundException, UserRoleMismatchException, NoSuchAlgorithmException, UserAlreadyExistsException{
 	   boolean areUsersAdded=false;
 	   areUsersAdded=UserOperations.addUsers(json);

@@ -58,23 +58,22 @@
    }
    
    #formbox{
-     display:flex;
-     justify-content:center;
-     align-items:center;
-     flex-direction:column;
-     border:2px solid black;
-     border-radius:10px;
-	 width:fit-content;
-	  position:fixed;
-     top:27%;
-     left:40%;
-     width:fit-content;
-    padding:7px;
-     min-width:350px;
-    min-height:376px;
-    margin-left:auto;
-    margin-right:auto;
-    
+         display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: fit-content;
+    position: relative;
+    top: 27%;
+    width: fit-content;
+    padding: 7px;
+    min-width: 350px;
+    min-height: 376px;
+    margin-left: auto;
+    margin-right: auto;
+    transform:translateY(50%);
    }
    
    
@@ -226,9 +225,8 @@
    
     @media only screen and (max-width: 600px) {
      #cabBox{
-       margin-top:40%;
-       grid-template-columns: 2fr;
-       grid-template-rows:auto auto auto auto auto auto auto;
+       display:flex;
+       flex-direction:column;
      }
    }
   
@@ -406,6 +404,8 @@
 @media only screen and (max-width: 900px) {
 	 #confirmbox{
 	   margin-top:37%;
+	   width:fit-content;
+	   text-align:center;
 	 }
      #btns{
        flex-direction:column;
@@ -503,7 +503,7 @@
 }
 
 .activeFilter,.activeFilter2,.activeFilterCabs,.activeFilter:hover,.activeFilter2:hover,.activeFilterCabs:hover{
-	background-color:green;
+	background-color:green !important;
 	color:white;
 }
 
@@ -523,6 +523,10 @@
 	padding:15px;
 	border-color:1px solid black;
 	animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.showHide{
+	display:none;
 }
 
 
@@ -557,6 +561,65 @@
   background-color:#A9A9A9;
   animation: skeleton-text 1s linear infinite alternate;
 }
+
+ .smallNav{
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    margin-top: 5%;
+    padding-bottom: 5%;
+}
+
+.navContent{
+	display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 75%;
+    padding-left: auto;
+    padding-right: auto;
+    background: aliceblue;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 7.5px );
+    -webkit-backdrop-filter: blur( 7.5px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    font-family: sans-serif;
+    padding-left: 3%;
+    padding-right: 3%;
+    justify-content:center;
+    font-size:1em;
+}
+
+.mobileNavItem{
+	margin-left: 0.8%;
+    margin-right: 0.8%;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition: background 400ms;
+    opacity:0.4;
+    white-space:nowrap;
+}
+
+.activeMobileNavItem{
+	opacity:1;
+}
+
+span.ripple {
+  position: absolute; 
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  background-color: red;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
  
 @media only screen and (max-width: 300px) {
 	 #confirmbox{
@@ -570,3 +633,10 @@
   }
   
    }
+   
+@media only screen and (max-width: 600px) {
+	 .showHide{
+	   display:flex;
+	 }
+	 
+   }  
