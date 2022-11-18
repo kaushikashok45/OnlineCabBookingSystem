@@ -42,6 +42,10 @@ class ManageCabsDOM{
 	getCabById(id){
 		return document.getElementById(id);
 	} 
+
+	getCabOperation(){
+		return document.getElementById("cabOperation");
+	}
 }
 
 class ManageCabs{
@@ -107,6 +111,20 @@ class ManageCabs{
 		this.self=this;
 		this.self.lazyLoadCount=0;
 		this.self.filter="Booked";
+	}
+
+	asyncCallWithData(servletName,servletData){
+		const cabsData=JSON.stringify(servletData);
+		console.log(servletName);
+		return $.ajax({
+			url:servletName,
+			type: "GET",
+			contentType:"application/json; charset=utf-8",
+			dataType:"json",
+			data:{
+				cabsData:JSON.stringify(servletData)
+			}
+	    });
 	}
 	
 	writeCabs(){
@@ -191,6 +209,26 @@ class ManageCabs{
     });
 	}
 
+	opHandler(){
+		var dom=new ManageCabsDOM();
+		if(dom.getCabOperation().value=="addCab"){
+			console.log("Adding add cab form");
+			this.self.writeCabsUpdateForm();
+		}
+		else{
+			this.self.writeCabsDeleteForm();
+		}
+	}
+
+	writeManageCabsOpsForm(){
+		var html="<div id=\"manageCabsOpForm\"><h2 class=\"statTitle\" id=\"tripTitle\">Manage Cabs</h2><form id=\"cabOps\"><label for=\"cabOp\">Cab operation: </label><select name=\"cabOperation\" class=\"field\" id=\"cabOperation\" ><option id=\"placeholder\" value=\"\" disabled selected>Select operation</option><option  value=\"addCab\">Add Cabs</option><option  value=\"deleteCabs\">Delete Cabs</option></select><button id=\"nextOp\" class=\"greenBtn\">NEXT &#8594;</form></div>";
+		var dom=new ManageCabsDOM();
+		dom.getCabUpdateBox().innerHTML=html;
+		$('#nextOp').on('click',function(){
+			renderAdmin.currentRender.opHandler();
+		})
+	}
+
 	lazyFetchCabs(cabsFilter,limit){
 		var result=null;	
 		console.log(2);
@@ -225,7 +263,7 @@ class ManageCabs{
 		var html="<div id=\"dashCabRow\"><div id=\"dashCabColumn1\" class=\"dashCabColumn\"><h2 class=\"statTitle\" id=\"tripTitle\">Cabs Overviews</h2><div id=\"filter\"><div id=\"Booked\" class=\"filterOptions  activeFilterCabs\" onClick=\"renderAdmin.currentRender.filterCabStats('Booked')\"><h6>Booked</h6></div><div id=\"Available\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('Available')\"><h6>Available</h6></div><div id=\"AllCabs\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.filterCabStats('AllCabs')\"><h6>All Cabs</h6></div></div><div id=\"cabsBox\" onscroll=\"renderAdmin.currentRender.cabsLazyLoader(event)\"></div></div><div id=\"dashCabColumn2\" class=\"dashCabColumn\"><div id=\"cabUpdateBox\"></div></div></div>";
 		dom.getDash().innerHTML=html;
 		this.self.filterCabStats("Booked");
-		this.self.writeCabsUpdateForm();
+		this.self.writeManageCabsOpsForm();
 	}
 
 	cabsLazyLoader(event){
@@ -246,12 +284,35 @@ class ManageCabs{
 	   this.writeCabSubForm();
 	}
 
+	
+
+	writeCabsDeleteForm(){
+		var dom=new ManageCabsDOM();
+       var cabsDeleteFormHtml="<h2 class=\"statTitle\" id=\"tripTitle\">Delete Cabs</h2><form><div id=\"cabsFullForm\" class=\"fullForm\"><div id=\"deleteCabBtn\" class=\"addBtn\" onClick=\"renderAdmin.currentRender.writeCabDeleteSubForm()\" title=\"Delete another Cab\">+</div><button id=\"submitDeleteCabs\" class=\"greenBtn\">Delete cabs</button></div></form>";
+	   dom.getCabUpdateBox().innerHTML=cabsDeleteFormHtml;
+	   $('#submitDeleteCabs').on('click',function(event){
+		  renderAdmin.currentRender.deleteCabs(event)
+	   })
+	   this.writeCabDeleteSubForm();
+	}
+
 	writeCabSubForm(){
 		var dom=new ManageCabsDOM();
 		var div=document.createElement("div");
 		var index=dom.getCabsFullForm().childElementCount-1;
 		dom.getCabsFullForm().insertBefore(div,dom.getCabsFullForm().children[index-1]);
 		var cabSubForm="<div id=\"form"+index+"\"><label for=\"cabids\">Driver email-id:</label><input type=\"text\" id=\"emailid"+index+"\" class=\"field\" name=\"emailid"+index+"\" required></input><br><br><label for=\"cabType\">Cab type:</label> <select name=\"cabType\" id=\"cabTypeid"+index+"\" class=\"select\"><option selected=\"true\" disabled=\"disabled\">Select cab type</option><option value=\"hatchback\">Hatchback</option><option value=\"sedan\">Sedan</option><option value=\"suv\">SUV</option></select><br></br><br></br><label for=\"cablocid"+index+"\">Cabs(s) location id:</label><input type=\"number\" id=\"cablocid"+index+"\" class=\"field\" name=\"cablocid"+index+"\" placeholder=\"Enter Cabs(s) location id..\" required></input></div><div id=\"remove"+index+"\" class=\"removeBtn\" onclick=\"renderAdmin.currentRender.deleteCabSubForm("+index+")\">-</div>";
+		dom.getCabsFullForm().childNodes[index-1].innerHTML=cabSubForm;
+		dom.getCabsFullForm().childNodes[index-1].setAttribute("id","cabsSubForm"+index);
+		dom.getCabsFullForm().childNodes[index-1].setAttribute("class","cabsSubForm");
+	}
+
+	writeCabDeleteSubForm(){
+		var dom=new ManageCabsDOM();
+		var div=document.createElement("div");
+		var index=dom.getCabsFullForm().childElementCount-1;
+		dom.getCabsFullForm().insertBefore(div,dom.getCabsFullForm().children[index-1]);
+		var cabSubForm="<div id=\"form"+index+"\"><label for=\"cabids\">Cab id:</label><input type=\"numeric\" id=\"cabid"+index+"\" class=\"field\" name=\"cabid"+index+"\" required></input><br><br></div><div id=\"remove"+index+"\" class=\"removeBtn\" onclick=\"renderAdmin.currentRender.deleteCabSubForm("+index+")\">-</div>";
 		dom.getCabsFullForm().childNodes[index-1].innerHTML=cabSubForm;
 		dom.getCabsFullForm().childNodes[index-1].setAttribute("id","cabsSubForm"+index);
 		dom.getCabsFullForm().childNodes[index-1].setAttribute("class","cabsSubForm");
@@ -311,6 +372,30 @@ class ManageCabs{
 		this.fetchCabStats(this.writeCabStats.bind(this));
 		return false;
 		
+	}
+
+	deleteCabs(event){
+		console.log("deleting");
+		var cabsToBeDeleted={
+			cabs:[]
+		};
+		var dom=new ManageCabsDOM();
+		var len=dom.getCabsFullForm().childElementCount;
+		for(var i=0;i<len-2;i++){
+			cabsToBeDeleted.cabs.push(
+			   dom.getSubFormField("cabid",i+1).value
+			);
+		}
+		const cabs=JSON.stringify(cabsToBeDeleted);
+		this.self.asyncCallWithData("/com.tomcat_hello_world/admin/deleteCabs",cabsToBeDeleted).done(function(){
+			alert("Cab(s) successfully deleted!");
+	}).fail(function(){
+			alert("One or more of the cabs has an underway trip or does not exist!");
+	}).always(
+		function(){
+			console.log("AJAX call for deleting cabs successful!");
+		}
+	);
 	}
 }
 

@@ -29,7 +29,7 @@ public class userLazyFetchTrips extends HttpServlet {
 		int limit=Integer.valueOf(request.getParameter("limit"));
 		try {
 			user=(UserOperations)session.getAttribute("User");
-			json=user.lazyLoadTrips(filter,limit);
+			json=user.lazyLoadTrips(filter,limit,user.getUser().getId());
 		}
 		catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

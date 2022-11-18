@@ -29,6 +29,7 @@ public class FetchStats extends HttpServlet{
 		catch(AccessDeniedException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println(json);
 		PrintWriter out = response.getWriter();
     	response.setContentType("application/json");
     	response.setCharacterEncoding("UTF-8");

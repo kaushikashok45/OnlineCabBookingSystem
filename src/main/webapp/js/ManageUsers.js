@@ -84,9 +84,6 @@ class ManageUsers{
         this.self.userStats=new Stats();
         this.self.writeUsersBox();
 		this.self.lazyLoadCount=0;
-        this.self.userStats.adminStats=this.self.userStats.fetchStats("Customer",this.self.lazyLoadCount);
-		console.log(this.self.userStats.adminStats);
-		this.self.writeUserStats();
     }
 	
 	writeUsersBox(){
@@ -100,10 +97,13 @@ class ManageUsers{
 		if(this.self.lazyLoadCount==0){
 		  this.self.dom.getUsersBox().innerHTML="<h2 class=\"statTitle\" id=\"tripTitle\">Users overview</h2><div id=\"userTable\"><div id=\"filter\"><div id=\"Customer\" class=\"filterOptions  activeFilter2\" onClick=\"renderAdmin.currentRender.userStats.filterUsers('Customer','usersBox')\"><h6>Customers</h6></div><div id=\"Driver\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.userStats.filterUsers('Driver','usersBox')\"><h6>Drivers</h6></div><div id=\"Admin\" class=\"filterOptions\" onClick=\"renderAdmin.currentRender.userStats.filterUsers('Admin','usersBox')\"><h6>Admins</h6></div></div><div id=\"userDataBox\" onscroll=\"renderAdmin.currentRender.lazyLoader(event)\"></div></div>";	
 		  this.self.userStats.adminStats.filter="Customer";	
-		  this.self.lazyLoadedRecords=this.self.userStats.fetchStats(this.self.userStats.filter,this.self.lazyLoadCount).users.users;
-		  var userData=Handlebars.compile("{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}");
-		  var html=userData({parsedUsers:this.self.lazyLoadedRecords});
-		  this.self.dom.getUserDataBox().innerHTML=html;
+		  this.self.userStats.fetchStats(this.self.userStats.filter,this.self.lazyLoadCount).done(function(data){ 
+			renderAdmin.currentRender.lazyLoadedRecords=data.users.users;
+			var userData=Handlebars.compile("{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}");
+		    var html=userData({parsedUsers:renderAdmin.currentRender.lazyLoadedRecords});
+		    renderAdmin.currentRender.dom.getUserDataBox().innerHTML=html;
+		  });
+		  
 		}
 		else{
 			var userData=Handlebars.compile("{{#with parsedUsers}}{{#each this}}<div id=\"t{{id}}\" class=\"trip\"><h5 class=\"detailans\">#<span class=\"detail\">{{id}}</span></h5><h5 class=\"detail\">User name:<span class=\"detailans\">{{name}}</span></h5><h5 class=\"detail\">Email:<span class=\"detailans\">{{email}}</span></h5><h5 class=\"detail\">Role:<span class=\"detailans\">{{role}}</span></h5></div>{{/each}}{{/with}}");
@@ -120,8 +120,11 @@ class ManageUsers{
 		{
 		   console.log('scrolled');
            this.self.lazyLoadCount=this.lazyLoadCount+1;
-		   this.self.lazyLoadedRecords=this.self.userStats.fetchStats(this.self.userStats.filter,this.self.lazyLoadCount);
-		   this.self.writeUserStats();
+		   this.self.userStats.fetchStats(this.self.userStats.filter,this.self.lazyLoadCount).done(function(data){
+			renderAdmin.currentRender.lazyLoadedRecords=data;
+			renderAdmin.currentRender.writeUserStats(); 
+		   });
+		  
 		}
 	  
 	}
@@ -182,10 +185,12 @@ class ManageUsers{
 			   alert('Error while adding users...Please try again later!');
 			 }  
 		});
-		this.self.userStats.adminStats=this.self.userStats.fetchStats();
-		console.log(this.self.userStats.adminStats);
-		this.self.writeUserStats();
-		this.self.writeUsersUpdateForm();
+		this.self.userStats.fetchStats().done(function(data){
+			renderAdmin.currentRender.userStats.adminStats=data;
+			console.log(renderAdmin.currentRender.userStats.adminStats);
+		    renderAdmin.currentRender.writeUserStats();
+		    renderAdmin.currentRender.writeUsersUpdateForm();
+		});
 		return false;
 		
 	}

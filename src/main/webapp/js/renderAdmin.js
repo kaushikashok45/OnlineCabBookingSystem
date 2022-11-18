@@ -40,20 +40,35 @@ class AdminRenderer{
 		}
 		else if(element=="manageUsers"){
 			this.currentRender=new ManageUsers();
+			this.currentRender.userStats.fetchStats("Customer",renderAdmin.currentRender.lazyLoadCount).done(function(data){
+				renderAdmin.currentRender.userStats.adminStats=data;
+				console.log(renderAdmin.currentRender.userStats.adminStats);
+				renderAdmin.currentRender.writeUserStats();
+			});
 		}
 	}
 	
 	activeClassChanger(currentActive){
-	  var prevElement=document.getElementsByClassName("active")[0];
-	  prevElement.classList.remove("active");
-	  var selectedElement=document.getElementById(currentActive);
-	  selectedElement.classList.add("active");
+	  if(currentActive=='logout'){
+        document.getElementById("logoutForm").submit();
+	  }	
+	  else{
+	   var prevElement=document.getElementsByClassName("active")[0];
+	   prevElement.classList.remove("active");
+	   var selectedElement=document.getElementById(currentActive);
+	   selectedElement.classList.add("active");
+	   var prevElementMobile=document.getElementsByClassName("activeMobileNavItem")[0];
+	   prevElementMobile.classList.remove("activeMobileNavItem");
+	   var selectedElementMobile=document.getElementById(currentActive+"Mobile");
+	   selectedElementMobile.classList.add("activeMobileNavItem");
+	  } 
    }
 }
 
 var renderAdmin=null
 $(document).ready(function(){
   renderAdmin=new AdminRenderer();
+  renderAdmin.currentRender.writeStats();
 });
 
 

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.tomcat_hello_world.Entity.User;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.tomcat_hello_world.Entity.Cab;
@@ -28,7 +30,7 @@ public class SQLQueries extends DatabaseConnection{
 	   JSONObject cabsByLoc=new JSONObject();
 	   JSONObject usersByRole=new JSONObject();
 	   Connection con=DatabaseConnection.initializeDatabase();
-	   PreparedStatement ps=con.prepareStatement(" SELECT DISTINCT t.Status,Count(t.id) AS Count FROM Trips t GROUP BY t.Status  UNION SELECT DISTINCT c.Status,Count(c.id) AS count FROM Cabs c GROUP BY c.Status UNION SELECT u.Role,COUNT(u.id) FROM Users u GROUP BY u.Role UNION SELECT l.Point,COUNT(c2.id) FROM Location l LEFT JOIN Cabs c2 ON c2.locid=l.id GROUP BY l.id;");
+	   PreparedStatement ps=con.prepareStatement("SELECT DISTINCT t.Status,Count(t.id) AS Count FROM Trips t GROUP BY t.Status  UNION SELECT DISTINCT c.Status,Count(c.id) AS count FROM Cabs c GROUP BY c.Status UNION SELECT u.Role,COUNT(u.id) FROM Users u GROUP BY u.Role UNION SELECT l.Point,COUNT(c2.id) FROM Location l LEFT JOIN Cabs c2 ON c2.locid=l.id GROUP BY l.id;");
 	   ResultSet rs=ps.executeQuery();
 	   while(rs.next()) {
 		   if(rs.getString("Status").equals("Completed") || rs.getString("Status").equals("Cancelled") || rs.getString("Status").equals("Underway")) {
@@ -194,6 +196,20 @@ public class SQLQueries extends DatabaseConnection{
     return trips;
    }
    
+   protected static boolean checkCabsExist(String query,int cabCount) throws ClassNotFoundException, SQLException {
+	   boolean cabsExist=false;
+	   Connection con=DatabaseConnection.initializeDatabase();
+	   PreparedStatement ps=con.prepareStatement(query);
+	   ResultSet rs=ps.executeQuery();
+	   if(rs.next()) {
+		   if(rs.getInt("cabsCount")==cabCount) {
+			   cabsExist=true;
+		   }
+	   }
+	   return cabsExist;
+	   
+   }
+   
    public static  ArrayList<TripOperations> tripsLazyLoader(String filter,int limit) throws ClassNotFoundException, SQLException {
 	   ArrayList<TripOperations> trips=new ArrayList<TripOperations>();
 	   Connection con=DatabaseConnection.initializeDatabase();
@@ -211,6 +227,13 @@ public class SQLQueries extends DatabaseConnection{
 		   ps=con.prepareStatement("SELECT t.id,t.uid,t.cabid,c.type,l.Point AS src,l2.Point AS dest,t.otp,t.Status,t.time_started,t.time_ended,d.distance,u.Name FROM Trips t INNER JOIN Cabs c  ON t.cabid=c.id INNER JOIN Users u ON c.uid=u.id  INNER JOIN Distance d ON ((t.src=d.src AND t.dest=d.dest) OR (t.src=d.dest AND t.dest=d.src)) INNER JOIN Location l on t.src=l.id INNER JOIN location l2 ON t.dest=l2.id ORDER BY t.id desc LIMIT ?,5;");
 	   }
 	   ps.setInt(1, limit*5);
+	   System.out.println("lazy loading trips!");
+	   /*try {
+		   throw new Exception();
+	   }
+	   catch(Exception e) {
+		   e.printStackTrace();
+	   }*/
 	   System.out.println(ps.toString());
        ResultSet rs=ps.executeQuery();
        while(rs.next()){

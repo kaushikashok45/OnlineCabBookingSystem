@@ -234,12 +234,11 @@ aside:hover nav.side-bar ul li a span.title {
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 7.5px );
     backdrop-filter: blur( 7.5px );
-    border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .mobileTitle{
-	color:black;
+	color:white;
 	text-align:center;
 }
 
@@ -260,6 +259,7 @@ aside:hover nav.side-bar ul li a span.title {
    margin-bottom: 30%;
    padding-left: 7%;
    padding-right: 7%;
+   transform: translateY(0%);
   }
 }
 

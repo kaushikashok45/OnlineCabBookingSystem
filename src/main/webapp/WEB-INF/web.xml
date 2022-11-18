@@ -225,6 +225,22 @@
      <servlet-name>userLazyFetchTrips</servlet-name>  
      <url-pattern>/userLazyFetchTrips/*</url-pattern>  
     </servlet-mapping>
+     <servlet>
+      <servlet-name>CheckUserStatus</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.CheckUserStatus</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>CheckUserStatus</servlet-name>  
+     <url-pattern>/CheckUserStatus/*</url-pattern>  
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>deleteCabs</servlet-name>  
+      <servlet-class>com.tomcat_hello_world.Servlets.deleteCabs</servlet-class>  
+    </servlet>  
+    <servlet-mapping>  
+     <servlet-name>deleteCabs</servlet-name>  
+     <url-pattern>/admin/deleteCabs/*</url-pattern>  
+    </servlet-mapping>
     <filter>
       <filter-name>ProfileFilter</filter-name>
       <filter-class>com.tomcat_hello_world.Security.ProfileFilter</filter-class>

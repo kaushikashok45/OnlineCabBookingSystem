@@ -142,5 +142,11 @@ public class CabOperations {
 		return cabsAdded;
 	}
 	
+	public static boolean deleteCabs(String query,String tripsQuery) throws ClassNotFoundException, SQLException {
+		boolean cabsDeleted=false;
+		cabsDeleted=SQLQueries.deleteCabs(query,tripsQuery);
+		return cabsDeleted;
+	}
+	
 	
 }
