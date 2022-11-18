@@ -1,6 +1,15 @@
 class AdminRenderer{
 	
+	get count(){
+		return this._count;
+	}
+
+	set count(newCount){
+		this._count=newCount;
+	}
+
 	constructor(){
+		this.count=0;
 		var hash = window.location.hash;
 		if(hash=="#dashboard" || hash==""){
 			window.location.hash="#dashboard"
@@ -29,6 +38,10 @@ class AdminRenderer{
 		this.activeClassChanger(element);
 		if(element=="dashboard"){
 			this.currentRender=new Stats();
+			if(this.count>0){
+                this.currentRender.writeStats();
+			}
+
 		}
 		else if(element=="manageCabs"){
 			this.currentRender=new ManageCabs();
@@ -68,6 +81,7 @@ class AdminRenderer{
 var renderAdmin=null
 $(document).ready(function(){
   renderAdmin=new AdminRenderer();
+  renderAdmin.count=1;
   renderAdmin.currentRender.writeStats();
 });
 
